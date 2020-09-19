@@ -1,0 +1,53 @@
+package com.mycompany.assofjpybasic.backend.analizador;
+
+import java_cup.runtime.*;
+
+class SintaxisPrincipal;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+
+terminal String dospor, vb, java, py, prog, txt, esp;
+
+non terminal String S, VB, JV, PY, PROG, TEXTO, ESP;
+
+start with S;
+
+S ::= ESP VB JV PY PROG {::}
+    | VB JV PY PROG {::}
+;
+
+VB ::= dospor vb TEXTO {::}
+;
+
+JV ::= dospor java TEXTO {::}
+;
+
+PY ::= dospor py TEXTO {::}
+;
+
+PROG ::= dospor prog TEXTO:e1 {::}
+;
+
+ESP ::= ESP:e1 esp:e2 {:RESULT = e1 + e2;:}
+    | esp:e1 {:RESULT = e1;:}
+;
+
+TEXTO ::= TEXTO:e1 txt:e2 {:RESULT = e1 + e2;:}
+        | TEXTO:e1 esp:e2 {:RESULT = e1 + e2;:}
+        | txt:e1 {:RESULT = e1;:}
+        | esp:e1 {:RESULT = e1;:}
+;
