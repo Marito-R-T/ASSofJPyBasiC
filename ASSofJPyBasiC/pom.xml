@@ -8,14 +8,20 @@
     <dependencies>
         <dependency>
             <groupId>de.jflex</groupId>
-            <artifactId>cup_runtime</artifactId>
-            <version>11b</version>
-        </dependency>
-        <dependency>
-            <groupId>de.jflex</groupId>
             <artifactId>cup-parent</artifactId>
             <version>11b</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.github.peterzeller</groupId>
+            <artifactId>javacup</artifactId>
+            <version>11c</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <properties>

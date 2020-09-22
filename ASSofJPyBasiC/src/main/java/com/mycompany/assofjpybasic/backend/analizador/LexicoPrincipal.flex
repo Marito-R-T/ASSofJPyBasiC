@@ -28,17 +28,17 @@ espacio=[\t|\r|\n|\f|" "]+
 
 %%
 
+/* Palabras Reservadas */
+<YYINITIAL> ("%%VB") {return new Symbol(SintaxisPrincipalSym.vb, yycolumn, yyline, yytext());}
+<YYINITIAL> ("%%JAVA") {return new Symbol(SintaxisPrincipalSym.java, yycolumn, yyline, yytext());}
+<YYINITIAL> ("%%PY") {return new Symbol(SintaxisPrincipalSym.py, yycolumn, yyline, yytext());}
+<YYINITIAL> ("%%PROGRAMA") {return new Symbol(SintaxisPrincipalSym.prog, yycolumn, yyline, yytext());}
+
+/* Expresiones Regulares */
+<YYINITIAL> ("/*")(.|{espacio})*("*/") {return new Symbol(SintaxisPrincipalSym.com, yycolumn, yyline, yytext());}
+<YYINITIAL> ("//")(.)*("\n") {return new Symbol(SintaxisPrincipalSym.com, yycolumn, yyline, yytext());}
+
 /* Espacios en blanco */
 {espacio}+ {return new Symbol(SintaxisPrincipalSym.esp, yycolumn, yyline, yytext());}
 
-/* Palabras Reservadas */
-<YYINITIAL> ("VB") {return new Symbol(SintaxisPrincipalSym.vb, yycolumn, yyline, yytext());}
-<YYINITIAL> ("JAVA") {return new Symbol(SintaxisPrincipalSym.java, yycolumn, yyline, yytext());}
-<YYINITIAL> ("PY") {return new Symbol(SintaxisPrincipalSym.py, yycolumn, yyline, yytext());}
-<YYINITIAL> ("PROGRAMA") {return new Symbol(SintaxisPrincipalSym.prog, yycolumn, yyline, yytext());}
-
-
-<YYINITIAL> ("%%") {return new Symbol(SintaxisPrincipalSym.dospor, yycolumn, yyline, yytext());}
-
-
-<YYINITIAL> (.)* {return new Symbol(SintaxisPrincipalSym.txt, yycolumn, yyline, yytext());}
+<YYINITIAL> (.) {return new Symbol(SintaxisPrincipalSym.txt, yycolumn, yyline, yytext());}

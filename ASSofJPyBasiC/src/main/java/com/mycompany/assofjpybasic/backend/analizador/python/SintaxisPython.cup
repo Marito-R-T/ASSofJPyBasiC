@@ -1,0 +1,204 @@
+package com.mycompany.assofjpybasic.backend.analizador.python;
+
+import java_cup.runtime.*;
+
+class SintaxisPython;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol sym){
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public Symbol getS(){
+        System.out.println(this.s.value);
+        System.out.print(this.s.value);
+        return this.s;
+    }
+:};
+
+terminal String deff, returnn, nott, andd, orr, iff, elseiff, elsee, forr, inn, range, whilee;
+terminal String breakk, continuee, noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div;
+terminal String mod, floor, pot, para, parc, coma, dosp, print, charinput, intinput, floatinput;
+terminal String igual, masig, menosig, porig, divig, floorig, potig, modig, puntocoma;
+terminal String com, id, entero, decimal, character, string, indent, dedent, newline;
+
+non terminal PYTHON, ESP, DEFS, SUITE, STMT_LIST, PC, STATEMENTLINE, AS_VAR, LISTVAR, LISTDEF;
+non terminal D, WRITE, INPUT, OP_VAR, STATEMENTS, IF, ELSEIF, ELSE, WHILE, COMA, FOR, RANGE;
+non terminal OPERACION_A, OPERACION_M, OPERACION_U, POWER, ATOM, CONDICION, AND, NOT, STATEMENT;
+non terminal COMPARACION, STRING, DEF, PAR_LIST, DEFPARAM;
+
+start with PYTHON;
+
+PYTHON ::= ESP DEFS
+        | ESP
+;
+
+ESP ::= newline
+    |
+;
+
+DEFS ::= DEFS DEF
+        | DEF 
+;
+
+DEF ::= deff id para PAR_LIST parc dosp SUITE
+        | deff id para parc dosp SUITE
+;
+
+PAR_LIST ::= PAR_LIST coma DEFPARAM
+        | DEFPARAM
+;
+
+DEFPARAM ::= id igual OPERACION_A
+        | id igual character
+        | id
+;
+
+SUITE ::= STMT_LIST newline
+        | newline indent STATEMENTS dedent
+;
+
+STMT_LIST ::= STATEMENTLINE puntocoma STMT_LIST
+        | STATEMENTLINE PC
+;
+
+PC ::= puntocoma
+        |
+;
+
+STATEMENTLINE ::= AS_VAR
+        | WRITE
+        | OP_VAR
+;
+
+AS_VAR ::= LISTVAR coma igual LISTDEF coma
+        | LISTVAR igual LISTDEF
+;
+
+LISTVAR ::= LISTVAR coma id
+        | id
+;
+
+LISTDEF ::= LISTDEF coma D
+        | D
+;
+
+D ::= character
+    | OPERACION_A
+    | INPUT
+;
+
+WRITE ::= print para STRING parc
+;
+
+INPUT ::= intinput
+        | charinput
+        | floatinput
+;
+
+OP_VAR ::= id masig OPERACION_A
+        | id menosig OPERACION_A
+        | id porig OPERACION_A
+        | id divig OPERACION_A
+        | id floorig OPERACION_A
+        | id potig OPERACION_A
+        | id modig OPERACION_A
+;
+
+STATEMENTS ::= STATEMENTS STATEMENT
+        | STATEMENT
+;
+
+STATEMENT ::= IF
+        | FOR
+        | WHILE
+        | STMT_LIST newline
+;
+
+IF ::= iff CONDICION dosp SUITE ELSEIF ELSE
+;
+
+ELSEIF ::= ELSEIF elseiff CONDICION dosp SUITE
+        |
+;
+
+ELSE ::= elsee dosp SUITE
+        |
+;
+
+WHILE ::= whilee CONDICION dosp SUITE ELSE
+;
+
+COMA ::= coma
+        |
+;
+
+FOR ::= forr LISTVAR COMA inn RANGE dosp SUITE ELSE
+;
+
+RANGE ::= range para OPERACION_A parc
+        | range para OPERACION_A coma OPERACION_A parc
+        | range para OPERACION_A coma OPERACION_A coma OPERACION_A parc
+;
+
+OPERACION_A ::= OPERACION_A mas OPERACION_M
+        | OPERACION_M menos OPERACION_M
+        | OPERACION_M
+;
+
+OPERACION_M ::= OPERACION_M por OPERACION_U
+        | OPERACION_M div OPERACION_U
+        | OPERACION_M floor OPERACION_U
+        | OPERACION_M mod OPERACION_U
+        | OPERACION_U
+;
+
+OPERACION_U ::= menos OPERACION_U
+        | mas OPERACION_U
+        | POWER
+;
+
+POWER ::= ATOM pot OPERACION_U
+        | ATOM
+;
+
+ATOM ::= id
+        | entero
+        | decimal
+;
+
+CONDICION ::= CONDICION orr AND
+        | AND
+;
+
+AND ::= AND andd NOT
+        | NOT
+;
+
+NOT ::= nott NOT
+    | COMPARACION
+;
+
+COMPARACION ::= OPERACION_A igual OPERACION_A
+    | OPERACION_A noigual OPERACION_A
+    | OPERACION_A menor OPERACION_A
+    | OPERACION_A menorig OPERACION_A
+    | OPERACION_A mayor OPERACION_A
+    | OPERACION_A mayorig OPERACION_A
+    | OPERACION_A
+;
+
+STRING ::= STRING coma D
+        | STRING coma string
+        | D
+        | string
+;

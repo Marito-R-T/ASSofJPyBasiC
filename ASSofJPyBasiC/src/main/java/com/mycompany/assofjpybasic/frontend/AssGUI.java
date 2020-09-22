@@ -10,6 +10,8 @@ import com.mycompany.assofjpybasic.backend.archivos.GuardarArchivo;
 import com.mycompany.assofjpybasic.frontend.tabulador.TabbedPanel;
 import java.io.File;
 import javax.swing.JScrollPane;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 
 /**
  *
@@ -37,6 +39,11 @@ public class AssGUI extends javax.swing.JFrame {
     private void arreglosExtras() {
         this.setLocationRelativeTo(null);
         this.setTitle("JPyBasiC");
+        Document doc = AssGUI.editorTerminal.getDocument();
+        if(doc instanceof PlainDocument){
+            doc.putProperty(PlainDocument.tabSizeAttribute, 2);
+            System.out.println("hola");
+        }
         /*NumeroLinea p1 = new NumeroLinea(panePrograma);
         NumeroLinea p2 = new NumeroLinea(paneTresD);
         NumeroLinea p3 = new NumeroLinea(paneOptimizacion);

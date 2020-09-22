@@ -1,0 +1,259 @@
+package com.mycompany.assofjpybasic.backend.analizador.visual;
+
+import java_cup.runtime.*;
+
+class SintaxisVisual;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol sym){
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public Symbol getS(){
+        System.out.println(this.s.value);
+        System.out.print(this.s.value);
+        return this.s;
+    }
+:};
+
+terminal String espacio, subb, functionn, modulee, endd, publicc, dimm, ass, nott, andd, andalsoo;
+terminal String orr, orelsee, xorr, integerr, decimall, charr, iff, elseiff, elsee, thenn, selectt;
+terminal String casee, forr, to, stepp, nextt, whilee, doo, loopp, exitt, continuee, igual, noigual, menor;
+terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, floor, pot, para, parc, coma;
+terminal String com, id, decimal, entero, character, y, string;
+terminal String write, writeln, charinput, floatinput, intinput;
+terminal String masig, menosig, porig, divig, floorig, returnn;
+
+non terminal VISUAL, MODULOS, MOD, STATESM, STATEM, SUB, FUNCTION, DEFVAR, LISTPARAM, LISTPARAMM, LISTVAR, ASIGVAR, ID;
+non terminal TYPE, DEF, OPERACION_A, OPERACION_M, OPERACION_U, POWER, STATEMENTS, STATEMENT, CASEELSE, ESP;
+non terminal IF_ELSE, BLOQUEIF, ELSE_IF, THEN, STATEMENTLINE, SELECT, CASE, EXPR, CASES, ATOM, STEP, CA, PUBLIC;
+non terminal LIST_CASE, FOR, WHILE, DO_WHILE, CONSOLEWRITE, INPUT, CONDICION, AND, XOR, NOT, COMPARACION, STRING;
+
+start with VISUAL;
+
+VISUAL ::= ESP MODULOS
+        | ESP
+;
+
+ESP ::= espacio
+    |
+;
+
+MODULOS ::= MODULOS MOD
+        | MOD 
+;
+
+MOD ::= PUBLIC modulee id espacio STATESM endd modulee espacio
+;
+
+PUBLIC ::= publicc
+        |
+;
+
+STATESM ::= STATEM STATESM
+        |
+;
+
+STATEM ::= SUB
+        | FUNCTION
+        | DEFVAR
+        | ASIGVAR
+;
+
+SUB ::= PUBLIC subb id para LISTPARAMM parc espacio STATEMENTS endd subb espacio
+;
+
+FUNCTION ::= PUBLIC functionn id para LISTPARAMM parc TYPE espacio STATEMENTS endd functionn espacio
+;
+
+DEFVAR ::= dimm LISTVAR espacio
+;
+
+LISTPARAMM ::= LISTPARAM
+            |
+;
+
+LISTPARAM ::= LISTPARAM coma id TYPE
+        | id TYPE
+;
+
+LISTVAR ::= LISTVAR coma id TYPE DEF
+        | id TYPE DEF
+;
+
+ASIGVAR ::= id igual OPERACION_A espacio
+        | id igual character espacio
+        | id masig OPERACION_A espacio
+        | id menosig OPERACION_A espacio
+        | id porig OPERACION_A espacio
+        | id divig OPERACION_A espacio
+        | id floorig OPERACION_A espacio
+;
+
+TYPE ::= ass integerr
+        | ass charr
+        | ass decimall
+        |
+;
+
+DEF ::= igual OPERACION_A
+        | igual character
+        |
+;
+
+OPERACION_A ::= OPERACION_A mas OPERACION_M
+        | OPERACION_M menos OPERACION_M
+        | OPERACION_M
+;
+
+OPERACION_M ::= OPERACION_M por OPERACION_U
+        | OPERACION_M div OPERACION_U
+        | OPERACION_M floor OPERACION_U
+        | OPERACION_M mod OPERACION_U
+        | OPERACION_U
+;
+
+OPERACION_U ::= menos OPERACION_U
+        | mas OPERACION_U
+        | POWER
+;
+
+POWER ::= ATOM pot OPERACION_U
+        | ATOM
+;
+
+ATOM ::= id
+        | entero
+        | decimal
+;
+
+STATEMENTS ::= STATEMENT STATEMENTS
+        |
+;
+
+STATEMENT ::= IF_ELSE
+        | SELECT
+        | FOR
+        | WHILE
+        | DO_WHILE
+        | STATEMENTLINE
+;
+
+IF_ELSE ::= iff CONDICION BLOQUEIF
+;
+
+BLOQUEIF ::= thenn STATEMENTLINE espacio
+        | THEN espacio STATEMENTS ELSE_IF endd iff espacio
+;
+
+ELSE_IF ::= elseiff CONDICION THEN espacio STATEMENTS ELSE_IF
+        | elsee espacio STATEMENTS
+        |
+;
+
+THEN ::= thenn
+        |
+;
+
+STATEMENTLINE ::= CONSOLEWRITE
+        | INPUT
+        | DEFVAR
+        | ASIGVAR
+;
+
+SELECT ::= selectt CA EXPR espacio CASES CASEELSE endd selectt espacio
+;
+
+CA ::= casee
+        | 
+;
+
+CASEELSE ::= casee elsee espacio STATEMENTS
+        |
+;
+
+EXPR ::= OPERACION_A
+        | character
+;
+
+CASES ::= CASES CASE
+        |
+;
+
+CASE ::= casee LIST_CASE espacio STATEMENTS
+;
+
+LIST_CASE ::= LIST_CASE coma OPERACION_A
+        | LIST_CASE coma OPERACION_A to OPERACION_A
+        | OPERACION_A
+        | OPERACION_A to OPERACION_A
+;
+
+FOR ::= forr id TYPE igual OPERACION_A to OPERACION_A STEP espacio STATEMENTS nextt ID espacio
+;
+
+ID ::= id
+    |
+;
+
+STEP ::= stepp OPERACION_A
+        |
+;
+
+WHILE ::= whilee CONDICION espacio STATEMENTS endd whilee espacio
+;
+
+DO_WHILE ::= doo whilee espacio STATEMENTS loopp espacio
+        | doo espacio STATEMENTS loopp whilee espacio
+;
+
+CONSOLEWRITE ::= write para STRING parc espacio
+        | writeln para STRING parc espacio
+;
+
+INPUT ::= id igual charinput espacio
+        | id igual floatinput espacio
+        | id igual intinput espacio
+;
+
+CONDICION ::= CONDICION orr AND
+        | CONDICION orelsee AND
+        | AND
+;
+
+AND ::= AND andd XOR
+        | AND andalsoo XOR
+        | XOR
+;
+
+XOR ::= XOR xorr NOT
+        | NOT
+;
+
+NOT ::= nott NOT
+    | COMPARACION
+;
+
+COMPARACION ::= OPERACION_A igual OPERACION_A
+    | OPERACION_A noigual OPERACION_A
+    | OPERACION_A menor OPERACION_A
+    | OPERACION_A menorig OPERACION_A
+    | OPERACION_A mayor OPERACION_A
+    | OPERACION_A mayorig OPERACION_A
+    | OPERACION_A
+;
+
+STRING ::= STRING y EXPR
+        | STRING y string
+        | EXPR
+        | string
+;
