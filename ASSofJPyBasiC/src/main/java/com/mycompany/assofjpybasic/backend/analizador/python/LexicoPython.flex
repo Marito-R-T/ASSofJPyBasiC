@@ -18,7 +18,7 @@ import java.util.List;
 %init}
 espacio=[\r|\f|" "]+
 tab="    "|"\t"
-letras=[a-z]
+letras=[a-zA-Z]
 onenine=[1-9]
 cero= "0"
 
@@ -82,8 +82,6 @@ cero= "0"
 <YYINITIAL> ("in") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.inn, yycolumn, yyline, yytext());}
 <YYINITIAL> ("range") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.range, yycolumn, yyline, yytext());}
 <YYINITIAL> ("while") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.whilee, yycolumn, yyline, yytext());}
-<YYINITIAL> ("break") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.breakk, yycolumn, yyline, yytext());}
-<YYINITIAL> ("continue") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.continuee, yycolumn, yyline, yytext());}
     /*Palabras de Comparacion*/
 <YYINITIAL> ("!=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.noigual, yycolumn, yyline, yytext());}
 <YYINITIAL> ("<") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.menor, yycolumn, yyline, yytext());}
@@ -98,7 +96,6 @@ cero= "0"
 <YYINITIAL> ("/") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.div, yycolumn, yyline, yytext());}
 <YYINITIAL> ("%") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.mod, yycolumn, yyline, yytext());}
 <YYINITIAL> ("//") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.floor, yycolumn, yyline, yytext());}
-<YYINITIAL> ("**") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.pot, yycolumn, yyline, yytext());}
     /*Palabras de agrupacion*/
 <YYINITIAL> ("(") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.para, yycolumn, yyline, yytext());}
 <YYINITIAL> (")") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.parc, yycolumn, yyline, yytext());}
@@ -107,18 +104,11 @@ cero= "0"
 <YYINITIAL> (";") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.puntocoma, yycolumn, yyline, yytext());}
     /*palabras para manejar consola*/
 <YYINITIAL> ("print") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.print, yycolumn, yyline, yytext());}
-<YYINITIAL> ("charinput()") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.charinput, yycolumn, yyline, yytext());}
-<YYINITIAL> ("intinput()") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.intinput, yycolumn, yyline, yytext());}
-<YYINITIAL> ("floatinput()") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.floatinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("charinput") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.charinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("intinput") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.intinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("floatinput") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.floatinput, yycolumn, yyline, yytext());}
     /*Operandos de asignacion*/
 <YYINITIAL> ("=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.igual, yycolumn, yyline, yytext());}
-<YYINITIAL> ("+=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.masig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("-=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.menosig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("*=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.porig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("/=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.divig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("//=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.floorig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("**=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.potig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("%=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.modig, yycolumn, yyline, yytext());}
 
 /* Expresiones Regulares */
 <YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.com, yycolumn, yyline, yytext());}
@@ -126,8 +116,8 @@ cero= "0"
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.decimal, yycolumn, yyline, yytext());}
-<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 2));} // "char"c
-<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 2));}
+<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));} // "char"c
+<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
 
 /* Espacios en blanco */
 {espacio}+ {System.out.print(yytext()); /*IGNORAR*/}

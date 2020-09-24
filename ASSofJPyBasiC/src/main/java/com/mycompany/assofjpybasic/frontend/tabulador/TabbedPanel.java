@@ -17,7 +17,6 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     private final File[] archivo;
     private boolean compilado;
-
     /**
      * Creates new form TabbedPanel
      *

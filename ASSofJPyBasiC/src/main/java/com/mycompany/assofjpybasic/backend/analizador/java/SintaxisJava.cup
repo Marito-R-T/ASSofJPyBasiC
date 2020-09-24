@@ -1,1 +1,229 @@
+package com.mycompany.assofjpybasic.backend.analizador.java;
 
+import java_cup.runtime.*;
+
+class SintaxisJava;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol sym){
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public Symbol getS(){
+        System.out.println(this.s.value);
+        System.out.print(this.s.value);
+        return this.s;
+    }
+:};
+
+terminal String publicc, classs, voidd, intt, floatt, charr, andd, orr, nott, iff, elsee, com;
+terminal String forr, whilee, doo, switchh, casee, dosp, defaultt, returnn;
+terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div, mod;
+terminal String para, parc, llavea, llavec, coma, puntocoma, println, print, charinput, intinput, floatinput;
+terminal String igual, masmas, menosmenos, id, entero, decimal, character, string;
+
+non terminal JAVA, CLASSES, CLASS, STATEMENTS_CLASS, STATEMENT_CLASS, METODO, TYPE_V, TYPE;
+non terminal LIST_PAR, LIST_PARR, STATEMENTS_METODO, STATEMENT_METODO, DEF_VAR, LIST_VAR, AS_VAR, COMP_STATE;
+non terminal WHILE, BLOQUE, FOR, INICIO, STEP, DO_WHILE, IF_ELSE, ELSEIF, ELSE, SWITCH, CASES;
+non terminal CASE, DEFAULT, STATEMENT_LINE, WRITE, OP_VAR, OPERACION_A, OPERACION_M, EXPR_STRING;
+non terminal OPERACION_U, ATOM, CONDICION, AND, NOT, COMPARACION, STRING, EXPR, INPUT;
+
+start with JAVA;
+
+JAVA ::= CLASSES
+;
+
+CLASSES ::= CLASSES CLASS
+        | 
+;
+
+CLASS ::= publicc classs id llavea STATEMENTS_CLASS llavec
+;
+
+STATEMENTS_CLASS ::= STATEMENTS_CLASS STATEMENT_CLASS
+        | STATEMENT_CLASS
+;
+
+STATEMENT_CLASS ::= METODO
+        | DEF_VAR
+;
+
+METODO ::= publicc TYPE_V id para LIST_PAR parc llavea STATEMENTS_METODO llavec
+        | publicc id para LIST_PAR parc llavea STATEMENTS_METODO llavec
+;
+
+TYPE_V ::= voidd
+        | TYPE
+;
+
+TYPE ::= intt
+        | floatt
+        | charr
+;
+
+LIST_PAR ::= TYPE id LIST_PARR
+        |
+;
+
+LIST_PARR ::= coma TYPE id LIST_PARR
+        | 
+;
+
+STATEMENTS_METODO ::= STATEMENTS_METODO STATEMENT_METODO
+        |
+;
+
+STATEMENT_METODO ::= DEF_VAR
+        | COMP_STATE
+        | STATEMENT_LINE
+;
+
+DEF_VAR ::= TYPE LIST_VAR
+;
+
+LIST_VAR ::= LIST_VAR coma AS_VAR
+        | AS_VAR
+;
+
+AS_VAR ::= id igual EXPR
+        | id
+;
+
+COMP_STATE ::= WHILE
+        | FOR
+        | DO_WHILE
+        | IF_ELSE
+        | SWITCH
+;
+
+WHILE ::= whilee para CONDICION parc BLOQUE
+;
+
+BLOQUE ::= llavea STATEMENTS_METODO llavec
+        | STATEMENT_LINE
+;
+
+FOR ::= forr para INICIO puntocoma CONDICION puntocoma STEP parc BLOQUE
+;
+
+INICIO ::= id
+        | TYPE AS_VAR
+;
+
+STEP ::= AS_VAR
+        | OP_VAR
+;
+
+DO_WHILE ::= doo BLOQUE whilee para CONDICION parc puntocoma
+;
+
+IF_ELSE ::= iff para CONDICION parc BLOQUE ELSEIF ELSE
+;
+
+ELSEIF ::= ELSEIF elsee iff para CONDICION parc BLOQUE
+        |
+;
+
+ELSE ::= elsee BLOQUE
+        |
+;
+
+SWITCH ::= switchh para EXPR parc llavea CASES DEFAULT llavec
+;
+
+CASES ::= CASES CASE
+        | 
+;
+
+CASE ::= casee OPERACION_A dosp STATEMENT_METODO
+;
+
+DEFAULT ::= defaultt dosp STATEMENT_METODO
+        |
+;
+
+STATEMENT_LINE ::= AS_VAR puntocoma
+        | DEF_VAR puntocoma
+        | WRITE puntocoma
+;
+
+WRITE ::= println para STRING parc
+       | print para STRING parc
+;
+
+OP_VAR ::= id masmas
+        | id menosmenos
+;
+
+OPERACION_A ::= OPERACION_A mas OPERACION_M
+        | OPERACION_M menos OPERACION_M
+        | OPERACION_M
+;
+
+OPERACION_M ::= OPERACION_M por OPERACION_U
+        | OPERACION_M div OPERACION_U
+        | OPERACION_M mod OPERACION_U
+        | OPERACION_U
+;
+
+OPERACION_U ::= menos OPERACION_U
+        | mas OPERACION_U
+        | ATOM
+;
+
+ATOM ::= id
+        | entero
+        | decimal
+        | para OPERACION_A parc
+;
+
+CONDICION ::= CONDICION orr AND
+        | AND
+;
+
+AND ::= AND andd NOT
+        | NOT
+;
+
+NOT ::= nott NOT
+    | COMPARACION
+;
+
+COMPARACION ::= OPERACION_A igig OPERACION_A
+    | OPERACION_A noigual OPERACION_A
+    | OPERACION_A menor OPERACION_A
+    | OPERACION_A menorig OPERACION_A
+    | OPERACION_A mayor OPERACION_A
+    | OPERACION_A mayorig OPERACION_A
+    | para CONDICION parc
+;
+
+STRING ::= STRING mas EXPR_STRING
+        | EXPR_STRING
+;
+
+EXPR_STRING ::= string
+        | character
+        | entero
+        | decimal
+        | para OPERACION_A parc
+;
+
+EXPR ::= OPERACION_A
+        | character
+        | INPUT
+;
+
+INPUT ::= charinput para string parc
+        | intinput para string parc
+        | floatinput para string parc
+;

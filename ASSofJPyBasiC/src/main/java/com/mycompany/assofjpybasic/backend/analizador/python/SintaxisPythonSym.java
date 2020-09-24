@@ -8,66 +8,55 @@ package com.mycompany.assofjpybasic.backend.analizador.python;
 /** CUP generated class containing symbol constants. */
 public class SintaxisPythonSym {
   /* terminals */
-  public static final int newline = 54;
-  public static final int floatinput = 36;
-  public static final int mod = 26;
-  public static final int potig = 43;
-  public static final int floor = 27;
-  public static final int com = 46;
-  public static final int menosig = 39;
-  public static final int coma = 31;
-  public static final int dedent = 53;
-  public static final int igual = 37;
-  public static final int range = 12;
-  public static final int nott = 4;
-  public static final int mayorig = 20;
-  public static final int string = 51;
-  public static final int menorig = 18;
-  public static final int indent = 52;
-  public static final int masig = 38;
-  public static final int elsee = 9;
-  public static final int porig = 40;
-  public static final int andd = 5;
-  public static final int intinput = 35;
-  public static final int charinput = 34;
-  public static final int returnn = 3;
-  public static final int menos = 23;
-  public static final int menor = 17;
-  public static final int elseiff = 8;
-  public static final int iff = 7;
+  public static final int newline = 44;
+  public static final int floatinput = 32;
+  public static final int mod = 23;
+  public static final int floor = 24;
+  public static final int com = 36;
+  public static final int coma = 27;
+  public static final int dedent = 43;
+  public static final int igual = 33;
+  public static final int range = 11;
+  public static final int nott = 3;
+  public static final int mayorig = 17;
+  public static final int string = 41;
+  public static final int menorig = 15;
+  public static final int indent = 42;
+  public static final int elsee = 8;
+  public static final int andd = 4;
+  public static final int intinput = 31;
+  public static final int returnn = 35;
+  public static final int charinput = 30;
+  public static final int menos = 20;
+  public static final int menor = 14;
+  public static final int elseiff = 7;
+  public static final int iff = 6;
   public static final int EOF = 0;
-  public static final int dosp = 32;
-  public static final int parc = 30;
-  public static final int mas = 22;
-  public static final int whilee = 13;
-  public static final int para = 29;
+  public static final int dosp = 28;
+  public static final int parc = 26;
+  public static final int mas = 19;
+  public static final int whilee = 12;
+  public static final int para = 25;
   public static final int error = 1;
-  public static final int mayor = 19;
-  public static final int breakk = 14;
-  public static final int entero = 48;
-  public static final int pot = 28;
-  public static final int por = 24;
-  public static final int forr = 10;
-  public static final int floorig = 42;
-  public static final int id = 47;
-  public static final int divig = 41;
-  public static final int orr = 6;
-  public static final int noigual = 16;
-  public static final int inn = 11;
-  public static final int modig = 44;
-  public static final int puntocoma = 45;
-  public static final int igig = 21;
-  public static final int continuee = 15;
-  public static final int print = 33;
-  public static final int character = 50;
-  public static final int div = 25;
-  public static final int decimal = 49;
+  public static final int mayor = 16;
+  public static final int entero = 38;
+  public static final int por = 21;
+  public static final int forr = 9;
+  public static final int id = 37;
+  public static final int orr = 5;
+  public static final int noigual = 13;
+  public static final int inn = 10;
+  public static final int puntocoma = 34;
+  public static final int igig = 18;
+  public static final int print = 29;
+  public static final int character = 40;
+  public static final int div = 22;
+  public static final int decimal = 39;
   public static final int deff = 2;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "deff",
-  "returnn",
   "nott",
   "andd",
   "orr",
@@ -78,8 +67,6 @@ public class SintaxisPythonSym {
   "inn",
   "range",
   "whilee",
-  "breakk",
-  "continuee",
   "noigual",
   "menor",
   "menorig",
@@ -92,7 +79,6 @@ public class SintaxisPythonSym {
   "div",
   "mod",
   "floor",
-  "pot",
   "para",
   "parc",
   "coma",
@@ -102,14 +88,8 @@ public class SintaxisPythonSym {
   "intinput",
   "floatinput",
   "igual",
-  "masig",
-  "menosig",
-  "porig",
-  "divig",
-  "floorig",
-  "potig",
-  "modig",
   "puntocoma",
+  "returnn",
   "com",
   "id",
   "entero",

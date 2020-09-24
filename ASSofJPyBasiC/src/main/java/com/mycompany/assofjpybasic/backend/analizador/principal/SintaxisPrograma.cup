@@ -1,0 +1,268 @@
+package com.mycompany.assofjpybasic.backend.analizador.principal;
+
+import java_cup.runtime.*;
+
+class SintaxisPrograma;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol sym){
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
+        System.out.println("\n" + sym.value + sym.sym);
+        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+    }
+
+    public Symbol getS(){
+        System.out.println(this.s.value);
+        System.out.print(this.s.value);
+        return this.s;
+    }
+:};
+
+terminal String voidd, mainn, constt, intt, floatt, charr, intpor, floatpor, charpor, asig, andd, orr, nott;
+terminal String iff, elsee, forr, switchh, casee, whilee, defaultt, breakk, doo, includee;
+terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div, mod;
+terminal String para, parc, llavea, llavec, cora, corc, coma, puntocoma, dosp, punto;
+terminal String printf, scanf, clrs, getch, igual, masmas, menosmenos, java, py, vb;
+terminal String com, idlib, id, entero, decimal, character, txt, comilla;
+
+non terminal PROGRAMA, INCLUDE_LENG, IN_LENG, IN_CLASS, CONST, TYPE, VARGLOB, ASIG_VAR, CORCHETES;
+non terminal LIST_ASIG, ASIG, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, MAIN, STATEMENTS, STATEMENT;
+non terminal COMPOUND, STATEMENTLINE, DEF_VAR, PRINTF, STRING, STR, MASCARA, VARS, SCANF;
+non terminal VARSS, IF_ELSE, ELSE_IF, ELSE, SWITCH, CASES, CASE, DEFAULT, WHILE, DO_WHILE, FOR, INICIO;
+non terminal STEP, OP_VAR, CONDICION, AND, NOT, COMPARACION, LLAMADA_METODO, EXPR, CLASS;
+non terminal LIST_CLASS, PARAM, LIST_PARAM, LIST; 
+
+start with PROGRAMA;
+
+PROGRAMA ::= INCLUDE_LENG CONST VARGLOB MAIN
+;
+
+INCLUDE_LENG ::= INCLUDE_LENG IN_LENG
+        | 
+;
+
+IN_LENG ::= includee comilla py comilla puntocoma
+        | includee comilla vb comilla puntocoma
+        | includee comilla java IN_CLASS comilla puntocoma
+        | includee menor idlib mayor puntocoma
+;
+
+IN_CLASS ::= punto por
+        | punto id
+;
+
+CONST ::= CONST constt TYPE id igual EXPR puntocoma
+        |
+;
+
+TYPE ::= intt
+        | floatt
+        | charr
+;
+
+VARGLOB ::= VARGLOB ASIG_VAR
+        |
+;
+
+ASIG_VAR ::= TYPE LIST_ASIG puntocoma
+        | TYPE id cora EXPR corc CORCHETES puntocoma
+;
+
+CORCHETES ::= CORCHETES cora EXPR corc
+        |
+;
+
+LIST_ASIG ::= LIST_ASIG coma id ASIG
+            | id ASIG
+;
+
+ASIG ::= igual EXPR
+        |
+;
+
+OPERACION_A ::= OPERACION_A mas OPERACION_M
+        | OPERACION_M menos OPERACION_M
+        | OPERACION_M
+;
+
+OPERACION_M ::= OPERACION_M por OPERACION_U
+        | OPERACION_M div OPERACION_U
+        | OPERACION_M mod OPERACION_U
+        | OPERACION_U
+;
+
+OPERACION_U ::= menos OPERACION_U
+        | mas OPERACION_U
+        | ATOM
+;
+
+ATOM ::= id
+        | entero
+        | decimal
+        | character
+        | id cora OPERACION_A corc CORCHETES
+        | para OPERACION_A parc
+;
+
+MAIN ::= voidd mainn para parc llavea STATEMENTS llavec
+;
+
+STATEMENTS ::= STATEMENTS STATEMENT
+        |
+;
+
+STATEMENT ::= COMPOUND
+        | STATEMENTLINE
+;
+
+COMPOUND ::= WHILE
+        | DO_WHILE
+        | FOR
+        | IF_ELSE
+        | SWITCH
+;
+
+STATEMENTLINE ::= clrs puntocoma
+        | ASIG_VAR
+        | DEF_VAR
+        | PRINTF
+        | SCANF
+        | LLAMADA_METODO puntocoma
+        | getch
+        | CLASS
+;
+
+DEF_VAR ::= id igual EXPR puntocoma
+        | id cora EXPR corc CORCHETES igual EXPR puntocoma
+;
+
+PRINTF ::= printf para STRING VARS parc puntocoma
+;
+
+STRING ::= comilla STR comilla
+;
+
+STR ::= STR txt
+        | STR MASCARA
+        | txt
+        | MASCARA
+;
+
+MASCARA ::= intpor
+        | floatpor
+        | charpor
+;
+
+VARS ::= VARS coma OPERACION_A
+        |
+;
+
+SCANF ::= scanf para STRING VARSS parc puntocoma
+;
+
+VARSS ::= VARS coma asig id
+        |
+;
+
+IF_ELSE ::= iff para CONDICION parc llavea STATEMENTS llavec ELSE_IF ELSE
+;
+
+ELSE_IF ::= ELSE_IF elsee iff para CONDICION parc llavea STATEMENTS llavec
+        |
+;
+
+ELSE ::= elsee llavea STATEMENTS llavec
+        |
+;
+
+SWITCH ::= switchh para EXPR parc llavea CASES DEFAULT llavec
+;
+
+CASES ::= CASES CASE
+        | 
+;
+
+CASE ::= casee OPERACION_A dosp STATEMENTS
+;
+
+DEFAULT ::= defaultt dosp STATEMENTS
+        |
+;
+
+WHILE ::= whilee para CONDICION parc llavea STATEMENTS llavec
+;
+
+DO_WHILE ::= doo llavea STATEMENTS llavec whilee para CONDICION parc
+;
+
+FOR ::= forr para INICIO puntocoma CONDICION puntocoma STEP parc llavea STATEMENTS llavec
+;
+
+INICIO ::= id
+        | TYPE DEF_VAR
+;
+
+STEP ::= DEF_VAR
+        | OP_VAR
+;
+
+OP_VAR ::= id masmas
+        | id menosmenos
+;
+
+CONDICION ::= CONDICION orr AND
+        | AND
+;
+
+AND ::= AND andd NOT
+        | NOT
+;
+
+NOT ::= nott NOT
+    | COMPARACION
+;
+
+COMPARACION ::= OPERACION_A igig OPERACION_A
+    | OPERACION_A noigual OPERACION_A
+    | OPERACION_A menor OPERACION_A
+    | OPERACION_A menorig OPERACION_A
+    | OPERACION_A mayor OPERACION_A
+    | OPERACION_A mayorig OPERACION_A
+    | para CONDICION parc
+;
+
+LLAMADA_METODO ::= py punto id para LIST_PARAM parc
+                | vb punto id para LIST_PARAM parc
+                | java punto id punto id para LIST_PARAM parc
+;
+
+EXPR ::= LLAMADA_METODO
+        | OPERACION_A
+        | getch
+;
+
+CLASS ::= java punto id LIST_CLASS puntocoma        
+;
+
+LIST_CLASS ::= LIST_CLASS coma id PARAM
+            | id PARAM
+;
+
+PARAM ::= para LIST_PARAM parc
+        |
+;
+
+LIST_PARAM ::= LIST
+        |
+;
+
+LIST ::= LIST_PARAM coma OPERACION_A
+        | OPERACION_A
+;

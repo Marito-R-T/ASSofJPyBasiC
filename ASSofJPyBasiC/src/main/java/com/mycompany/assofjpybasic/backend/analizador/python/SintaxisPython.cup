@@ -25,15 +25,15 @@ parser code
     }
 :};
 
-terminal String deff, returnn, nott, andd, orr, iff, elseiff, elsee, forr, inn, range, whilee;
-terminal String breakk, continuee, noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div;
-terminal String mod, floor, pot, para, parc, coma, dosp, print, charinput, intinput, floatinput;
-terminal String igual, masig, menosig, porig, divig, floorig, potig, modig, puntocoma;
+terminal String deff, nott, andd, orr, iff, elseiff, elsee, forr, inn, range, whilee;
+terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div;
+terminal String mod, floor, para, parc, coma, dosp, print, charinput, intinput, floatinput;
+terminal String igual, puntocoma, returnn;
 terminal String com, id, entero, decimal, character, string, indent, dedent, newline;
 
 non terminal PYTHON, ESP, DEFS, SUITE, STMT_LIST, PC, STATEMENTLINE, AS_VAR, LISTVAR, LISTDEF;
-non terminal D, WRITE, INPUT, OP_VAR, STATEMENTS, IF, ELSEIF, ELSE, WHILE, COMA, FOR, RANGE;
-non terminal OPERACION_A, OPERACION_M, OPERACION_U, POWER, ATOM, CONDICION, AND, NOT, STATEMENT;
+non terminal D, WRITE, INPUT, STATEMENTS, IF, ELSEIF, ELSE, WHILE, COMA, FOR, RANGE;
+non terminal OPERACION_A, OPERACION_M, OPERACION_U, ATOM, CONDICION, AND, NOT, STATEMENT;
 non terminal COMPARACION, STRING, DEF, PAR_LIST, DEFPARAM;
 
 start with PYTHON;
@@ -52,6 +52,7 @@ DEFS ::= DEFS DEF
 
 DEF ::= deff id para PAR_LIST parc dosp SUITE
         | deff id para parc dosp SUITE
+        | AS_VAR newline
 ;
 
 PAR_LIST ::= PAR_LIST coma DEFPARAM
@@ -77,7 +78,7 @@ PC ::= puntocoma
 
 STATEMENTLINE ::= AS_VAR
         | WRITE
-        | OP_VAR
+        | INPUT
 ;
 
 AS_VAR ::= LISTVAR coma igual LISTDEF coma
@@ -100,18 +101,9 @@ D ::= character
 WRITE ::= print para STRING parc
 ;
 
-INPUT ::= intinput
-        | charinput
-        | floatinput
-;
-
-OP_VAR ::= id masig OPERACION_A
-        | id menosig OPERACION_A
-        | id porig OPERACION_A
-        | id divig OPERACION_A
-        | id floorig OPERACION_A
-        | id potig OPERACION_A
-        | id modig OPERACION_A
+INPUT ::= intinput para string parc
+        | charinput para string parc
+        | floatinput para string parc
 ;
 
 STATEMENTS ::= STATEMENTS STATEMENT
@@ -135,14 +127,14 @@ ELSE ::= elsee dosp SUITE
         |
 ;
 
-WHILE ::= whilee CONDICION dosp SUITE ELSE
+WHILE ::= whilee CONDICION dosp SUITE
 ;
 
 COMA ::= coma
         |
 ;
 
-FOR ::= forr LISTVAR COMA inn RANGE dosp SUITE ELSE
+FOR ::= forr LISTVAR COMA inn RANGE dosp SUITE
 ;
 
 RANGE ::= range para OPERACION_A parc
@@ -164,16 +156,13 @@ OPERACION_M ::= OPERACION_M por OPERACION_U
 
 OPERACION_U ::= menos OPERACION_U
         | mas OPERACION_U
-        | POWER
-;
-
-POWER ::= ATOM pot OPERACION_U
         | ATOM
 ;
 
 ATOM ::= id
         | entero
         | decimal
+        | para OPERACION_A parc
 ;
 
 CONDICION ::= CONDICION orr AND
@@ -188,13 +177,13 @@ NOT ::= nott NOT
     | COMPARACION
 ;
 
-COMPARACION ::= OPERACION_A igual OPERACION_A
+COMPARACION ::= OPERACION_A igig OPERACION_A
     | OPERACION_A noigual OPERACION_A
     | OPERACION_A menor OPERACION_A
     | OPERACION_A menorig OPERACION_A
     | OPERACION_A mayor OPERACION_A
     | OPERACION_A mayorig OPERACION_A
-    | OPERACION_A
+    | para COMPARACION parc
 ;
 
 STRING ::= STRING coma D

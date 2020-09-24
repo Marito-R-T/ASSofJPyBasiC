@@ -8,91 +8,75 @@ package com.mycompany.assofjpybasic.backend.analizador.visual;
 /** CUP generated class containing symbol constants. */
 public class SintaxisVisualSym {
   /* terminals */
-  public static final int xorr = 15;
-  public static final int doo = 30;
-  public static final int ass = 9;
-  public static final int floatinput = 60;
-  public static final int endd = 6;
-  public static final int mod = 44;
-  public static final int floor = 45;
-  public static final int write = 57;
-  public static final int com = 50;
-  public static final int dimm = 8;
-  public static final int menosig = 63;
-  public static final int coma = 49;
-  public static final int thenn = 22;
-  public static final int igual = 34;
-  public static final int nott = 10;
-  public static final int mayorig = 39;
-  public static final int string = 56;
-  public static final int menorig = 37;
-  public static final int masig = 62;
-  public static final int elsee = 21;
-  public static final int porig = 64;
-  public static final int casee = 24;
-  public static final int nextt = 28;
-  public static final int exitt = 32;
-  public static final int andd = 11;
-  public static final int intinput = 61;
+  public static final int doo = 26;
+  public static final int ass = 8;
+  public static final int floatinput = 53;
+  public static final int endd = 5;
+  public static final int mod = 38;
+  public static final int floor = 39;
+  public static final int write = 50;
+  public static final int com = 43;
+  public static final int dimm = 7;
+  public static final int coma = 42;
+  public static final int thenn = 18;
+  public static final int igual = 28;
+  public static final int nott = 9;
+  public static final int mayorig = 33;
+  public static final int string = 49;
+  public static final int menorig = 31;
+  public static final int elsee = 17;
+  public static final int casee = 20;
+  public static final int nextt = 24;
+  public static final int andd = 10;
+  public static final int intinput = 54;
   public static final int functionn = 4;
-  public static final int loopp = 31;
-  public static final int returnn = 67;
-  public static final int charinput = 59;
-  public static final int menos = 41;
-  public static final int menor = 36;
-  public static final int elseiff = 20;
-  public static final int orelsee = 14;
-  public static final int iff = 19;
+  public static final int loopp = 27;
+  public static final int returnn = 55;
+  public static final int charinput = 52;
+  public static final int menos = 35;
+  public static final int menor = 30;
+  public static final int elseiff = 16;
+  public static final int iff = 15;
   public static final int EOF = 0;
-  public static final int parc = 48;
-  public static final int mas = 40;
-  public static final int para = 47;
-  public static final int whilee = 29;
+  public static final int parc = 41;
+  public static final int mas = 34;
+  public static final int para = 40;
+  public static final int whilee = 25;
   public static final int error = 1;
-  public static final int mayor = 38;
-  public static final int andalsoo = 12;
-  public static final int entero = 53;
-  public static final int decimall = 17;
-  public static final int pot = 46;
-  public static final int por = 42;
-  public static final int forr = 25;
-  public static final int floorig = 66;
+  public static final int mayor = 32;
+  public static final int entero = 46;
+  public static final int decimall = 13;
+  public static final int por = 36;
+  public static final int forr = 21;
   public static final int subb = 3;
-  public static final int publicc = 7;
-  public static final int id = 51;
-  public static final int modulee = 5;
-  public static final int divig = 65;
-  public static final int y = 55;
-  public static final int stepp = 27;
-  public static final int orr = 13;
-  public static final int noigual = 35;
-  public static final int selectt = 23;
-  public static final int continuee = 33;
+  public static final int publicc = 6;
+  public static final int id = 44;
+  public static final int y = 48;
+  public static final int stepp = 23;
+  public static final int orr = 11;
+  public static final int noigual = 29;
+  public static final int selectt = 19;
   public static final int espacio = 2;
-  public static final int character = 54;
-  public static final int writeln = 58;
-  public static final int div = 43;
-  public static final int integerr = 16;
-  public static final int decimal = 52;
-  public static final int charr = 18;
-  public static final int to = 26;
+  public static final int character = 47;
+  public static final int writeln = 51;
+  public static final int div = 37;
+  public static final int integerr = 12;
+  public static final int decimal = 45;
+  public static final int charr = 14;
+  public static final int to = 22;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "espacio",
   "subb",
   "functionn",
-  "modulee",
   "endd",
   "publicc",
   "dimm",
   "ass",
   "nott",
   "andd",
-  "andalsoo",
   "orr",
-  "orelsee",
-  "xorr",
   "integerr",
   "decimall",
   "charr",
@@ -109,8 +93,6 @@ public class SintaxisVisualSym {
   "whilee",
   "doo",
   "loopp",
-  "exitt",
-  "continuee",
   "igual",
   "noigual",
   "menor",
@@ -123,7 +105,6 @@ public class SintaxisVisualSym {
   "div",
   "mod",
   "floor",
-  "pot",
   "para",
   "parc",
   "coma",
@@ -139,11 +120,6 @@ public class SintaxisVisualSym {
   "charinput",
   "floatinput",
   "intinput",
-  "masig",
-  "menosig",
-  "porig",
-  "divig",
-  "floorig",
   "returnn"
   };
 }

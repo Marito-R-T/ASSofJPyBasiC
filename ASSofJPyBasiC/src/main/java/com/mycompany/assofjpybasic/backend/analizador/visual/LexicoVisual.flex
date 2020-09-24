@@ -10,8 +10,8 @@ import java_cup.runtime.*;
 %line
 %column
 %ignorecase
+letras=[a-zA-Z]
 espacio=[\t|\r|\f|" "]+
-letras=[a-z]
 onenine=[1-9]
 cero= "0"
 
@@ -38,7 +38,6 @@ cero= "0"
     /*Palabras para procesos*/
 <YYINITIAL> ("sub") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.subb, yycolumn, yyline, yytext());}
 <YYINITIAL> ("function") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.functionn, yycolumn, yyline, yytext());}
-<YYINITIAL> ("module") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.modulee, yycolumn, yyline, yytext());}
 <YYINITIAL> ("end") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.endd, yycolumn, yyline, yytext());}
 <YYINITIAL> ("public") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.publicc, yycolumn, yyline, yytext());}
 <YYINITIAL> ("return") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.returnn, yycolumn, yyline, yytext());}
@@ -48,10 +47,7 @@ cero= "0"
     /*Palabras para Condicional*/
 <YYINITIAL> ("not") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.nott, yycolumn, yyline, yytext());}
 <YYINITIAL> ("and") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.andd, yycolumn, yyline, yytext());}
-<YYINITIAL> ("andalso") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.andalsoo, yycolumn, yyline, yytext());}
 <YYINITIAL> ("or") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.orr, yycolumn, yyline, yytext());}
-<YYINITIAL> ("orelse") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.orelsee, yycolumn, yyline, yytext());}
-<YYINITIAL> ("xor") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.xorr, yycolumn, yyline, yytext());}
     /*Palabras tipos*/
 <YYINITIAL> ("integer") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.integerr, yycolumn, yyline, yytext());}
 <YYINITIAL> ("decimal") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.decimall, yycolumn, yyline, yytext());}
@@ -70,8 +66,6 @@ cero= "0"
 <YYINITIAL> ("while") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.whilee, yycolumn, yyline, yytext());}
 <YYINITIAL> ("do") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.doo, yycolumn, yyline, yytext());}
 <YYINITIAL> ("loop") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.loopp, yycolumn, yyline, yytext());}
-<YYINITIAL> ("exit") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.exitt, yycolumn, yyline, yytext());}
-<YYINITIAL> ("continue") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.continuee, yycolumn, yyline, yytext());}
     /*Palabras de Comparacion*/
 <YYINITIAL> ("<>") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.noigual, yycolumn, yyline, yytext());}
 <YYINITIAL> ("<") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.menor, yycolumn, yyline, yytext());}
@@ -85,7 +79,6 @@ cero= "0"
 <YYINITIAL> ("/") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.div, yycolumn, yyline, yytext());}
 <YYINITIAL> ("mod") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.mod, yycolumn, yyline, yytext());}
 <YYINITIAL> ("\\") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.floor, yycolumn, yyline, yytext());}
-<YYINITIAL> ("^") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.pot, yycolumn, yyline, yytext());}
     /*Palabras de agrupacion*/
 <YYINITIAL> ("(") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.para, yycolumn, yyline, yytext());}
 <YYINITIAL> (")") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.parc, yycolumn, yyline, yytext());}
@@ -95,25 +88,20 @@ cero= "0"
     /*palabras para manejar consola*/
 <YYINITIAL> ("console.writeline") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.writeln, yycolumn, yyline, yytext());}
 <YYINITIAL> ("console.write") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.write, yycolumn, yyline, yytext());}
-<YYINITIAL> ("charinput()") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.charinput, yycolumn, yyline, yytext());}
-<YYINITIAL> ("intinput()") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.intinput, yycolumn, yyline, yytext());}
-<YYINITIAL> ("floatinput()") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.floatinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("charinput") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.charinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("intinput") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.intinput, yycolumn, yyline, yytext());}
+<YYINITIAL> ("floatinput") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.floatinput, yycolumn, yyline, yytext());}
     /*Operandos de asignacion*/
 <YYINITIAL> ("=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.igual, yycolumn, yyline, yytext());}
-<YYINITIAL> ("+=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.masig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("-=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.menosig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("*=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.porig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("/=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.divig, yycolumn, yyline, yytext());}
-<YYINITIAL> ("\\=") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.floorig, yycolumn, yyline, yytext());}
 
 /* Expresiones Regulares */
 <YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.com, yycolumn, yyline, yytext());}
 <YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.com, yycolumn, yyline, yytext());}
-<YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.id, yycolumn, yyline, yytext());}
+<YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()+SintaxisVisualSym.id); return new Symbol(SintaxisVisualSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.decimal, yycolumn, yyline, yytext());}
-<YYINITIAL> ("\"")(.)("\"")("c") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 2));} // "char"c
-<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 2));}
+<YYINITIAL> ("\"")(.)("\"")("c") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));} // "char"c
+<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
 
 /* Espacios en blanco */
 {espacio}+ {System.out.print(yytext()); /*IGNORAR*/}

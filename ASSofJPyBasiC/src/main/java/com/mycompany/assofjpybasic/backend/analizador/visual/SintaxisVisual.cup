@@ -25,34 +25,26 @@ parser code
     }
 :};
 
-terminal String espacio, subb, functionn, modulee, endd, publicc, dimm, ass, nott, andd, andalsoo;
-terminal String orr, orelsee, xorr, integerr, decimall, charr, iff, elseiff, elsee, thenn, selectt;
-terminal String casee, forr, to, stepp, nextt, whilee, doo, loopp, exitt, continuee, igual, noigual, menor;
-terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, floor, pot, para, parc, coma;
+terminal String espacio, subb, functionn, endd, publicc, dimm, ass, nott, andd;
+terminal String orr, integerr, decimall, charr, iff, elseiff, elsee, thenn, selectt;
+terminal String casee, forr, to, stepp, nextt, whilee, doo, loopp, igual, noigual, menor;
+terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, floor, para, parc, coma;
 terminal String com, id, decimal, entero, character, y, string;
 terminal String write, writeln, charinput, floatinput, intinput;
-terminal String masig, menosig, porig, divig, floorig, returnn;
+terminal String returnn;
 
-non terminal VISUAL, MODULOS, MOD, STATESM, STATEM, SUB, FUNCTION, DEFVAR, LISTPARAM, LISTPARAMM, LISTVAR, ASIGVAR, ID;
-non terminal TYPE, DEF, OPERACION_A, OPERACION_M, OPERACION_U, POWER, STATEMENTS, STATEMENT, CASEELSE, ESP;
+non terminal VISUAL, STATESM, STATEM, SUB, FUNCTION, DEFVAR, LISTPARAM, LISTPARAMM, LISTVAR, ASIGVAR, ID;
+non terminal TYPE, DEF, OPERACION_A, OPERACION_M, OPERACION_U, STATEMENTS, STATEMENT, CASEELSE, ESP, D;
 non terminal IF_ELSE, BLOQUEIF, ELSE_IF, THEN, STATEMENTLINE, SELECT, CASE, EXPR, CASES, ATOM, STEP, CA, PUBLIC;
-non terminal LIST_CASE, FOR, WHILE, DO_WHILE, CONSOLEWRITE, INPUT, CONDICION, AND, XOR, NOT, COMPARACION, STRING;
+non terminal LIST_CASE, FOR, WHILE, DO_WHILE, CONSOLEWRITE, INPUT, CONDICION, AND, NOT, COMPARACION, STRING;
 
 start with VISUAL;
 
-VISUAL ::= ESP MODULOS
-        | ESP
+VISUAL ::= ESP STATESM
 ;
 
 ESP ::= espacio
     |
-;
-
-MODULOS ::= MODULOS MOD
-        | MOD 
-;
-
-MOD ::= PUBLIC modulee id espacio STATESM endd modulee espacio
 ;
 
 PUBLIC ::= publicc
@@ -66,7 +58,6 @@ STATESM ::= STATEM STATESM
 STATEM ::= SUB
         | FUNCTION
         | DEFVAR
-        | ASIGVAR
 ;
 
 SUB ::= PUBLIC subb id para LISTPARAMM parc espacio STATEMENTS endd subb espacio
@@ -92,11 +83,6 @@ LISTVAR ::= LISTVAR coma id TYPE DEF
 
 ASIGVAR ::= id igual OPERACION_A espacio
         | id igual character espacio
-        | id masig OPERACION_A espacio
-        | id menosig OPERACION_A espacio
-        | id porig OPERACION_A espacio
-        | id divig OPERACION_A espacio
-        | id floorig OPERACION_A espacio
 ;
 
 TYPE ::= ass integerr
@@ -107,6 +93,7 @@ TYPE ::= ass integerr
 
 DEF ::= igual OPERACION_A
         | igual character
+        | igual D
         |
 ;
 
@@ -124,19 +111,16 @@ OPERACION_M ::= OPERACION_M por OPERACION_U
 
 OPERACION_U ::= menos OPERACION_U
         | mas OPERACION_U
-        | POWER
-;
-
-POWER ::= ATOM pot OPERACION_U
         | ATOM
 ;
 
 ATOM ::= id
         | entero
         | decimal
+        | para OPERACION_A parc
 ;
 
-STATEMENTS ::= STATEMENT STATEMENTS
+STATEMENTS ::= STATEMENTS STATEMENT
         |
 ;
 
@@ -183,6 +167,7 @@ CASEELSE ::= casee elsee espacio STATEMENTS
 
 EXPR ::= OPERACION_A
         | character
+        | D
 ;
 
 CASES ::= CASES CASE
@@ -193,9 +178,7 @@ CASE ::= casee LIST_CASE espacio STATEMENTS
 ;
 
 LIST_CASE ::= LIST_CASE coma OPERACION_A
-        | LIST_CASE coma OPERACION_A to OPERACION_A
         | OPERACION_A
-        | OPERACION_A to OPERACION_A
 ;
 
 FOR ::= forr id TYPE igual OPERACION_A to OPERACION_A STEP espacio STATEMENTS nextt ID espacio
@@ -212,30 +195,28 @@ STEP ::= stepp OPERACION_A
 WHILE ::= whilee CONDICION espacio STATEMENTS endd whilee espacio
 ;
 
-DO_WHILE ::= doo whilee espacio STATEMENTS loopp espacio
-        | doo espacio STATEMENTS loopp whilee espacio
+DO_WHILE ::= doo whilee CONDICION espacio STATEMENTS loopp espacio
+        | doo espacio STATEMENTS loopp whilee CONDICION espacio
 ;
 
 CONSOLEWRITE ::= write para STRING parc espacio
         | writeln para STRING parc espacio
 ;
 
-INPUT ::= id igual charinput espacio
-        | id igual floatinput espacio
-        | id igual intinput espacio
+INPUT ::= id igual D espacio
+        | D espacio
+;
+
+D ::= charinput para string parc
+        | floatinput para string parc
+        | intinput para string parc
 ;
 
 CONDICION ::= CONDICION orr AND
-        | CONDICION orelsee AND
         | AND
 ;
 
-AND ::= AND andd XOR
-        | AND andalsoo XOR
-        | XOR
-;
-
-XOR ::= XOR xorr NOT
+AND ::= AND andd NOT
         | NOT
 ;
 
@@ -249,7 +230,7 @@ COMPARACION ::= OPERACION_A igual OPERACION_A
     | OPERACION_A menorig OPERACION_A
     | OPERACION_A mayor OPERACION_A
     | OPERACION_A mayorig OPERACION_A
-    | OPERACION_A
+    | para CONDICION parc
 ;
 
 STRING ::= STRING y EXPR
