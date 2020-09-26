@@ -22,8 +22,6 @@ import java.io.StringReader;
  */
 public class prueba {
 
-    int a_$as = 1;
-
     /**
      * @param args the command line arguments
      * @throws java.lang.Exception
@@ -137,13 +135,8 @@ public class prueba {
         py.parse();
         SintaxisJava jv = new SintaxisJava(new LexicoJava(new StringReader(archivo.getJava())));
         jv.parse();
-        int i = 0;
-        char i2 = 2;
-        int v = i + i2;
-        switch (i){
-            case 1:
-                
-        }
+        char ii = 'c' + 65;
+        System.out.println(ii);
     }
 
 }

@@ -1,2 +1,28 @@
-/home/mari2bar/Documentos/Proyectos/Estructura de Datos/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/main.java
-/home/mari2bar/Documentos/Proyectos/Estructura de Datos/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/frontend/AssGUI.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/semantica/java/OperacionJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/java/LexicoJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/prueba.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/semantica/java/VariableJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/visual/SintaxisVisual.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/semantica/java/JavaSemantica.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/LexicoPrincipal.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/python/SintaxisPython.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/principal/SintaxisPrograma.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/python/SintaxisPythonSym.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/visual/SintaxisVisualSym.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/principal/SintaxisProgramaSym.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/java/SintaxisJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/python/LexicoPython.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/main.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/frontend/AssGUI.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/SintaxisPrincipal.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/frontend/NumeroLinea.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/semantica/java/MetodoJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/semantica/java/TablaJava.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/archivos/GuardarArchivo.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/visual/LexicoVisual.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/archivos/AperturaMLG.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/classes/ArchivoMLG.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/frontend/tabulador/TabbedPanel.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/principal/LexicoPrograma.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/SintaxisPrincipalSym.java
+/home/mari2bar/Documentos/Proyectos/Compiladores2/ASSofJPyBasiC/ASSofJPyBasiC/src/main/java/com/mycompany/assofjpybasic/backend/analizador/java/SintaxisJavaSym.java

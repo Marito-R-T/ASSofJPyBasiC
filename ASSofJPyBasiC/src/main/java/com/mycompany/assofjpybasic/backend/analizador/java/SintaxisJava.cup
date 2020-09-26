@@ -1,12 +1,19 @@
 package com.mycompany.assofjpybasic.backend.analizador.java;
 
 import java_cup.runtime.*;
+import com.mycompany.assofjpybasic.backend.semantica.java.*;
+import java.util.ArrayList;
+import java.util.List;
+import com.mycompany.assofjpybasic.backend.semantica.java.*;
 
 class SintaxisJava;
 
 parser code
 {:
     private Symbol s;
+    private JavaSemantica java = new JavaSemantica();
+    private TablaJava tabla;
+    private List<VariableJava> variables;
     
     public void syntax_error(Symbol sym){
         System.out.println("\n" + sym.value + sym.sym);
@@ -19,9 +26,7 @@ parser code
     }
 
     public Symbol getS(){
-        System.out.println(this.s.value);
-        System.out.print(this.s.value);
-        return this.s;
+        return this.cur_token;
     }
 :};
 
@@ -31,11 +36,14 @@ terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, 
 terminal String para, parc, llavea, llavec, coma, puntocoma, println, print, charinput, intinput, floatinput;
 terminal String igual, masmas, menosmenos, id, entero, decimal, character, string;
 
-non terminal JAVA, CLASSES, CLASS, STATEMENTS_CLASS, STATEMENT_CLASS, METODO, TYPE_V, TYPE;
-non terminal LIST_PAR, LIST_PARR, STATEMENTS_METODO, STATEMENT_METODO, DEF_VAR, LIST_VAR, AS_VAR, COMP_STATE;
+non terminal JAVA, CLASSES, CLASS, STATEMENTS_CLASS, STATEMENT_CLASS, METODO;
+non terminal Integer TYPE_V, TYPE;
+non terminal List<VariableJava> LIST_PAR;
+non terminal OperacionJava OPERACION_A, OPERACION_M, OPERACION_U, ATOM;
+non terminal LIST_PARR, STATEMENTS_METODO, STATEMENT_METODO, DEF_VAR, LIST_VAR, AS_VAR, COMP_STATE;
 non terminal WHILE, BLOQUE, FOR, INICIO, STEP, DO_WHILE, IF_ELSE, ELSEIF, ELSE, SWITCH, CASES;
-non terminal CASE, DEFAULT, STATEMENT_LINE, WRITE, OP_VAR, OPERACION_A, OPERACION_M, EXPR_STRING;
-non terminal OPERACION_U, ATOM, CONDICION, AND, NOT, COMPARACION, STRING, EXPR, INPUT;
+non terminal CASE, DEFAULT, STATEMENT_LINE, WRITE, OP_VAR, EXPR_STRING;
+non terminal CONDICION, AND, NOT, COMPARACION, STRING, EXPR, INPUT, AS_VAR_LINE;
 
 start with JAVA;
 
@@ -46,28 +54,32 @@ CLASSES ::= CLASSES CLASS
         | 
 ;
 
-CLASS ::= publicc classs id llavea STATEMENTS_CLASS llavec
+CLASS ::= publicc classs id llavea {:TablaJava sem = new TablaJava(); java.getTabla().add(sem); tabla = sem; TablaJava.AMBITO += 1;:} 
+        STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1; tabla = null;:}
 ;
 
 STATEMENTS_CLASS ::= STATEMENTS_CLASS STATEMENT_CLASS
-        | STATEMENT_CLASS
+        | {::}
 ;
 
 STATEMENT_CLASS ::= METODO
-        | DEF_VAR
+        | DEF_VAR puntocoma
 ;
 
-METODO ::= publicc TYPE_V id para LIST_PAR parc llavea STATEMENTS_METODO llavec
-        | publicc id para LIST_PAR parc llavea STATEMENTS_METODO llavec
+METODO ::= publicc TYPE_V:e1 id:e2 para LIST_PAR:e3 parc llavea {:if(tabla.addMetodo(new MetodoJava(e2, e1, e3))){
+                        syntax_error(getS());
+                } 
+                        TablaJava.AMBITO += 1;:} 
+                STATEMENTS_METODO llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
 ;
 
-TYPE_V ::= voidd
-        | TYPE
+TYPE_V ::= voidd {:RESULT = TablaJava.VOID;:}
+        | TYPE:e1 {:RESULT = e1;:}
 ;
 
-TYPE ::= intt
-        | floatt
-        | charr
+TYPE ::= intt {:RESULT = TablaJava.INT;:}
+        | floatt {:RESULT = TablaJava.FLOAT;:}
+        | charr {:RESULT = TablaJava.CHAR;:}
 ;
 
 LIST_PAR ::= TYPE id LIST_PARR
@@ -82,20 +94,20 @@ STATEMENTS_METODO ::= STATEMENTS_METODO STATEMENT_METODO
         |
 ;
 
-STATEMENT_METODO ::= DEF_VAR
-        | COMP_STATE
+STATEMENT_METODO ::= COMP_STATE
         | STATEMENT_LINE
 ;
 
-DEF_VAR ::= TYPE LIST_VAR
+DEF_VAR ::= TYPE:e1 {:variables = new ArrayList<>();:} LIST_VAR {:VariableJava.agregarTipo(variables, e1);
+                                        if(!tabla.addListVar(variables)){syntax_error(getS());} variables = new ArrayList<>();:}
 ;
 
-LIST_VAR ::= LIST_VAR coma AS_VAR
-        | AS_VAR
+LIST_VAR ::= LIST_VAR coma AS_VAR {::}
+        | AS_VAR {::}
 ;
 
-AS_VAR ::= id igual EXPR
-        | id
+AS_VAR ::= id:e1 igual EXPR {:variables.add(new VariableJava(e1, TablaJava.AMBITO));:}
+        | id:e1 {:variables.add(new VariableJava(e1, TablaJava.AMBITO));:}
 ;
 
 COMP_STATE ::= WHILE
@@ -108,7 +120,7 @@ COMP_STATE ::= WHILE
 WHILE ::= whilee para CONDICION parc BLOQUE
 ;
 
-BLOQUE ::= llavea STATEMENTS_METODO llavec
+BLOQUE ::= llavea {:TablaJava.AMBITO += 1;:}  STATEMENTS_METODO llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
         | STATEMENT_LINE
 ;
 
@@ -119,7 +131,7 @@ INICIO ::= id
         | TYPE AS_VAR
 ;
 
-STEP ::= AS_VAR
+STEP ::= AS_VAR_LINE
         | OP_VAR
 ;
 
@@ -151,9 +163,13 @@ DEFAULT ::= defaultt dosp STATEMENT_METODO
         |
 ;
 
-STATEMENT_LINE ::= AS_VAR puntocoma
+STATEMENT_LINE ::= AS_VAR_LINE puntocoma
         | DEF_VAR puntocoma
         | WRITE puntocoma
+        | INPUT puntocoma
+;
+
+AS_VAR_LINE ::= id:e1 igual EXPR {:if(!tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO))){syntax_error(getS());}:}
 ;
 
 WRITE ::= println para STRING parc
@@ -164,26 +180,27 @@ OP_VAR ::= id masmas
         | id menosmenos
 ;
 
-OPERACION_A ::= OPERACION_A mas OPERACION_M
-        | OPERACION_M menos OPERACION_M
-        | OPERACION_M
+OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:RESULT = new OperacionJava(TablaJava.regresarTipo(e1.getTipo(), e2.getTipo()));:}
+        | OPERACION_M:e1 menos OPERACION_M:e2 {:RESULT = new OperacionJava(TablaJava.regresarTipo(e1.getTipo(), e2.getTipo()));:}
+        | OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_M ::= OPERACION_M por OPERACION_U
-        | OPERACION_M div OPERACION_U
-        | OPERACION_M mod OPERACION_U
-        | OPERACION_U
+OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:RESULT = new OperacionJava(TablaJava.regresarTipo(e1.getTipo(), e2.getTipo()));:}
+        | OPERACION_M:e1 div OPERACION_U:e2 {:RESULT = new OperacionJava(TablaJava.regresarTipo(e1.getTipo(), e2.getTipo()));:}
+        | OPERACION_M:e1 mod OPERACION_U:e2 {:RESULT = new OperacionJava(TablaJava.regresarTipo(e1.getTipo(), e2.getTipo()));:}
+        | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U
-        | mas OPERACION_U
-        | ATOM
+OPERACION_U ::= menos OPERACION_U:e1 {:if(e1.getTipo()==1){e1.setTipo(TablaJava.INT); RESULT = e1;} RESULT = e1;:}
+        | mas OPERACION_U:e1 {:RESULT = e1;:}
+        | ATOM:e1 {:RESULT = e1;:}
 ;
 
-ATOM ::= id
-        | entero
-        | decimal
-        | para OPERACION_A parc
+ATOM ::= id {:RESULT = new OperacionJava(0);:}
+        | entero {:RESULT = new OperacionJava(TablaJava.INT);:}
+        | decimal {:RESULT = new OperacionJava(TablaJava.FLOAT);:}
+        | character {:RESULT = new OperacionJava(TablaJava.CHAR);:}
+        | para OPERACION_A:e1 parc {:RESULT = e1;:}
 ;
 
 CONDICION ::= CONDICION orr AND
@@ -219,7 +236,6 @@ EXPR_STRING ::= string
 ;
 
 EXPR ::= OPERACION_A
-        | character
         | INPUT
 ;
 
