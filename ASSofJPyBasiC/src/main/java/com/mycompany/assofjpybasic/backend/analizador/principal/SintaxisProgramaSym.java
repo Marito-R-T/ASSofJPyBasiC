@@ -8,69 +8,69 @@ package com.mycompany.assofjpybasic.backend.analizador.principal;
 /** CUP generated class containing symbol constants. */
 public class SintaxisProgramaSym {
   /* terminals */
-  public static final int doo = 23;
-  public static final int comilla = 63;
-  public static final int printf = 46;
-  public static final int mod = 35;
-  public static final int switchh = 18;
-  public static final int asig = 11;
-  public static final int com = 56;
-  public static final int py = 54;
-  public static final int txt = 62;
-  public static final int coma = 42;
-  public static final int igual = 50;
-  public static final int floatpor = 9;
-  public static final int nott = 14;
-  public static final int mayorig = 29;
+  public static final int doo = 20;
+  public static final int comilla = 59;
+  public static final int printf = 43;
+  public static final int mod = 32;
+  public static final int switchh = 15;
+  public static final int asig = 8;
+  public static final int com = 53;
+  public static final int py = 51;
+  public static final int coma = 39;
+  public static final int igual = 47;
+  public static final int nott = 11;
+  public static final int mayorig = 26;
+  public static final int string = 60;
+  public static final int pyy = 61;
   public static final int intt = 5;
-  public static final int menorig = 27;
-  public static final int intpor = 8;
-  public static final int llavec = 39;
+  public static final int menorig = 24;
+  public static final int vbb = 62;
+  public static final int llavec = 36;
   public static final int floatt = 6;
-  public static final int menosmenos = 52;
-  public static final int llavea = 38;
-  public static final int elsee = 16;
-  public static final int casee = 19;
-  public static final int andd = 12;
-  public static final int masmas = 51;
+  public static final int menosmenos = 49;
+  public static final int llavea = 35;
+  public static final int elsee = 13;
+  public static final int casee = 16;
+  public static final int andd = 9;
+  public static final int masmas = 48;
   public static final int voidd = 2;
-  public static final int getch = 49;
-  public static final int vb = 55;
-  public static final int menos = 32;
-  public static final int menor = 26;
-  public static final int includee = 24;
-  public static final int iff = 15;
+  public static final int getch = 46;
+  public static final int vb = 52;
+  public static final int menos = 29;
+  public static final int javaa = 63;
+  public static final int menor = 23;
+  public static final int includee = 21;
+  public static final int iff = 12;
   public static final int constt = 4;
-  public static final int dosp = 44;
+  public static final int dosp = 41;
   public static final int EOF = 0;
-  public static final int parc = 37;
-  public static final int idlib = 57;
-  public static final int mas = 31;
-  public static final int para = 36;
-  public static final int whilee = 20;
+  public static final int parc = 34;
+  public static final int idlib = 54;
+  public static final int mas = 28;
+  public static final int whilee = 17;
+  public static final int para = 33;
   public static final int error = 1;
-  public static final int corc = 41;
-  public static final int mayor = 28;
-  public static final int cora = 40;
-  public static final int breakk = 22;
-  public static final int entero = 59;
-  public static final int por = 33;
-  public static final int punto = 45;
-  public static final int forr = 17;
-  public static final int defaultt = 21;
-  public static final int id = 58;
-  public static final int clrs = 48;
-  public static final int orr = 13;
-  public static final int java = 53;
-  public static final int noigual = 25;
+  public static final int corc = 38;
+  public static final int mayor = 25;
+  public static final int cora = 37;
+  public static final int breakk = 19;
+  public static final int entero = 56;
+  public static final int por = 30;
+  public static final int punto = 42;
+  public static final int forr = 14;
+  public static final int defaultt = 18;
+  public static final int id = 55;
+  public static final int clrs = 45;
+  public static final int orr = 10;
+  public static final int java = 50;
+  public static final int noigual = 22;
   public static final int mainn = 3;
-  public static final int charpor = 10;
-  public static final int puntocoma = 43;
-  public static final int igig = 30;
-  public static final int character = 61;
-  public static final int div = 34;
-  public static final int decimal = 60;
-  public static final int scanf = 47;
+  public static final int puntocoma = 40;
+  public static final int igig = 27;
+  public static final int character = 58;
+  public static final int div = 31;
+  public static final int decimal = 57;
+  public static final int scanf = 44;
   public static final int charr = 7;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -81,9 +81,6 @@ public class SintaxisProgramaSym {
   "intt",
   "floatt",
   "charr",
-  "intpor",
-  "floatpor",
-  "charpor",
   "asig",
   "andd",
   "orr",
@@ -135,8 +132,11 @@ public class SintaxisProgramaSym {
   "entero",
   "decimal",
   "character",
-  "txt",
-  "comilla"
+  "comilla",
+  "string",
+  "pyy",
+  "vbb",
+  "javaa"
   };
 }
 

@@ -37,11 +37,9 @@ public class TablaJava {
         for (VariableJava variable : variables) {
             if(variable.getId().equals(var.getId())) {
                 return false;
-            } else {
-                variables.add(var);
-                return true;
             }
         }
+        variables.add(0, var);
         return true;
     }
 
@@ -92,23 +90,30 @@ public class TablaJava {
     /**
      * Metodo para verificar existencia de una variable
      * @param var   Variable a verificar su existencia
-     * @return      retorna true si existe la variable, false si no existe
+     * @return      retorna el tipo de variable que es, si no lo encuentra regresa -1
      */
-    public boolean existeVar(VariableJava var){
+    public int existeVar(VariableJava var){
         for (VariableJava variable : variables) {
-            if(variable.equals(var)) {
-                return false;
-            } else {
-                variables.add(var);
-                return true;
+            if(variable.getId().equals(var.getId())) {
+                return variable.getTipo();
             }
         }
-        return true;
+        return -1;
     }
-    
-    public void exi(int a, String b){}
-    
-    public void exi(String b, int a){}
+
+    /**
+     * Metodo para verificar existencia de una variable global
+     * @param var Variable a verificar su existencia en la clase
+     * @return Retorna el tipo de variable que es la variable
+     */
+    public int existeVarGlobal(VariableJava var) {
+        for (VariableJava variable : variables) {
+            if(variable.getId().equals(var.getId()) && variable.getAmbito()==1) {
+                return variable.getTipo();
+            }
+        }
+        return -1;
+    }
     
     /**
      * Metodo para verificar los metodos de llava al momento de ingresarlo
@@ -117,14 +122,16 @@ public class TablaJava {
      */
     public boolean addMetodo(MetodoJava metodo) {
         for (MetodoJava met : metodos) {
-            if(met.equals(metodo)) {
+            if(!met.isnotEquals(metodo)) {
                 return false;
-            } else {
-                metodos.add(metodo);
-                return true;
             }
         }
+        metodos.add(metodo);
         return true;
+    }
+
+    public List<VariableJava> getVariables() {
+        return variables;
     }
     
 }

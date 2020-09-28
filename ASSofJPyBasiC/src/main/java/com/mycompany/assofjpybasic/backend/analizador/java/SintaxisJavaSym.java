@@ -9,56 +9,59 @@ package com.mycompany.assofjpybasic.backend.analizador.java;
 public class SintaxisJavaSym {
   /* terminals */
   public static final int doo = 16;
-  public static final int floatinput = 43;
-  public static final int mod = 32;
+  public static final int floatinput = 46;
+  public static final int thiss = 22;
+  public static final int mod = 35;
   public static final int switchh = 17;
   public static final int com = 13;
-  public static final int coma = 37;
-  public static final int igual = 44;
+  public static final int coma = 40;
+  public static final int igual = 47;
   public static final int nott = 10;
-  public static final int mayorig = 26;
-  public static final int string = 51;
+  public static final int mayorig = 29;
+  public static final int string = 54;
   public static final int intt = 5;
   public static final int classs = 3;
-  public static final int menorig = 24;
-  public static final int llavec = 36;
+  public static final int menorig = 27;
+  public static final int llavec = 39;
   public static final int floatt = 6;
-  public static final int menosmenos = 46;
-  public static final int llavea = 35;
+  public static final int menosmenos = 49;
+  public static final int llavea = 38;
   public static final int elsee = 12;
   public static final int casee = 18;
   public static final int andd = 8;
-  public static final int intinput = 42;
-  public static final int masmas = 45;
+  public static final int intinput = 45;
+  public static final int masmas = 48;
   public static final int voidd = 4;
-  public static final int charinput = 41;
+  public static final int charinput = 44;
   public static final int returnn = 21;
-  public static final int menos = 29;
-  public static final int menor = 23;
+  public static final int menos = 32;
+  public static final int menor = 26;
   public static final int iff = 11;
   public static final int EOF = 0;
   public static final int dosp = 19;
-  public static final int parc = 34;
-  public static final int mas = 28;
+  public static final int parc = 37;
+  public static final int mas = 31;
+  public static final int para = 36;
   public static final int whilee = 15;
-  public static final int para = 33;
   public static final int error = 1;
-  public static final int mayor = 25;
-  public static final int entero = 48;
-  public static final int por = 30;
+  public static final int mayor = 28;
+  public static final int breakk = 24;
+  public static final int entero = 51;
+  public static final int por = 33;
   public static final int forr = 14;
+  public static final int punto = 23;
   public static final int defaultt = 20;
   public static final int publicc = 2;
-  public static final int id = 47;
-  public static final int println = 39;
+  public static final int id = 50;
+  public static final int println = 42;
   public static final int orr = 9;
-  public static final int noigual = 22;
-  public static final int puntocoma = 38;
-  public static final int igig = 27;
-  public static final int print = 40;
-  public static final int character = 50;
-  public static final int div = 31;
-  public static final int decimal = 49;
+  public static final int noigual = 25;
+  public static final int puntocoma = 41;
+  public static final int igig = 30;
+  public static final int print = 43;
+  public static final int character = 53;
+  public static final int div = 34;
+  public static final int decimal = 52;
   public static final int charr = 7;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -83,6 +86,9 @@ public class SintaxisJavaSym {
   "dosp",
   "defaultt",
   "returnn",
+  "thiss",
+  "punto",
+  "breakk",
   "noigual",
   "menor",
   "menorig",

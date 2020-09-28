@@ -35,24 +35,27 @@ cero= "0"
 %state STRING
 
 %%
-
+    /*Palabras para referenciar otros lenguajes*/
+<YYINITIAL> ("#include \"JAVA.") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.java, yycolumn, yyline, yytext());}
+<YYINITIAL> ("#include \"PY\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.py, yycolumn, yyline, yytext());}
+<YYINITIAL> ("#include \"VB\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.vb, yycolumn, yyline, yytext());}
+<YYINITIAL> ("JAVA") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.javaa, yycolumn, yyline, yytext());}
+<YYINITIAL> ("PY") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.pyy, yycolumn, yyline, yytext());}
+<YYINITIAL> ("VB") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.vbb, yycolumn, yyline, yytext());}
     /*Palabras para procesos*/
 <YYINITIAL> ("void") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.voidd, yycolumn, yyline, yytext());}
 <YYINITIAL> ("main") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.mainn, yycolumn, yyline, yytext());}
 <YYINITIAL> ("#include") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.includee, yycolumn, yyline, yytext());}
+    /*Palabras para Condicional*/
+<YYINITIAL> ("&&") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.andd, yycolumn, yyline, yytext());}
+<YYINITIAL> ("||") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.orr, yycolumn, yyline, yytext());}
+<YYINITIAL> ("!") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.nott, yycolumn, yyline, yytext());}
     /*Palabras para Tipos*/
 <YYINITIAL> ("const") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.constt, yycolumn, yyline, yytext());}
 <YYINITIAL> ("int") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.intt, yycolumn, yyline, yytext());}
 <YYINITIAL> ("float") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.floatt, yycolumn, yyline, yytext());}
 <YYINITIAL> ("char") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.charr, yycolumn, yyline, yytext());}
-<YYINITIAL> ("%d") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.intpor, yycolumn, yyline, yytext());}
-<YYINITIAL> ("%c") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.floatpor, yycolumn, yyline, yytext());}
-<YYINITIAL> ("%f") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.charpor, yycolumn, yyline, yytext());}
 <YYINITIAL> ("&") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.asig, yycolumn, yyline, yytext());}
-    /*Palabras para Condicional*/
-<YYINITIAL> ("&&") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.andd, yycolumn, yyline, yytext());}
-<YYINITIAL> ("||") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.orr, yycolumn, yyline, yytext());}
-<YYINITIAL> ("!") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.nott, yycolumn, yyline, yytext());}
     /*Palabras de Funciones*/
 <YYINITIAL> ("if") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.iff, yycolumn, yyline, yytext());}
 <YYINITIAL> ("else") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.elsee, yycolumn, yyline, yytext());}
@@ -97,21 +100,18 @@ cero= "0"
 <YYINITIAL> ("=") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.igual, yycolumn, yyline, yytext());}
 <YYINITIAL> ("++") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.masmas, yycolumn, yyline, yytext());}
 <YYINITIAL> ("--") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.menosmenos, yycolumn, yyline, yytext());}
-    /*Palabras para referenciar otros lenguajes*/
-<YYINITIAL> ("JAVA") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.java, yycolumn, yyline, yytext());}
-<YYINITIAL> ("PY") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.py, yycolumn, yyline, yytext());}
-<YYINITIAL> ("VB") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.vb, yycolumn, yyline, yytext());}
 
 /* Expresiones Regulares */
-<YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());}
-<YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());}
+<YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
+<YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")*(".h") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.idlib, yycolumn, yyline, yytext());}
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.decimal, yycolumn, yyline, yytext());}
 <YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));} // "char"c
+<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
 
 /* Espacios en blanco */
 {espacio}+ {System.out.print(yytext()); /*IGNORAR*/}
 
-<YYINITIAL> (.)+ {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.txt, yycolumn, yyline, yytext());/*error*/}
+<YYINITIAL> . {System.out.print(yytext());/*error*/}

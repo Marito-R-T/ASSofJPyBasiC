@@ -9,6 +9,8 @@ import com.mycompany.assofjpybasic.backend.analizador.LexicoPrincipal;
 import com.mycompany.assofjpybasic.backend.analizador.SintaxisPrincipal;
 import com.mycompany.assofjpybasic.backend.analizador.java.LexicoJava;
 import com.mycompany.assofjpybasic.backend.analizador.java.SintaxisJava;
+import com.mycompany.assofjpybasic.backend.analizador.principal.LexicoPrograma;
+import com.mycompany.assofjpybasic.backend.analizador.principal.SintaxisPrograma;
 import com.mycompany.assofjpybasic.backend.analizador.python.LexicoPython;
 import com.mycompany.assofjpybasic.backend.analizador.python.SintaxisPython;
 import com.mycompany.assofjpybasic.backend.analizador.visual.LexicoVisual;
@@ -55,9 +57,31 @@ public class prueba {
                 + "%%JAVA\n"
                 + "public class algo {\n"
                 + "\n"
-                + "	public int holaMundo() {\n"
-                + "		System.out.println(\"asasasd\");\n"
+                + "     int s2 = 25;\n"
+                + "	    public int holaMundo() {\n"
+                + "         int i2 = 12*3-2/8;\n"
+                + "         System.out.println(\"la suma es:\"+i2);\n"
+                + "         while(1<i2){\n"
+                + "             int i3;\n"
+                + "             System.out.print(\"i2 es: \" + i2);\n"
+                + "         }\n"
+                + "         if(12>1){\n"
+                + "                if(65/2 == 15) {\n"
+                + "                        return 14;\n"
+                + "                } else {\n"
+                + "                    return 15%8;\n"
+                + "                }\n"
+                + "            } else if(15<2) {\n"
+                + "                 return 45;\n"
+                + "            } else{\n"
+                + "            }\n"
+                + "             return 45;\n"
                 + "	}\n"
+                + "     \n"
+                + "     public void holaMundo(int s) {\n"
+                + "             int i2 = 12;\n"
+                + "             int i3 = s*s2;\n"
+                + "     }\n"
                 + "}\n"
                 + "\n"
                 + "%%PY\n"
@@ -101,7 +125,7 @@ public class prueba {
                 + "  // Factorial\n"
                 + "  resultado = VB.Factorial(i);\n"
                 + " \n"
-                + "  printf(\"El factorial de %d es %d\",&a,&resultado);\n"
+                + "  printf(\"El factorial de %d es %d\",a,resultado);\n"
                 + "    \n"
                 + "  printf(\"Conversion de años a meses\");\n"
                 + "\n"
@@ -135,8 +159,8 @@ public class prueba {
         py.parse();
         SintaxisJava jv = new SintaxisJava(new LexicoJava(new StringReader(archivo.getJava())));
         jv.parse();
-        char ii = 'c' + 65;
-        System.out.println(ii);
+        SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
+        pro.parse();
     }
 
 }

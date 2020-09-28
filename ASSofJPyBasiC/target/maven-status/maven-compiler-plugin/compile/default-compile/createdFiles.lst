@@ -1,4 +1,5 @@
 com/mycompany/assofjpybasic/backend/prueba.class
+com/mycompany/assofjpybasic/backend/semantica/java/StatementJava.class
 com/mycompany/assofjpybasic/backend/analizador/python/LexicoPython.class
 com/mycompany/assofjpybasic/frontend/AssGUI.class
 com/mycompany/assofjpybasic/backend/analizador/SintaxisPrincipalSym.class
@@ -12,10 +13,12 @@ com/mycompany/assofjpybasic/backend/classes/ArchivoMLG.class
 com/mycompany/assofjpybasic/backend/analizador/java/LexicoJava.class
 com/mycompany/assofjpybasic/frontend/NumeroLinea.class
 com/mycompany/assofjpybasic/backend/semantica/java/VariableJava.class
+com/mycompany/assofjpybasic/backend/semantica/java/ReturnJava.class
 com/mycompany/assofjpybasic/backend/analizador/python/SintaxisPythonSym.class
 com/mycompany/assofjpybasic/frontend/tabulador/TabbedPanel.class
 com/mycompany/assofjpybasic/frontend/NumeroLinea$1.class
 com/mycompany/assofjpybasic/frontend/AssGUI$2.class
+com/mycompany/assofjpybasic/backend/semantica/java/ListaIf.class
 com/mycompany/assofjpybasic/backend/analizador/visual/LexicoVisual.class
 com/mycompany/assofjpybasic/frontend/AssGUI$5.class
 com/mycompany/assofjpybasic/backend/analizador/SintaxisPrincipal$CUP$SintaxisPrincipal$actions.class
@@ -24,6 +27,7 @@ com/mycompany/assofjpybasic/frontend/AssGUI$4.class
 com/mycompany/assofjpybasic/backend/semantica/java/TablaJava.class
 com/mycompany/assofjpybasic/backend/analizador/visual/SintaxisVisualSym.class
 com/mycompany/assofjpybasic/backend/archivos/AperturaMLG.class
+com/mycompany/assofjpybasic/backend/semantica/java/StatementsJava.class
 com/mycompany/assofjpybasic/backend/analizador/principal/SintaxisProgramaSym.class
 com/mycompany/assofjpybasic/backend/analizador/java/SintaxisJava.class
 com/mycompany/assofjpybasic/backend/analizador/java/SintaxisJava$CUP$SintaxisJava$actions.class
@@ -36,5 +40,6 @@ com/mycompany/assofjpybasic/backend/main.class
 com/mycompany/assofjpybasic/frontend/AssGUI$6.class
 com/mycompany/assofjpybasic/backend/analizador/principal/SintaxisPrograma$CUP$SintaxisPrograma$actions.class
 com/mycompany/assofjpybasic/frontend/AssGUI$1.class
+com/mycompany/assofjpybasic/backend/semantica/java/IfOperacion.class
 com/mycompany/assofjpybasic/backend/analizador/java/SintaxisJavaSym.class
 com/mycompany/assofjpybasic/backend/analizador/principal/LexicoPrograma.class

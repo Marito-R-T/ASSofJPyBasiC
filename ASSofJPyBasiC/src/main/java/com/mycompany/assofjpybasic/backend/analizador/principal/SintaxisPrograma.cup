@@ -25,16 +25,17 @@ parser code
     }
 :};
 
-terminal String voidd, mainn, constt, intt, floatt, charr, intpor, floatpor, charpor, asig, andd, orr, nott;
+terminal String voidd, mainn, constt, intt, floatt, charr, asig, andd, orr, nott;
 terminal String iff, elsee, forr, switchh, casee, whilee, defaultt, breakk, doo, includee;
 terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div, mod;
 terminal String para, parc, llavea, llavec, cora, corc, coma, puntocoma, dosp, punto;
 terminal String printf, scanf, clrs, getch, igual, masmas, menosmenos, java, py, vb;
-terminal String com, idlib, id, entero, decimal, character, txt, comilla;
+terminal String com, idlib, id, entero, decimal, character, comilla, string;
+terminal String pyy, vbb, javaa;
 
 non terminal PROGRAMA, INCLUDE_LENG, IN_LENG, IN_CLASS, CONST, TYPE, VARGLOB, ASIG_VAR, CORCHETES;
 non terminal LIST_ASIG, ASIG, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, MAIN, STATEMENTS, STATEMENT;
-non terminal COMPOUND, STATEMENTLINE, DEF_VAR, PRINTF, STRING, STR, MASCARA, VARS, SCANF;
+non terminal COMPOUND, STATEMENTLINE, DEF_VAR, PRINTF, VARS, SCANF;
 non terminal VARSS, IF_ELSE, ELSE_IF, ELSE, SWITCH, CASES, CASE, DEFAULT, WHILE, DO_WHILE, FOR, INICIO;
 non terminal STEP, OP_VAR, CONDICION, AND, NOT, COMPARACION, LLAMADA_METODO, EXPR, CLASS;
 non terminal LIST_CLASS, PARAM, LIST_PARAM, LIST; 
@@ -48,14 +49,14 @@ INCLUDE_LENG ::= INCLUDE_LENG IN_LENG
         | 
 ;
 
-IN_LENG ::= includee comilla py comilla puntocoma
-        | includee comilla vb comilla puntocoma
-        | includee comilla java IN_CLASS comilla puntocoma
-        | includee menor idlib mayor puntocoma
+IN_LENG ::= py
+        | vb
+        | java IN_CLASS comilla
+        | includee menor idlib mayor
 ;
 
-IN_CLASS ::= punto por
-        | punto id
+IN_CLASS ::= por
+        | id
 ;
 
 CONST ::= CONST constt TYPE id igual EXPR puntocoma
@@ -131,22 +132,22 @@ COMPOUND ::= WHILE
 
 STATEMENTLINE ::= clrs puntocoma
         | ASIG_VAR
-        | DEF_VAR
+        | DEF_VAR puntocoma
         | PRINTF
         | SCANF
         | LLAMADA_METODO puntocoma
-        | getch
+        | getch puntocoma
         | CLASS
 ;
 
-DEF_VAR ::= id igual EXPR puntocoma
-        | id cora EXPR corc CORCHETES igual EXPR puntocoma
+DEF_VAR ::= id igual EXPR
+        | id cora EXPR corc CORCHETES igual EXPR
 ;
 
-PRINTF ::= printf para STRING VARS parc puntocoma
+PRINTF ::= printf para string VARS parc puntocoma
 ;
 
-STRING ::= comilla STR comilla
+/*STRING ::= comilla STR comilla
 ;
 
 STR ::= STR txt
@@ -158,16 +159,16 @@ STR ::= STR txt
 MASCARA ::= intpor
         | floatpor
         | charpor
-;
+;*/
 
 VARS ::= VARS coma OPERACION_A
         |
 ;
 
-SCANF ::= scanf para STRING VARSS parc puntocoma
+SCANF ::= scanf para string VARSS parc puntocoma
 ;
 
-VARSS ::= VARS coma asig id
+VARSS ::= VARSS coma asig id
         |
 ;
 
@@ -205,7 +206,8 @@ DO_WHILE ::= doo llavea STATEMENTS llavec whilee para CONDICION parc
 FOR ::= forr para INICIO puntocoma CONDICION puntocoma STEP parc llavea STATEMENTS llavec
 ;
 
-INICIO ::= id
+INICIO ::= DEF_VAR
+        | id
         | TYPE DEF_VAR
 ;
 
@@ -238,9 +240,9 @@ COMPARACION ::= OPERACION_A igig OPERACION_A
     | para CONDICION parc
 ;
 
-LLAMADA_METODO ::= py punto id para LIST_PARAM parc
-                | vb punto id para LIST_PARAM parc
-                | java punto id punto id para LIST_PARAM parc
+LLAMADA_METODO ::= pyy punto id para LIST_PARAM parc
+                | vbb punto id para LIST_PARAM parc
+                | javaa punto id punto id para LIST_PARAM parc
 ;
 
 EXPR ::= LLAMADA_METODO
@@ -248,7 +250,7 @@ EXPR ::= LLAMADA_METODO
         | getch
 ;
 
-CLASS ::= java punto id LIST_CLASS puntocoma        
+CLASS ::= javaa punto id LIST_CLASS puntocoma        
 ;
 
 LIST_CLASS ::= LIST_CLASS coma id PARAM

@@ -40,6 +40,7 @@ cero= "0"
 <YYINITIAL> ("public") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.publicc, yycolumn, yyline, yytext());}
 <YYINITIAL> ("class") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.classs, yycolumn, yyline, yytext());}
 <YYINITIAL> ("void") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.voidd, yycolumn, yyline, yytext());}
+<YYINITIAL> ("this") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.thiss, yycolumn, yyline, yytext());}
 <YYINITIAL> ("return") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.returnn, yycolumn, yyline, yytext());}
     /*Palabras para Tipos*/
 <YYINITIAL> ("int") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.intt, yycolumn, yyline, yytext());}
@@ -57,6 +58,7 @@ cero= "0"
 <YYINITIAL> ("case") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.casee, yycolumn, yyline, yytext());}
 <YYINITIAL> ("while") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.whilee, yycolumn, yyline, yytext());}
 <YYINITIAL> ("default") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.defaultt, yycolumn, yyline, yytext());}
+<YYINITIAL> ("breakk") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.breakk, yycolumn, yyline, yytext());}
 <YYINITIAL> ("doo") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.doo, yycolumn, yyline, yytext());}
     /*Palabras de Comparacion*/
 <YYINITIAL> ("!=") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.noigual, yycolumn, yyline, yytext());}
@@ -78,6 +80,7 @@ cero= "0"
 <YYINITIAL> ("}") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.llavec, yycolumn, yyline, yytext());}
 <YYINITIAL> (",") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.coma, yycolumn, yyline, yytext());}
 <YYINITIAL> (";") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.puntocoma, yycolumn, yyline, yytext());}
+<YYINITIAL> (".") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.punto, yycolumn, yyline, yytext());}
 <YYINITIAL> (":") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.dosp, yycolumn, yyline, yytext());}
     /*palabras para manejar consola*/
 <YYINITIAL> ("System.out.println") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.println, yycolumn, yyline, yytext());}

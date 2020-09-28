@@ -39,14 +39,16 @@ public class MetodoJava {
      * @param var el metodo con el que se comparara este metodo
      * @return true si es igual, false si no lo es
      */
-    public boolean equals(MetodoJava var) {
-        return false;
+    public boolean isnotEquals(MetodoJava var) {
+        return this.TIPO!=var.TIPO || !MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
     }
     
-    public void i1(int i, String i2){
-    
-    }
-    
+    /**
+     * Metodo para ver si el array1 es igual al array2
+     * @param parametros1 Parametros del primer metodo
+     * @param parametros2 Parametros del segundo metodo
+     * @return true Si son los mismos, false si no lo son
+     */
     public static final boolean sonMismosParametros(List<VariableJava> parametros1, List<VariableJava> parametros2){
         if(parametros1.size() == parametros2.size()){
             for (int i = 0; i < parametros1.size(); i++) {
@@ -56,6 +58,10 @@ public class MetodoJava {
         } else {
             return false;
         }
+    }
+
+    public List<VariableJava> getParametros() {
+        return parametros;
     }
     
 }
