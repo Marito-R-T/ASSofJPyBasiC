@@ -3,31 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.assofjpybasic.backend.semantica.java;
+package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import java.util.List;
 
 /**
  *
- * @author mari2bar
+ * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public class MetodoJava {
+public class MetodoVisual {
 
     private final String id;
-    private final int TIPO;
-    private final List<VariableJava> parametros;
+    private final String TIPO;
+    private final List<VariableVisual> parametros;
+    private VariableVisual visual;
 
     /**
      *
      *
      * @param id Id del metodo
-     * @param TIPO Tipo del metodo 1 - CHAR 2 - INT 3 - FLOAT 4 - VOID
      * @param parametros lista de parametros del metodo
+     * @param tipo Tipo del retorno del metodo
      */
-    public MetodoJava(final String id, final int TIPO, final List<VariableJava> parametros) {
-        this.id = id;
-        this.TIPO = TIPO;
+    public MetodoVisual(String id, List<VariableVisual> parametros, String tipo) {
+        this.id = id.toLowerCase();
         this.parametros = parametros;
+        this.TIPO = tipo;
     }
 
     /**
@@ -36,8 +37,8 @@ public class MetodoJava {
      * @param var el metodo con el que se comparara este metodo
      * @return true si es igual, false si no lo es
      */
-    public boolean isnotEquals(MetodoJava var) {
-        return !this.id.equals(var.getId()) || this.TIPO != var.TIPO || !MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
+    public boolean isnotEquals(MetodoVisual var) {
+        return !this.id.equals(var.getId()) || !this.TIPO.equals(var.getTIPO()) || !MetodoVisual.sonMismosParametros(this.parametros, var.getParametros());
     }
 
     /**
@@ -47,7 +48,7 @@ public class MetodoJava {
      * @param parametros2 Parametros del segundo metodo
      * @return true Si son los mismos, false si no lo son
      */
-    public static final boolean sonMismosParametros(final List<VariableJava> parametros1, final List<VariableJava> parametros2) {
+    public static final boolean sonMismosParametros(List<VariableVisual> parametros1, List<VariableVisual> parametros2) {
         if (parametros1.size() == parametros2.size()) {
             for (int i = 0; i < parametros1.size(); i++) {
                 if (!parametros1.get(i).isMismoTipo(parametros2.get(i))) {
@@ -60,12 +61,24 @@ public class MetodoJava {
         }
     }
 
-    public List<VariableJava> getParametros() {
+    public List<VariableVisual> getParametros() {
         return parametros;
+    }
+
+    public String getTIPO() {
+        return TIPO;
     }
 
     public String getId() {
         return id;
+    }
+
+    public VariableVisual getVisual() {
+        return visual;
+    }
+
+    public void setVisual(VariableVisual visual) {
+        this.visual = visual;
     }
 
 }

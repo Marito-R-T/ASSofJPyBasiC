@@ -13,15 +13,32 @@ import java.util.List;
  * @author mari2bar
  */
 public class JavaSemantica {
-    
+
     private final List<TablaJava> tabla;
-    
-    public JavaSemantica(){
+
+    public JavaSemantica() {
         tabla = new ArrayList<>();
     }
 
     public List<TablaJava> getTabla() {
         return tabla;
     }
-    
+
+    /**
+     * Metodo para verificar que se pueda agregar Clase Y agregarla
+     * seguidamente.
+     *
+     * @param tab Clase java que se va a ingresar
+     * @return True si no hay otra clase con el mismo nombre, False si ya esta
+     * repetida la clase
+     */
+    public boolean agregarTabla(TablaJava tab) {
+        if (tabla.stream().noneMatch((tablaJava) -> (tablaJava.getId().equals(tab.getId())))) {
+            this.tabla.add(tab);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

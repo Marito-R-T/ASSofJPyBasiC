@@ -4,7 +4,6 @@ import java_cup.runtime.*;
 import com.mycompany.assofjpybasic.backend.semantica.java.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.mycompany.assofjpybasic.backend.semantica.java.*;
 
 class SintaxisJava;
 
@@ -62,7 +61,9 @@ CLASSES ::= CLASSES CLASS
         | 
 ;
 
-CLASS ::= publicc classs id llavea {:TablaJava sem = new TablaJava(); java.getTabla().add(sem); tabla = sem; TablaJava.AMBITO += 1;:} 
+CLASS ::= publicc classs id:e1 llavea {:TablaJava sem = new TablaJava(e1); if(!java.agregarTabla(sem)){
+                                syntax_error(getS()); }
+                                tabla = sem; TablaJava.AMBITO += 1;:} 
         STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1; tabla = null;:}
 ;
 
