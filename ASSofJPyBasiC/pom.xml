@@ -29,4 +29,9 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <name>Compilador</name>
+    <description>Proyecto basado en 2 partes de compiladores, donde se analizará
+        codigo java, python, visual basic, y c.
+        Convirtiendolo en codigo 3 direcciones, Luego optimizandolo
+        y finalizando con el Lenguaje Assembler.</description>
 </project>

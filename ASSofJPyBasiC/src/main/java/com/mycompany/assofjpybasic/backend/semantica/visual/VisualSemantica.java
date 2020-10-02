@@ -10,12 +10,12 @@ import java.util.List;
 
 /**
  *
- * @author Sammy Guergachi <sguergachi at gmail.com>
+ * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
 public class VisualSemantica {
 
     public static String CHAR = "CHAR", INT = "INT", FLOAT = "INT-FLOAT", VOID = "VOID";
-    public static int AMBITO = 0;
+    public static Integer AMBITO = 0;
     private final List<VariableVisual> variables = new ArrayList<>();
     private final List<MetodoVisual> metodos = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class VisualSemantica {
      * definido
      */
     public static boolean tienenTipos(List<VariableVisual> var) {
-        int f = 0, d = 0;
+        Integer f = 0, d = 0;
         for (VariableVisual variableVisual : var) {
             if (variableVisual.isDefinido()) {
                 f++;
@@ -102,7 +102,7 @@ public class VisualSemantica {
      * @param tipo2 tipo de operador del segundo valor
      * @return regresa el tipo padre: 3>2>1
      */
-    public static int regresarTipo(int tipo1, int tipo2) {
+    public static Integer regresarTipo(Integer tipo1, Integer tipo2) {
         if (tipo1 > tipo2) {
             return tipo1;
         } else if (tipo2 > tipo1) {
@@ -117,7 +117,7 @@ public class VisualSemantica {
      *
      * @param ambito Ambito a eliminar
      */
-    public void eliminarAmbito(int ambito) {
+    public void eliminarAmbito(Integer ambito) {
         List<VariableVisual> eliminar = new ArrayList<>();
         variables.stream().filter((variable) -> (variable.getAmbito() == ambito)).forEachOrdered((variable) -> {
             eliminar.add(variable);
@@ -164,10 +164,10 @@ public class VisualSemantica {
     public boolean addMetodo(MetodoVisual metodo) {
         for (MetodoVisual met : metodos) {
             if (!met.isnotEquals(metodo)) {
-                int pos = metodos.indexOf(met);
-                metodos.remove(pos);
+                Integer pos = metodos.indexOf(met);
+                metodos.remove(pos.intValue());
                 metodos.add(pos, metodo);
-                return true;
+                return false;
             }
         }
         metodos.add(metodo);

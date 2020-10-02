@@ -821,7 +821,7 @@ VisualSemantica.AMBITO += 1;
 		String e3 = (String)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-1)).value;
 VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
-                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO));
+                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3));
                                         e2.add(met.getVisual()); sem.addListVar(e2);
                                         if(!sem.addMetodo(met)){syntax_error(getS());}
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("NT$1",48, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Sammy Guergachi <sguergachi at gmail.com>
+ * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
 public class MetodoPython {
 

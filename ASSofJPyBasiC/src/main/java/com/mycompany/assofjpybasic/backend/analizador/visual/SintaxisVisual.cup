@@ -78,7 +78,7 @@ SUB ::= PUBLIC subb id:e1 para LISTPARAMM:e2 parc espacio {:VisualSemantica.AMBI
 
 FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
-                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO));
+                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3));
                                         e2.add(met.getVisual()); sem.addListVar(e2);
                                         if(!sem.addMetodo(met)){syntax_error(getS());}:} 
                                         STATEMENTSF endd functionn espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);

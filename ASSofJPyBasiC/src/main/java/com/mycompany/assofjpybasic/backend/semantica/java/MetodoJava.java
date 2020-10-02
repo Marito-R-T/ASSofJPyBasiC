@@ -6,6 +6,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.List;
 public class MetodoJava {
 
     private final String id;
-    private final int TIPO;
+    private final Integer TIPO;
     private final List<VariableJava> parametros;
 
     /**
@@ -24,7 +25,7 @@ public class MetodoJava {
      * @param TIPO Tipo del metodo 1 - CHAR 2 - INT 3 - FLOAT 4 - VOID
      * @param parametros lista de parametros del metodo
      */
-    public MetodoJava(final String id, final int TIPO, final List<VariableJava> parametros) {
+    public MetodoJava(final String id, final Integer TIPO, final List<VariableJava> parametros) {
         this.id = id;
         this.TIPO = TIPO;
         this.parametros = parametros;
@@ -37,7 +38,7 @@ public class MetodoJava {
      * @return true si es igual, false si no lo es
      */
     public boolean isnotEquals(MetodoJava var) {
-        return !this.id.equals(var.getId()) || this.TIPO != var.TIPO || !MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
+        return !this.id.equals(var.getId()) || !Objects.equals(this.TIPO, var.TIPO) || !MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
     }
 
     /**

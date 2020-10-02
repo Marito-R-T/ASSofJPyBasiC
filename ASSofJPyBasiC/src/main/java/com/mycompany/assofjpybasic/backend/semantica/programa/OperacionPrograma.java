@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.assofjpybasic.backend.semantica.python;
+package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class OperacionPython {
+public class OperacionPrograma {
 
-    private String tipo;
+    private Integer tipo;
 
     /**
      * Constructor con el tipo de operacion
      *
-     * @param tipo CHAR -> Char || INT -> Int || INT-FLOAT -> Float
+     * @param tipo 1 -> Char || 2 -> Int || 3-FLOAT -> Float
      */
-    public OperacionPython(String tipo) {
+    public OperacionPrograma(Integer tipo) {
         this.tipo = tipo;
     }
 
@@ -28,19 +28,21 @@ public class OperacionPython {
      * @param op1 Operador 1 con el que se compara
      * @param op2 Operador 2 con el que se compara
      */
-    public OperacionPython(OperacionPython op1, OperacionPython op2) {
-        if (op2.getTipo().contains("FLOAT") || op1.getTipo().contains("FLOAT")) {
-            this.tipo = PythonSemantica.FLOAT;
+    public OperacionPrograma(OperacionPrograma op1, OperacionPrograma op2) {
+        if (op1.getTipo() > op2.getTipo()) {
+            this.tipo = op1.getTipo();
+        } else if (op2.getTipo() < op2.getTipo()) {
+            this.tipo = op2.getTipo();
         } else {
-            this.tipo = PythonSemantica.INT;
+            this.tipo = op1.getTipo();
         }
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(Integer tipo) {
         this.tipo = tipo;
     }
 
-    public String getTipo() {
+    public Integer getTipo() {
         return tipo;
     }
 

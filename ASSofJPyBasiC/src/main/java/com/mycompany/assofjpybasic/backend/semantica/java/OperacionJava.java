@@ -10,24 +10,23 @@ package com.mycompany.assofjpybasic.backend.semantica.java;
  * @author mari2bar
  */
 public class OperacionJava {
-    
-    private int tipo;
+
+    private Integer tipo;
 
     /**
      * Constructor con el tipo de operacion
-     * @param tipo 1 -> Char
-     * ||  2 -> Int
-     * ||  3 -> Float
+     *
+     * @param tipo 1 -> Char || 2 -> Int || 3 -> Float
      */
-    public OperacionJava(int tipo){
+    public OperacionJava(Integer tipo) {
         this.tipo = tipo;
     }
 
-    public void setTipo(int tipo) {
+    public void setTipo(Integer tipo) {
         this.tipo = tipo;
     }
 
-    public int getTipo() {
+    public Integer getTipo() {
         return tipo;
     }
 

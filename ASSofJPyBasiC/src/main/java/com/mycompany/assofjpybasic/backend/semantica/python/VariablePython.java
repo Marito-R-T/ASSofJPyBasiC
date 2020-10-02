@@ -9,13 +9,13 @@ import java.util.List;
 
 /**
  *
- * @author Sammy Guergachi <sguergachi at gmail.com>
+ * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
 public class VariablePython {
 
     private final String id;
     private String tipo;
-    private final int ambito;
+    private final Integer ambito;
 
     /**
      * Constructor de variable que inicializa todos sus componentes de la
@@ -24,7 +24,7 @@ public class VariablePython {
      * @param id Id de la variable
      * @param ambito ambito al que pertenece la variable
      */
-    public VariablePython(String id, int ambito) {
+    public VariablePython(String id, Integer ambito) {
         this.id = id;
         this.ambito = ambito;
     }
@@ -41,7 +41,7 @@ public class VariablePython {
         return tipo;
     }
 
-    public int getAmbito() {
+    public Integer getAmbito() {
         return ambito;
     }
 

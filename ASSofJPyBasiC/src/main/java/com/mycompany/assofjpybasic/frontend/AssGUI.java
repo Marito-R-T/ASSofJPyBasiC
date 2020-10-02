@@ -15,7 +15,7 @@ import javax.swing.text.PlainDocument;
 
 /**
  *
- * @author mari2bar clase GUI, ventana visible del programa.
+ * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
 public class AssGUI extends javax.swing.JFrame {
 
@@ -40,7 +40,7 @@ public class AssGUI extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("JPyBasiC");
         Document doc = AssGUI.editorTerminal.getDocument();
-        if(doc instanceof PlainDocument){
+        if (doc instanceof PlainDocument) {
             doc.putProperty(PlainDocument.tabSizeAttribute, 2);
             System.out.println("hola");
         }

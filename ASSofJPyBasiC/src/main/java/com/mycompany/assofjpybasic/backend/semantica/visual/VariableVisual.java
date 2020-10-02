@@ -9,13 +9,13 @@ import java.util.List;
 
 /**
  *
- * @author Sammy Guergachi <sguergachi at gmail.com>
+ * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
 public class VariableVisual {
 
     private final String id;
     private String tipo;
-    private final int ambito;
+    private final Integer ambito;
     private boolean definido = false, astipo = false;
 
     /**
@@ -26,7 +26,7 @@ public class VariableVisual {
      * @param ambito ambito al que pertenece la variable
      * @param tipo Tipo de la variable
      */
-    public VariableVisual(String id, int ambito, String tipo) {
+    public VariableVisual(String id, Integer ambito, String tipo) {
         this.id = id.toLowerCase();
         this.ambito = ambito;
         this.tipo = tipo;
@@ -39,7 +39,7 @@ public class VariableVisual {
      * @param id Id de la variable
      * @param ambito ambito al que pertenece la variable
      */
-    public VariableVisual(String id, int ambito) {
+    public VariableVisual(String id, Integer ambito) {
         this.id = id.toLowerCase();
         this.ambito = ambito;
     }

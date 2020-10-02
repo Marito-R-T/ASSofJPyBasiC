@@ -7,6 +7,7 @@ package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -14,8 +15,8 @@ import java.util.List;
  */
 public class TablaJava {
 
-    public static final int VOID = 4, CHAR = 1, INT = 2, FLOAT = 3;
-    public static int AMBITO = 0;
+    public static final Integer VOID = 4, CHAR = 1, INT = 2, FLOAT = 3;
+    public static Integer AMBITO = 0;
     private final String id;
     private final List<VariableJava> variables = new ArrayList<>();
     private final List<VariableJava> var_definidas = new ArrayList<>();
@@ -38,10 +39,8 @@ public class TablaJava {
      * @return regresa un booleano para verificar si se puede ingresar variable
      */
     public boolean addVar(VariableJava var) {
-        for (VariableJava variable : variables) {
-            if (variable.getId().equals(var.getId())) {
-                return false;
-            }
+        if (!variables.stream().noneMatch((variable) -> (variable.getId().equals(var.getId())))) {
+            return false;
         }
         variables.add(0, var);
         return true;
@@ -55,10 +54,8 @@ public class TablaJava {
      * variable no se puede ingresar
      */
     public boolean addListVar(List<VariableJava> var) {
-        for (VariableJava variableJava : var) {
-            if (!this.addVar(variableJava)) {
-                return false;
-            }
+        if (!var.stream().noneMatch((variableJava) -> (!this.addVar(variableJava)))) {
+            return false;
         }
         return true;
     }
@@ -71,7 +68,7 @@ public class TablaJava {
      * @param tipo2 tipo de operador del segundo valor
      * @return regresa el tipo padre: 3>2>1
      */
-    public static int regresarTipo(int tipo1, int tipo2) {
+    public static Integer regresarTipo(Integer tipo1, Integer tipo2) {
         if (tipo1 > tipo2) {
             return tipo1;
         } else if (tipo2 > tipo1) {
@@ -86,9 +83,9 @@ public class TablaJava {
      *
      * @param ambito Ambito a eliminar
      */
-    public void eliminarAmbito(int ambito) {
+    public void eliminarAmbito(Integer ambito) {
         List<VariableJava> eliminar = new ArrayList<>();
-        variables.stream().filter((variable) -> (variable.getAmbito() == ambito)).forEachOrdered((variable) -> {
+        variables.stream().filter((variable) -> (Objects.equals(variable.getAmbito(), ambito))).forEachOrdered((variable) -> {
             var_definidas.add(variable);
             eliminar.add(variable);
         });
@@ -132,10 +129,8 @@ public class TablaJava {
      * @return true si se pudo ingresar, false si ya estaba repetido
      */
     public boolean addMetodo(MetodoJava metodo) {
-        for (MetodoJava met : metodos) {
-            if (!met.isnotEquals(metodo)) {
-                return false;
-            }
+        if (!metodos.stream().noneMatch((met) -> (!met.isnotEquals(metodo)))) {
+            return false;
         }
         metodos.add(metodo);
         return true;
