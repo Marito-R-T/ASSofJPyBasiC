@@ -645,6 +645,10 @@ public class SintaxisVisual extends java_cup.runtime.lr_parser {
         System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
 
+    public VisualSemantica getVisual(){
+            return sem;
+    }
+
     public Symbol getS(){
         return this.cur_token;
     }
@@ -822,7 +826,7 @@ VisualSemantica.AMBITO += 1;
 VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
                                         actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3));
-                                        e2.add(met.getVisual()); sem.addListVar(e2);
+                                        sem.addListVar(e2);
                                         if(!sem.addMetodo(met)){syntax_error(getS());}
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("NT$1",48, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }

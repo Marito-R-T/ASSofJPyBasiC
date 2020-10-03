@@ -9,11 +9,11 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class VariablePrograma {
+public class VariablePrograma extends OperacionPrograma {
 
     protected final String id;
     protected final Integer ambito;
-    protected final Integer tipo;
+    protected Integer tipo;
     public final static Integer CHAR = 1, INT = 2, FLOAT = 3, CLASS = 4;
 
     /**
@@ -24,9 +24,36 @@ public class VariablePrograma {
      * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
      */
     public VariablePrograma(String id, Integer ambito, Integer tipo) {
+        super(tipo);
         this.id = id;
         this.ambito = ambito;
         this.tipo = tipo;
+    }
+
+    /**
+     * Constructor de una variable del programa principal C
+     *
+     * @param id Es el id que tiene la variable
+     * @param ambito Es el ambito al que pertenece la variable
+     */
+    public VariablePrograma(String id, Integer ambito) {
+        super(null);
+        this.id = id;
+        this.ambito = ambito;
+    }
+
+    /**
+     * Constructor de una variable del programa principal C
+     *
+     * @param id Es el id que tiene la variable
+     * @param ambito Es el ambito al que pertenece la variable
+     * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
+     */
+    public VariablePrograma(String id, Integer ambito, OperacionPrograma tipo) {
+        super(tipo.getTipo());
+        this.id = id;
+        this.ambito = ambito;
+        this.tipo = tipo.getTipo();
     }
 
     public String getId() {
@@ -37,8 +64,14 @@ public class VariablePrograma {
         return ambito;
     }
 
+    @Override
     public Integer getTipo() {
         return tipo;
+    }
+
+    @Override
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
     }
 
 }

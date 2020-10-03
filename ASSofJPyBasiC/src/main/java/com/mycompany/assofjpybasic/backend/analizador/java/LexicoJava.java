@@ -3,8 +3,6 @@
 package com.mycompany.assofjpybasic.backend.analizador.java;
 
 import java_cup.runtime.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

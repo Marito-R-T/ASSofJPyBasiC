@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ArregloPrograma extends VariablePrograma {
 
-    private final List<Integer> tam;
+    private final List<OperacionPrograma> tam;
 
     /**
      * Constructor del arreglo de una variable
@@ -24,9 +24,13 @@ public class ArregloPrograma extends VariablePrograma {
      * @param tam Dimensiones del arreglo, el tamaño de la lista es las
      * dimensiones que contiene el arreglo
      */
-    public ArregloPrograma(String id, Integer ambito, Integer tipo, List<Integer> tam) {
+    public ArregloPrograma(String id, Integer ambito, Integer tipo, List<OperacionPrograma> tam) {
         super(id, ambito, tipo);
         this.tam = tam;
+    }
+
+    public List<OperacionPrograma> getTam() {
+        return tam;
     }
 
 }

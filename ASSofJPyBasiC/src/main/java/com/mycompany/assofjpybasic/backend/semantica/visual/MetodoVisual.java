@@ -5,6 +5,8 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
 import java.util.List;
 
 /**
@@ -79,6 +81,44 @@ public class MetodoVisual {
 
     public void setVisual(VariableVisual visual) {
         this.visual = visual;
+    }
+
+    /**
+     * Metodo para verificar similitud de metodos con el actual
+     *
+     * @param id Id del metodo a comparar
+     * @param params Parametros del metodo a comparar
+     * @return True si son iguales los metodos, False si no son iguales los
+     * metodos
+     */
+    public boolean equals(String id, List<OperacionPrograma> params) {
+        if (id.equals(this.id) && params.size() == this.parametros.size()) {
+            for (int i = 0; i < params.size(); i++) {
+                if (!this.isMismoTipo(this.parametros.get(i).getTipo(), params.get(i).getTipo())) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Metodo para evaluar que sean los mismos tipos, así poder usar el metodo
+     *
+     * @param tipo1 Tipo del parametro del metodo Python
+     * @param tipo2 Tipo del parametro enviado
+     * @return True si tienen el mismo tipo de parametro con el metodo
+     */
+    private boolean isMismoTipo(String tipo1, Integer tipo2) {
+        if (tipo1.equals(VisualSemantica.FLOAT) && tipo2 <= 3) {
+            return true;
+        } else if (tipo1.equals(VisualSemantica.INT) && tipo2 <= 2) {
+            return true;
+        } else {
+            return tipo1.equals(VisualSemantica.CHAR) && tipo2 == 1;
+        }
     }
 
 }

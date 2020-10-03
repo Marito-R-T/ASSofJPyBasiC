@@ -120,11 +120,11 @@ public class prueba {
                 + "  // Factorial\n"
                 + "  resultado = VB.Factorial(i);\n"
                 + " \n"
-                + "  printf(\"El factorial de %d es %d\",a,resultado);\n"
+                + "  printf(\"El factorial de %d es %d\",i,resultado);\n"
                 + "    \n"
                 + "  printf(\"Conversion de años a meses\");\n"
                 + "\n"
-                + "  PY.edadmeses();\n"
+                + "  PY.edadmeses(0 , 12);\n"
                 + "\n"
                 + "  // Arreglo\n"
                 + "  Arreglo1[1][1] = 0;\n"
@@ -155,6 +155,7 @@ public class prueba {
         SintaxisJava jv = new SintaxisJava(new LexicoJava(new StringReader(archivo.getJava())));
         jv.parse();
         SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
+        pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
         pro.parse();
     }
 

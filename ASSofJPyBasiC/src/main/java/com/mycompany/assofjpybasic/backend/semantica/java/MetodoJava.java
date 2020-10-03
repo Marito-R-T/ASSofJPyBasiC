@@ -5,6 +5,9 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
+import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +70,38 @@ public class MetodoJava {
 
     public String getId() {
         return id;
+    }
+
+    /**
+     * Metodo para verificar su similitud con el actual
+     *
+     * @param id Id a comparar con este metodo
+     * @param params Parametros a comparar con este metodo
+     * @return True si es igual a este Metodo, False si no lo es
+     */
+    public boolean equals(String id, List<OperacionPrograma> params) {
+        if (id.equals(this.id) && params.size() == this.parametros.size()) {
+            for (int i = 0; i < params.size(); i++) {
+                if (!this.isMismoTipo(this.parametros.get(i).getTipo(), params.get(i).getTipo())) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Metodo para verificar que sea el mismo tipo de metodo -> char, int, float
+     *
+     * @param tipo1 Tipo del parametro de este metodo
+     * @param tipo2 Tipo del parametro del metodo a comparar
+     * @return True si el tipo 1 es mayor o igual al tipo 2, False si el tipo1
+     * es menor al tipo 2
+     */
+    private boolean isMismoTipo(Integer tipo1, Integer tipo2) {
+        return tipo1 > tipo2;
     }
 
 }

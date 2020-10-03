@@ -178,4 +178,8 @@ public class VisualSemantica {
         return variables;
     }
 
+    public List<MetodoVisual> getMetodos() {
+        return metodos;
+    }
+
 }

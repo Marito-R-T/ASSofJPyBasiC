@@ -5,6 +5,9 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
+import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -142,6 +145,18 @@ public class TablaJava {
 
     public String getId() {
         return id;
+    }
+
+    /**
+     * Metodo para mostrar si existe o no un metodo que tenga los mismos
+     * parametros y mismo id
+     *
+     * @param id Id del metodo a buscar
+     * @param params Parametros del metodo a verificar similitud
+     * @return True si existe el metodo, False si no existe el metodo
+     */
+    public boolean existeMetodo(String id, List<OperacionPrograma> params) {
+        return metodos.stream().anyMatch((metodo) -> (metodo.equals(id, params)));
     }
 
 }

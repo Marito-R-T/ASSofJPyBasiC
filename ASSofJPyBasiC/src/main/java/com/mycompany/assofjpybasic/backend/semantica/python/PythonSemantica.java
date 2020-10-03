@@ -138,4 +138,8 @@ public class PythonSemantica {
         return variables;
     }
 
+    public List<MetodoPython> getMetodos() {
+        return metodos;
+    }
+
 }

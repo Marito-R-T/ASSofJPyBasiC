@@ -23,6 +23,22 @@ public class OperacionPrograma {
     }
 
     /**
+     * Constructor con el tipo de operacion
+     *
+     * @param tipo1 1 -> Char || 2 -> Int || 3-FLOAT -> Float
+     * @param tipo2 1 -> Char || 2 -> Int || 3-FLOAT -> Float
+     */
+    public OperacionPrograma(Integer tipo1, Integer tipo2) {
+        if (tipo1 > tipo2) {
+            this.tipo = tipo1;
+        } else if (tipo1 < tipo2) {
+            this.tipo = tipo2;
+        } else {
+            this.tipo = tipo1;
+        }
+    }
+
+    /**
      * Constructor que se inicia, a partir de 2 operaciones
      *
      * @param op1 Operador 1 con el que se compara

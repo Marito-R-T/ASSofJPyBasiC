@@ -416,6 +416,10 @@ public class SintaxisPython extends java_cup.runtime.lr_parser {
         System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
 
+    public PythonSemantica getPython(){
+            return sem;
+    }
+
     public Symbol getS(){
         return this.cur_token;
     }
