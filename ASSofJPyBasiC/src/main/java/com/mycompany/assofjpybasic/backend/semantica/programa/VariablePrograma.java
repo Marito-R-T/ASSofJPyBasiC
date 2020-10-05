@@ -5,6 +5,8 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
+
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
@@ -24,7 +26,7 @@ public class VariablePrograma extends OperacionPrograma {
      * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
      */
     public VariablePrograma(String id, Integer ambito, Integer tipo) {
-        super(tipo);
+        super(tipo, new TerminalOperator(id));
         this.id = id;
         this.ambito = ambito;
         this.tipo = tipo;
@@ -37,7 +39,7 @@ public class VariablePrograma extends OperacionPrograma {
      * @param ambito Es el ambito al que pertenece la variable
      */
     public VariablePrograma(String id, Integer ambito) {
-        super(null);
+        super(null, new TerminalOperator(id));
         this.id = id;
         this.ambito = ambito;
     }
@@ -50,7 +52,7 @@ public class VariablePrograma extends OperacionPrograma {
      * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
      */
     public VariablePrograma(String id, Integer ambito, OperacionPrograma tipo) {
-        super(tipo.getTipo());
+        super(tipo.getTipo(), new TerminalOperator(id));
         this.id = id;
         this.ambito = ambito;
         this.tipo = tipo.getTipo();

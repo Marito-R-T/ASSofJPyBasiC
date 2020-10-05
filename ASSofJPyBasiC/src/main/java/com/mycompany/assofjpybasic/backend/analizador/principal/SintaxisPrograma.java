@@ -9,6 +9,7 @@ import java_cup.runtime.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -659,6 +660,7 @@ public class SintaxisPrograma extends java_cup.runtime.lr_parser {
     private ProgramaSemantica sem = new ProgramaSemantica();
     private boolean esCase = false;
     private String java, vb, py;
+    private List<Triplete> trip = new ArrayList<>();
     
     public void syntax_error(Symbol sym){
         System.out.println("\n" + sym.value + sym.sym);
@@ -946,7 +948,7 @@ class CUP$SintaxisPrograma$actions {
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		List<OperacionPrograma> opr = new ArrayList<>(); 
-                if(e1.getTipo()<=VariablePrograma.INT) opr.add(new OperacionPrograma(e1.getTipo()));
+                if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("CORCHETES",45, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1020,7 +1022,8 @@ class CUP$SintaxisPrograma$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);
+		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new SumOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_A",41, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1035,7 +1038,8 @@ class CUP$SintaxisPrograma$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);
+		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_A",41, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1062,7 +1066,8 @@ class CUP$SintaxisPrograma$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);
+		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new PorOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_M",42, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1077,7 +1082,8 @@ class CUP$SintaxisPrograma$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);
+		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new DivOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_M",42, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1092,7 +1098,8 @@ class CUP$SintaxisPrograma$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);
+		if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new ModOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_M",42, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1116,7 +1123,11 @@ class CUP$SintaxisPrograma$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.CHAR);} RESULT = e1;
+		if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.INT);}
+                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0"));
+                RESULT = new OperacionPrograma(cero,
+                e1, new RestOperator(null, cero.getTriplete(), e1.getTriplete(),
+                Triplete.devolverTipo(cero, e1)));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_U",43, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1155,7 +1166,7 @@ class CUP$SintaxisPrograma$actions {
 		VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO)); 
                 if(var == null){
                         syntax_error(getS());
-                } else{RESULT = new OperacionPrograma(var.getTipo());}
+                } else{RESULT = new OperacionPrograma(var.getTipo(), new TerminalOperator(e1));}
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",44, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1164,7 +1175,10 @@ class CUP$SintaxisPrograma$actions {
           case 36: // ATOM ::= entero 
             {
               OperacionPrograma RESULT =null;
-		RESULT = new OperacionPrograma(VariablePrograma.INT);
+		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
+		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",44, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1173,7 +1187,10 @@ class CUP$SintaxisPrograma$actions {
           case 37: // ATOM ::= decimal 
             {
               OperacionPrograma RESULT =null;
-		RESULT = new OperacionPrograma(VariablePrograma.FLOAT);
+		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
+		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",44, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1182,7 +1199,10 @@ class CUP$SintaxisPrograma$actions {
           case 38: // ATOM ::= character 
             {
               OperacionPrograma RESULT =null;
-		RESULT = new OperacionPrograma(VariablePrograma.CHAR);
+		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
+		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",44, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1198,7 +1218,7 @@ class CUP$SintaxisPrograma$actions {
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		List<OperacionPrograma> e2 = (List<OperacionPrograma>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		VariablePrograma var = sem.existeVar(e1, e2.size());
-                if(var == null){syntax_error(getS());}else{RESULT = new OperacionPrograma(var.getTipo());}
+                if(var == null){syntax_error(getS());}else{RESULT = new OperacionPrograma(var.getTipo(), new TerminalOperator(e1));}
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",44, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;

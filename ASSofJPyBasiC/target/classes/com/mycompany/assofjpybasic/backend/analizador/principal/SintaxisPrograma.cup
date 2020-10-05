@@ -4,6 +4,7 @@ import java_cup.runtime.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
 
 class SintaxisPrograma;
 
@@ -13,6 +14,7 @@ parser code
     private ProgramaSemantica sem = new ProgramaSemantica();
     private boolean esCase = false;
     private String java, vb, py;
+    private List<Triplete> trip = new ArrayList<>();
     
     public void syntax_error(Symbol sym){
         System.out.println("\n" + sym.value + sym.sym);
@@ -100,7 +102,7 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){syntax
 
 CORCHETES ::= CORCHETES:e1 cora EXPR:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
         | cora EXPR:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>(); 
-                if(e1.getTipo()<=VariablePrograma.INT) opr.add(new OperacionPrograma(e1.getTipo()));
+                if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
 ;
 
@@ -116,31 +118,41 @@ ASIG ::= igual EXPR:e1 {:RESULT = e1;:}
         |
 ;
 
-OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);:}
+OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new SumOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
+        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);:}
-        | OPERACION_M:e1 div OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);:}
-        | OPERACION_M:e1 mod OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2);:}
+OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new PorOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
+        | OPERACION_M:e1 div OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new DivOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
+        | OPERACION_M:e1 mod OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+                new ModOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
         | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U:e1 {:if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.CHAR);} RESULT = e1;:}
+OPERACION_U ::= menos OPERACION_U:e1 {:if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.INT);}
+                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0"));
+                RESULT = new OperacionPrograma(cero,
+                e1, new RestOperator(null, cero.getTriplete(), e1.getTriplete(),
+                Triplete.devolverTipo(cero, e1)));:}
         | mas OPERACION_U:e1 {:RESULT = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
 ;
 
+// Falta resolver lo de los corchetes
 ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO)); 
                 if(var == null){
                         syntax_error(getS());
-                } else{RESULT = new OperacionPrograma(var.getTipo());}:}
-        | entero {:RESULT = new OperacionPrograma(VariablePrograma.INT);:}
-        | decimal {:RESULT = new OperacionPrograma(VariablePrograma.FLOAT);:}
-        | character {:RESULT = new OperacionPrograma(VariablePrograma.CHAR);:}
+                } else{RESULT = new OperacionPrograma(var.getTipo(), new TerminalOperator(e1));}:}
+        | entero:e1 {:RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));:}
+        | decimal:e1 {:RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1));:}
+        | character:e1 {:RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));:}
         | id:e1 CORCHETES:e2 {:VariablePrograma var = sem.existeVar(e1, e2.size());
-                if(var == null){syntax_error(getS());}else{RESULT = new OperacionPrograma(var.getTipo());}:}
+                if(var == null){syntax_error(getS());}else{RESULT = new OperacionPrograma(var.getTipo(), new TerminalOperator(e1));}:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
 ;
 
