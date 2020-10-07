@@ -22,15 +22,15 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  */
 public class GetchOperator extends Triplete {
 
-    private String tipo;
+    private final String tipo = "int-float";
 
-    public GetchOperator(String id, TerminalOperator op, String tipo) {
+    public GetchOperator(String id, TerminalOperator op) {
         super(id, op, null);
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "getch();";
     }
 
 }

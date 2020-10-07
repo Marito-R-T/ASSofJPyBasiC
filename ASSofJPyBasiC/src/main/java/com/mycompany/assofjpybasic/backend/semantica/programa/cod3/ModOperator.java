@@ -28,11 +28,14 @@ public class ModOperator extends Triplete {
     public ModOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
         this.tipo = tipo;
+        this.id = "t" + Triplete.ETNUM;
+        Triplete.ETNUM++;
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String d = this.tipo + " " + this.id + " = " + this.operando1.getId() + " % " + this.operando2.getId() + ";";
+        return d;
     }
 
 }

@@ -30,13 +30,13 @@ public class TerminalOperator extends Triplete {
      * @param operador Nombre o valor del operador
      */
     public TerminalOperator(String operador) {
-        super(null, null, null);
+        super(operador, null, null);
         this.operador = operador;
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.id + ";";
     }
 
 }

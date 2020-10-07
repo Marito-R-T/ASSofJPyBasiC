@@ -16,6 +16,8 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
@@ -31,9 +33,10 @@ public class ConstantePrograma extends VariablePrograma {
      * @param ambito Es el ambito al que pertenece la variable
      * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
      * @param expr Tipo de la expresión que venía, si es falso genera un error
+     * @param tri Triplete que sera parte de esta constante
      */
-    public ConstantePrograma(String id, Integer ambito, Integer tipo, Integer expr) {
-        super(id, ambito, tipo);
+    public ConstantePrograma(String id, Integer ambito, Integer tipo, Integer expr, Triplete tri) {
+        super(id, ambito, tipo, tri);
         inicializado = expr != null;
     }
 

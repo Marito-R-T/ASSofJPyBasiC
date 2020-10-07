@@ -23,6 +23,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class AsignarValor extends Triplete {
 
     private final String OPERADOR = "=";
+    private String tipo;
 
     public AsignarValor(String id, Triplete operando1, Triplete operando2) {
         super(id, operando1, operando2);
@@ -30,7 +31,23 @@ public class AsignarValor extends Triplete {
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (operando2 != null && tipo != null) {
+            return this.tipo + " " + this.operando1.getId() + " = " + operando2.getId() + ";";
+        } else if (tipo != null && operando2 == null) {
+            return this.tipo + " " + this.operando1.getId() + ";";
+        } else if (operando2 != null && tipo == null) {
+            return this.operando1.getId() + " = " + this.operando2.getId() + ";";
+        } else {
+            return this.operando1.getId() + ";";
+        }
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
 }

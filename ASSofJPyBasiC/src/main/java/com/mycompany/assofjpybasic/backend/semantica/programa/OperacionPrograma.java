@@ -18,7 +18,7 @@ public class OperacionPrograma {
 
     private Integer tipo;
     private List<Triplete> tripletes = new ArrayList<>();
-    private final Triplete triplete;
+    protected Triplete triplete;
 
     /**
      * Constructor con el tipo de operacion
@@ -90,17 +90,38 @@ public class OperacionPrograma {
      *
      * @param op1 Operación del programa 1
      * @param op2 Operación del programa 2
+     * @return True si los ingresa de manera correcta, False si hay un fallo
      */
-    private boolean hacerTripletes(OperacionPrograma op1, OperacionPrograma op2) {
-        if (this.tripletes.addAll(op1.getTripletes()) && this.tripletes.addAll(op2.getTripletes())) {
-            if (!(op1.getTriplete() instanceof TerminalOperator)) {
-                this.tripletes.add(op1.getTriplete());
-            }
-            if (!(op2.getTriplete() instanceof TerminalOperator)) {
-                this.tripletes.add(op2.getTriplete());
-            }
+    protected final boolean hacerTripletes(OperacionPrograma op1, OperacionPrograma op2) {
+        this.tripletes.addAll(op1.getTripletes());
+        if (!(op1.getTriplete() instanceof TerminalOperator)) {
+            this.tripletes.add(op1.getTriplete());
+        }
+        this.tripletes.addAll(op2.getTripletes());
+        if (!(op2.getTriplete() instanceof TerminalOperator)) {
+            this.tripletes.add(op2.getTriplete());
         }
         return false;
+    }
+
+    /**
+     *
+     * @param op1 Operación uno que tiene las tripletas
+     * @return True si se agreago todo correctamente
+     */
+    protected boolean hacerTripletes(OperacionPrograma op1) {
+        this.tripletes.addAll(op1.getTripletes());
+        if (!(op1.getTriplete() instanceof TerminalOperator)) {
+            this.tripletes.add(op1.getTriplete());
+        }
+        return false;
+    }
+
+    public void mostrarTripletes() {
+        tripletes.forEach((trip) -> {
+            System.out.println(trip.devolverString());
+        });
+        System.out.println(triplete.devolverString());
     }
 
 }

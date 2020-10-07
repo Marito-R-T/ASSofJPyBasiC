@@ -6,7 +6,6 @@
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
-import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
 import java.util.List;
 
 /**

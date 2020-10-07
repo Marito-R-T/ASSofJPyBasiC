@@ -24,11 +24,11 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
  */
 public abstract class Triplete {
 
-    protected final String id;
+    protected String id;
     protected final Triplete operando1;
     protected final Triplete operando2;
     protected static int VARNUM = 0, ETNUM = 0;
-    private static final String[] tipos = {"char", "int", "float"};
+    public static final String[] tipos = {"char", "int", "float"};
 
     /**
      * Constructor para iniciar Triplete
@@ -60,9 +60,9 @@ public abstract class Triplete {
 
     public static String devolverTipo(OperacionPrograma op1, OperacionPrograma op2) {
         if (op1.getTipo() >= op2.getTipo()) {
-            return Triplete.tipos[op1.getTipo()];
+            return Triplete.tipos[op1.getTipo() - 1];
         } else {
-            return Triplete.tipos[op2.getTipo()];
+            return Triplete.tipos[op2.getTipo() - 1];
         }
     }
 

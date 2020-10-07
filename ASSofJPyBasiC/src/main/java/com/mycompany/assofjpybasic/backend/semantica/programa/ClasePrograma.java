@@ -6,6 +6,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 
 /**
  *
@@ -21,9 +22,10 @@ public class ClasePrograma extends VariablePrograma {
      * @param id Id de la clase Java en el programa C
      * @param ambito Ambito en donde se instancia la clase
      * @param clase Clase a la que pertenece la variable
+     * @param tri Triplete que usará esta clase
      */
-    public ClasePrograma(String id, Integer ambito, TablaJava clase) {
-        super(id, ambito, VariablePrograma.CLASS);
+    public ClasePrograma(String id, Integer ambito, TablaJava clase, Triplete tri) {
+        super(id, ambito, VariablePrograma.CLASS, tri);
         this.clase = clase;
     }
 

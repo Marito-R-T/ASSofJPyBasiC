@@ -25,15 +25,17 @@ public class RestOperator extends Triplete {
     private final String OPERADOR = "-";
     private final String tipo;
 
-    public RestOperator(Integer id, Triplete operando1, Triplete operando2, String tipo) {
-        super("t" + Triplete.ETNUM++, operando1, operando2);
+    public RestOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
+        super(id, operando1, operando2);
+        this.id = "t" + Triplete.ETNUM;
         Triplete.ETNUM++;
         this.tipo = tipo;
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String d = this.tipo + " " + this.id + " = " + this.operando1.getId() + " - " + this.operando2.getId() + ";";
+        return d;
     }
 
 }

@@ -105,7 +105,7 @@ public class prueba {
                 + "void main()\n"
                 + "{\n"
                 + "  int base, exp, i, resultado;\n"
-                + "  \n"
+                + "  base = 10*25 -5/5%1;\n"
                 + "  clrscr();\n"
                 + "  \n"
                 + "  printf(\"Bienvenido\");\n"
