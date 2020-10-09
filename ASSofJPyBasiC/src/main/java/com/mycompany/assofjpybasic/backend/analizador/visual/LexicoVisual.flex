@@ -50,7 +50,7 @@ cero= "0"
 <YYINITIAL> ("or") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.orr, yycolumn, yyline, yytext());}
     /*Palabras tipos*/
 <YYINITIAL> ("integer") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.integerr, yycolumn, yyline, yytext());}
-<YYINITIAL> ("double") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.decimall, yycolumn, yyline, yytext());}
+<YYINITIAL> ("decimal") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.decimall, yycolumn, yyline, yytext());}
 <YYINITIAL> ("char") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.charr, yycolumn, yyline, yytext());}
     /*Palabras de Funciones*/
 <YYINITIAL> ("if") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.iff, yycolumn, yyline, yytext());}

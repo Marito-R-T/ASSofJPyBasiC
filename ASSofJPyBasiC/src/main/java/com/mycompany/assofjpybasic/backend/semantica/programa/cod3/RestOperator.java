@@ -27,8 +27,8 @@ public class RestOperator extends Triplete {
 
     public RestOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
-        this.id = "t" + Triplete.ETNUM;
-        Triplete.ETNUM++;
+        this.id = "t" + Triplete.VARNUM;
+        Triplete.VARNUM++;
         this.tipo = tipo;
     }
 

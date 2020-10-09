@@ -28,8 +28,8 @@ public class DivOperator extends Triplete {
     public DivOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
         this.tipo = tipo;
-        this.id = "t" + Triplete.ETNUM;
-        Triplete.ETNUM++;
+        this.id = "t" + Triplete.VARNUM;
+        Triplete.VARNUM++;
     }
 
     @Override

@@ -32,11 +32,11 @@ cero= "0"
     }
 %}
 
-%state STRING
+%state STRING, JAVA
 
 %%
     /*Palabras para referenciar otros lenguajes*/
-<YYINITIAL> ("#include \"JAVA.") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.java, yycolumn, yyline, yytext());}
+<YYINITIAL> ("#include \"JAVA.") {yybegin(JAVA); System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.java, yycolumn, yyline, yytext());}
 <YYINITIAL> ("#include \"PY\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.py, yycolumn, yyline, yytext());}
 <YYINITIAL> ("#include \"VB\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.vb, yycolumn, yyline, yytext());}
 <YYINITIAL> ("JAVA") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.javaa, yycolumn, yyline, yytext());}
@@ -95,8 +95,7 @@ cero= "0"
 <YYINITIAL> ("scanf") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.scanf, yycolumn, yyline, yytext());}
 <YYINITIAL> ("clrscr()") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.clrs, yycolumn, yyline, yytext());}
 <YYINITIAL> ("getch()") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.getch, yycolumn, yyline, yytext());}
-<YYINITIAL> ("\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext());}
-    /*Operandos de asignacion*/
+   /*Operandos de asignacion*/
 <YYINITIAL> ("=") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.igual, yycolumn, yyline, yytext());}
 <YYINITIAL> ("++") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.masmas, yycolumn, yyline, yytext());}
 <YYINITIAL> ("--") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.menosmenos, yycolumn, yyline, yytext());}
@@ -109,9 +108,23 @@ cero= "0"
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.decimal, yycolumn, yyline, yytext());}
 <YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));} // "char"c
-<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
+<YYINITIAL> \" {yybegin(STRING); return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext());}
 
 /* Espacios en blanco */
-{espacio}+ {System.out.print(yytext()); /*IGNORAR*/}
+<YYINITIAL> {espacio}+ {System.out.print(yytext()); /*IGNORAR*/}
 
 <YYINITIAL> . {System.out.print(yytext());/*error*/}
+
+<JAVA> {
+    <YYINITIAL> ("*") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.por, yycolumn, yyline, yytext());}
+    {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.id, yycolumn, yyline, yytext());}
+    \"                              { yybegin(YYINITIAL);
+                                        return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext()); }
+}
+
+<STRING> {
+      \"                             { yybegin(YYINITIAL);
+                                        return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext());}
+    "%d"|"%c"|"%f"                   {return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext());}
+      [^]                            {return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext());}
+}

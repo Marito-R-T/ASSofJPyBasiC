@@ -16,21 +16,31 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
+import java.util.List;
+
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class MayorOperator extends Triplete {
+public class MayorOperator extends CondicionalOperator {
 
     private final String OPERADOR = ">";
 
-    public MayorOperator(String id, Triplete operando1, Triplete operando2) {
-        super(id, operando1, operando2);
+    public MayorOperator(Triplete operando1, Triplete operando2, List<Triplete> trip1, List<Triplete> trip2) {
+        super(operando1, operando2, trip1, trip2);
+        tripletes.addAll(trip1);
+        tripletes.addAll(trip2);
+        if (!(operando1 instanceof TerminalOperator)) {
+            tripletes.add(operando1);
+        }
+        if (!(operando2 instanceof TerminalOperator)) {
+            tripletes.add(operando2);
+        }
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "(" + this.operando1.getId() + this.OPERADOR + this.operando2.getId() + ")";
     }
 
 }

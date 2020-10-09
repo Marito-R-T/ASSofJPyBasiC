@@ -7,7 +7,6 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.DefinirArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.PorOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
@@ -43,9 +42,34 @@ public class ArregloPrograma extends VariablePrograma {
         }
     }
 
+    /**
+     * Constructor para agregar una operación a una parte del arreglo
+     *
+     * @param id Id del arreglo
+     * @param ambito Ambito
+     * @param tipo
+     * @param tam
+     * @param arreglo
+     * @param op
+     */
     public ArregloPrograma(String id, Integer ambito, Integer tipo, List<OperacionPrograma> tam, ArregloPrograma arreglo, OperacionPrograma op) {
         super(id, ambito, tipo, null);
         this.triplete = this.obtenerTriplete(tam, arreglo.getFinales(), op);
+        this.tam = tam;
+    }
+
+    /**
+     * Constructor para agregar a un temporal un arreglo
+     *
+     * @param id Id del Triplete
+     * @param ambito Ambito del Triplete
+     * @param tipo Tipo del triplete
+     * @param tam Lista de Operaciones Para asignar el arreglo
+     * @param arreglo Arreglo del que se va sacar los datos
+     */
+    public ArregloPrograma(String id, Integer ambito, Integer tipo, List<OperacionPrograma> tam, ArregloPrograma arreglo) {
+        super(id, ambito, tipo, null);
+        this.triplete = this.obtenerTriplete(tam, arreglo.getFinales());
         this.tam = tam;
     }
 
@@ -112,6 +136,30 @@ public class ArregloPrograma extends VariablePrograma {
         }
         this.getTripletes().addAll(op.getTripletes());
         return new AsignarArreglo(this.id, this.getTripletes().get(this.getTripletes().size() - 1), op.getTriplete());
+    }
+
+    /**
+     * Obtener triplete de la asignación de las variables
+     *
+     * @param tam Lista de Operaciones de donde va a ser el arreglo
+     * @param trip Lista de Tripletes del arreglo operacion
+     * @return El triplete final
+     */
+    public final Triplete obtenerTriplete(List<OperacionPrograma> tam, List<Triplete> trip) {
+        this.hacerTripletes(tam);
+        Triplete tr = null;
+        if (this.finales.size() > 1) {
+            for (int i = this.finales.size() - 1; i > 0; i--) {
+                if (i != 0) {
+                    Triplete por = new PorOperator(null, this.finales.get(i), trip.get(i - 1), "int");
+                    this.getTripletes().add(por);
+                    this.getTripletes().add(new SumOperator(null, this.finales.get(i - 1), por, "int"));
+                }
+            }
+        } else {
+            this.getTripletes().add(this.finales.get(0));
+        }
+        return this.getTripletes().get(this.getTripletes().size() - 1);
     }
 
     /**

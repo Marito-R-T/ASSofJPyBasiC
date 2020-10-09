@@ -14,22 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mycompany.assofjpybasic.backend.semantica.programa;
-
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
-import java.util.List;
+package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class AsigArreglo extends OperacionPrograma {
+public class TemporalArreglo extends Triplete {
 
-    private List<Triplete> tri;
-    private List<OperacionPrograma> ope;
+    private String tipo;
+    private String arreglo;
 
-    public AsigArreglo(Triplete triplete, List<OperacionPrograma> ope, List<Triplete> tri) {
-        super(null, triplete);
+    public TemporalArreglo(String id, String arreglo, Triplete operando2, String tipo) {
+        super(id, null, operando2);
+        this.arreglo = arreglo;
+        this.tipo = tipo;
+        this.id = "t" + Triplete.ETNUM;
+        Triplete.ETNUM++;
+    }
+
+    @Override
+    public String devolverString() {
+        String d = this.tipo + " " + this.id + " = " + this.arreglo + "[" + this.operando2.getId() + "];";
+        return d;
     }
 
 }

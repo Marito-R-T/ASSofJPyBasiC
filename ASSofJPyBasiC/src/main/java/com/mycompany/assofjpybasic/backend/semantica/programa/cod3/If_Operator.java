@@ -23,14 +23,24 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class If_Operator extends Triplete {
 
     public final String operacion = "if";
+    private Etiqueta et;
 
-    public If_Operator(String id, Triplete operando1, Triplete operando2) {
-        super(id, operando1, operando2);
+    public If_Operator(Triplete operando1, Etiqueta operando2) {
+        super(null, operando1, operando2);
+        this.et = operando2;
     }
 
     @Override
     public String devolverString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "if" + this.operando1.devolverString() + " goto " + et.getId();
+    }
+
+    public Etiqueta getEt() {
+        return et;
+    }
+
+    public void setEt(Etiqueta et) {
+        this.et = et;
     }
 
 }

@@ -193,8 +193,8 @@ IF_ELSE ::= iff CONDICION BLOQUEIF
 
 BLOQUEIF ::= thenn {:VisualSemantica.AMBITO += 1;:} STATEMENTLINE 
                 espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
-        | THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS ELSE_IF endd iff espacio 
-                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+        | THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS 
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF endd iff espacio 
 ;
 
 ELSE_IF ::= elseiff CONDICION THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS

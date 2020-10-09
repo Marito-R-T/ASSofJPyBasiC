@@ -16,6 +16,9 @@ import com.mycompany.assofjpybasic.backend.analizador.python.SintaxisPython;
 import com.mycompany.assofjpybasic.backend.analizador.visual.LexicoVisual;
 import com.mycompany.assofjpybasic.backend.analizador.visual.SintaxisVisual;
 import com.mycompany.assofjpybasic.backend.classes.ArchivoMLG;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.StringReader;
 
 /**
@@ -29,7 +32,15 @@ public class prueba {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
-        String s = "%%VB\n"
+        File file = new File("/home/mari2bar/Escritorio/prueba2.mlg");
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String s = "";
+        String a;
+        while ((a = br.readLine()) != null) {
+            s += a + "\n";
+        }
+        /*s = "%%VB\n"
                 + "\n"
                 + "Public Sub Saludo()\n"
                 + "\n"
@@ -43,6 +54,8 @@ public class prueba {
                 + "    Num = N\n"
                 + "    If N = 0 Then\n"
                 + "	Fact = 1\n"
+                + "    Elseif N != 0 Then\n"
+                + "     fact = 2\n"
                 + "    Else\n"
                 + "        Fact = 1\n"
                 + "        Do\n"
@@ -119,12 +132,16 @@ public class prueba {
                 + "\n"
                 + "  // Factorial\n"
                 + "  resultado = VB.Factorial(i);\n"
+                + "  i = Arreglo1[1*1][2];\n"
                 + " \n"
                 + "  printf(\"El factorial de %d es %d\",i,resultado);\n"
                 + "    \n"
                 + "  printf(\"Conversion de años a meses\");\n"
                 + "\n"
                 + "  PY.edadmeses(0 , 12);\n"
+                + "  if(3<2 && i*3==6){\n"
+                + "\n"
+                + "  }\n"
                 + "\n"
                 + "  // Arreglo\n"
                 + "  Arreglo1[1][1] = 0;\n"
@@ -141,7 +158,7 @@ public class prueba {
                 + "  printf(\" = %d\",resultado);\n"
                 + "\n"
                 + "  getch();\n"
-                + "}";
+                + "}";*/
         SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
         ArchivoMLG archivo = (ArchivoMLG) lengua.parse().value;
         System.out.println("visual = " + archivo.getVisual());

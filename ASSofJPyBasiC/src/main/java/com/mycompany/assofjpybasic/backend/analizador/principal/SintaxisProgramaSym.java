@@ -20,11 +20,11 @@ public class SintaxisProgramaSym {
   public static final int igual = 47;
   public static final int nott = 11;
   public static final int mayorig = 26;
-  public static final int string = 60;
-  public static final int pyy = 61;
+  public static final int string = 63;
+  public static final int pyy = 60;
   public static final int intt = 5;
   public static final int menorig = 24;
-  public static final int vbb = 62;
+  public static final int vbb = 61;
   public static final int llavec = 36;
   public static final int floatt = 6;
   public static final int menosmenos = 49;
@@ -37,7 +37,7 @@ public class SintaxisProgramaSym {
   public static final int getch = 46;
   public static final int vb = 52;
   public static final int menos = 29;
-  public static final int javaa = 63;
+  public static final int javaa = 62;
   public static final int menor = 23;
   public static final int includee = 21;
   public static final int iff = 12;
@@ -58,6 +58,7 @@ public class SintaxisProgramaSym {
   public static final int por = 30;
   public static final int punto = 42;
   public static final int forr = 14;
+  public static final int str = 64;
   public static final int defaultt = 18;
   public static final int id = 55;
   public static final int clrs = 45;
@@ -133,10 +134,11 @@ public class SintaxisProgramaSym {
   "decimal",
   "character",
   "comilla",
-  "string",
   "pyy",
   "vbb",
-  "javaa"
+  "javaa",
+  "string",
+  "str"
   };
 }
 
