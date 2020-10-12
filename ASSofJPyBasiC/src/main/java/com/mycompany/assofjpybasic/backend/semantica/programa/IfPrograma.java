@@ -43,6 +43,7 @@ public class IfPrograma extends CondicionPrograma {
         this.malo.add(et);
         this.triplete.addAll(tripletes);
         this.triplete.add(tri);
+        this.triplete.add(new GoToOperator(et));
     }
 
     /**

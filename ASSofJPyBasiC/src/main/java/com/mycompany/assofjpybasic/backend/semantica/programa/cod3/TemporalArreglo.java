@@ -29,8 +29,8 @@ public class TemporalArreglo extends Triplete {
         super(id, null, operando2);
         this.arreglo = arreglo;
         this.tipo = tipo;
-        this.id = "t" + Triplete.ETNUM;
-        Triplete.ETNUM++;
+        this.id = "t" + Triplete.VARNUM;
+        Triplete.VARNUM++;
     }
 
     @Override

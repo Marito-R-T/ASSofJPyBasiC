@@ -5,6 +5,9 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.python;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +55,28 @@ public class PythonSemantica {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Metodo para verificar existencia de una variable y agregarla si no existe
+     *
+     * @param var Variable a verificar su existencia
+     * @param tipo lista tipos de Variables
+     * @return retorna los tripletes de las asignaciones
+     */
+    public static List<Triplete> devolverAsig(List<VariablePython> var, List<OperacionPython> tipo) {
+        if (var.size() == tipo.size()) {
+            List<Triplete> list = new ArrayList<>();
+            for (int i = 0; i < var.size(); i++) {
+                VariablePython py = var.get(i);
+                OperacionPython t = tipo.get(i);
+                list.addAll(t.mostrarTripletes());
+                list.add(new AsignarValor(new TerminalOperator(py.getId()), t.getTriplete(), OperacionPython.obtenerTipo(t)));
+            }
+            return list;
+        } else {
+            return new ArrayList<>();
         }
     }
 

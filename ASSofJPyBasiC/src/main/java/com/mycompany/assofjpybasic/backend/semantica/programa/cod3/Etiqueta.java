@@ -24,7 +24,7 @@ public class Etiqueta extends Triplete {
 
     public Etiqueta() {
         super(null, null, null);
-        this.id = "t" + Triplete.ETNUM;
+        this.id = "et" + Triplete.ETNUM;
         Triplete.ETNUM++;
     }
 

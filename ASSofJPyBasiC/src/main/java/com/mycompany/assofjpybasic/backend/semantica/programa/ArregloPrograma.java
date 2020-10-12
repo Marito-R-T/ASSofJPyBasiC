@@ -113,6 +113,57 @@ public class ArregloPrograma extends VariablePrograma {
     }
 
     /**
+     * Metodo para obtener todos los tripletes de las operaciones dentro de los
+     * parentesis
+     *
+     * @param tam Operaciones dentro de los parentesis
+     */
+    public final void hacerTripletes(List<OperacionPrograma> tam) {
+        OperacionPrograma anterior = null;
+        for (OperacionPrograma operacionPrograma : tam) {
+            super.getTripletes().addAll(operacionPrograma.getTripletes());
+            if (!(operacionPrograma.getTriplete() instanceof TerminalOperator)) {
+                super.getTripletes().add(operacionPrograma.getTriplete());
+                this.finales.add(operacionPrograma.getTriplete());
+            } else {
+                Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), null);
+                ((AsignarTemporal) tri).setTipo(Triplete.tipos[operacionPrograma.getTipo() - 1]);
+                super.getTripletes().add(tri);
+                this.finales.add(tri);
+            }
+            anterior = operacionPrograma;
+        }
+    }
+
+    /**
+     * Metodo para obtener todos los tripletes de las operaciones dentro de los
+     * parentesis
+     *
+     * @param tam Operaciones dentro de los parentesis
+     */
+    public final void hacerTripletes2(List<OperacionPrograma> tam) {
+        OperacionPrograma anterior = null;
+        for (OperacionPrograma operacionPrograma : tam) {
+            super.getTripletes().addAll(operacionPrograma.getTripletes());
+            if (!(operacionPrograma.getTriplete() instanceof TerminalOperator)) {
+                super.getTripletes().add(operacionPrograma.getTriplete());
+                this.finales.add(operacionPrograma.getTriplete());
+            } else {
+                Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), null);
+                ((AsignarTemporal) tri).setTipo(Triplete.tipos[operacionPrograma.getTipo() - 1]);
+                super.getTripletes().add(tri);
+                this.finales.add(tri);
+            }
+            if (anterior != null) {
+                super.getTripletes().add(new PorOperator(null, anterior.getTriplete(),
+                        operacionPrograma.getTriplete(),
+                        Triplete.devolverTipo(anterior, operacionPrograma)));
+            }
+            anterior = operacionPrograma;
+        }
+    }
+
+    /**
      * Obtener triplete de la asignación de las variables
      *
      * @param tam Lista de Operaciones de donde va a ser el arreglo
@@ -121,7 +172,7 @@ public class ArregloPrograma extends VariablePrograma {
      * @return El triplete final
      */
     public final Triplete obtenerTriplete(List<OperacionPrograma> tam, List<Triplete> trip, OperacionPrograma op) {
-        this.hacerTripletes(tam);
+        this.hacerTripletes2(tam);
         Triplete tr = null;
         if (this.finales.size() > 1) {
             for (int i = this.finales.size() - 1; i > 0; i--) {
@@ -160,29 +211,6 @@ public class ArregloPrograma extends VariablePrograma {
             this.getTripletes().add(this.finales.get(0));
         }
         return this.getTripletes().get(this.getTripletes().size() - 1);
-    }
-
-    /**
-     * Metodo para obtener todos los tripletes de las operaciones dentro de los
-     * parentesis
-     *
-     * @param tam Operaciones dentro de los parentesis
-     */
-    public final void hacerTripletes(List<OperacionPrograma> tam) {
-        OperacionPrograma anterior = null;
-        for (OperacionPrograma operacionPrograma : tam) {
-            super.getTripletes().addAll(operacionPrograma.getTripletes());
-            if (!(operacionPrograma.getTriplete() instanceof TerminalOperator)) {
-                super.getTripletes().add(operacionPrograma.getTriplete());
-                this.finales.add(operacionPrograma.getTriplete());
-            } else {
-                Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), null);
-                ((AsignarTemporal) tri).setTipo(Triplete.tipos[operacionPrograma.getTipo() - 1]);
-                super.getTripletes().add(tri);
-                this.finales.add(tri);
-            }
-            anterior = operacionPrograma;
-        }
     }
 
 }

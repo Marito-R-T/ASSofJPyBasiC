@@ -16,9 +16,6 @@ import com.mycompany.assofjpybasic.backend.analizador.python.SintaxisPython;
 import com.mycompany.assofjpybasic.backend.analizador.visual.LexicoVisual;
 import com.mycompany.assofjpybasic.backend.analizador.visual.SintaxisVisual;
 import com.mycompany.assofjpybasic.backend.classes.ArchivoMLG;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.StringReader;
 
 /**
@@ -32,15 +29,15 @@ public class prueba {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
-        File file = new File("/home/mari2bar/Escritorio/prueba2.mlg");
+        /*File file = new File("/home/mari2bar/Escritorio/prueba2.mlg");
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
         String s = "";
         String a;
         while ((a = br.readLine()) != null) {
             s += a + "\n";
-        }
-        /*s = "%%VB\n"
+        }*/
+        String s = "%%VB\n"
                 + "\n"
                 + "Public Sub Saludo()\n"
                 + "\n"
@@ -143,6 +140,15 @@ public class prueba {
                 + "\n"
                 + "  }\n"
                 + "\n"
+                + "  switch(i*2){\n"
+                + "  case 0: \n"
+                + "  printf(\"primer case\");"
+                + "  break;\n"
+                + "  case 1: \n"
+                + "  printf(\"hola\");\n"
+                + "  default: \n"
+                + "  printf(\"aaaa\");"
+                + "  }\n"
                 + "  // Arreglo\n"
                 + "  Arreglo1[1][1] = 0;\n"
                 + "  \n"
@@ -158,7 +164,7 @@ public class prueba {
                 + "  printf(\" = %d\",resultado);\n"
                 + "\n"
                 + "  getch();\n"
-                + "}";*/
+                + "}";
         SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
         ArchivoMLG archivo = (ArchivoMLG) lengua.parse().value;
         System.out.println("visual = " + archivo.getVisual());

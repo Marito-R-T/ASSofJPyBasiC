@@ -27,6 +27,10 @@ public class prueba2 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        StringBuffer string = new StringBuffer();
+        string.append("hola");
+        string.setLength(0);
+        System.out.println(string);
         String s = "a", b = "B";
         System.out.println(s.concat(b));
     }

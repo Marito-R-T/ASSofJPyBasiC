@@ -27,8 +27,8 @@ public class AsignarTemporal extends Triplete {
     public AsignarTemporal(String id, Triplete operando1, String tipo) {
         super(id, operando1, null);
         this.tipo = tipo;
-        this.id = "t" + Triplete.ETNUM;
-        Triplete.ETNUM++;
+        this.id = "t" + Triplete.VARNUM;
+        Triplete.VARNUM++;
     }
 
     @Override

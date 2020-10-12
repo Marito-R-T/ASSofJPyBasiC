@@ -16,6 +16,7 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,16 @@ public class IgualOperator extends CondicionalOperator {
         super(operando1, operando2, trip1, trip2);
         tripletes.addAll(trip1);
         tripletes.addAll(trip2);
+        if (!(operando1 instanceof TerminalOperator)) {
+            tripletes.add(operando1);
+        }
+        if (!(operando2 instanceof TerminalOperator)) {
+            tripletes.add(operando2);
+        }
+    }
+
+    public IgualOperator(Triplete operando1, Triplete operando2) {
+        super(operando1, operando2, new ArrayList<>(), new ArrayList<>());
         if (!(operando1 instanceof TerminalOperator)) {
             tripletes.add(operando1);
         }

@@ -24,6 +24,7 @@ public class If_Operator extends Triplete {
 
     public final String operacion = "if";
     private Etiqueta et;
+    private Triplete op;
 
     public If_Operator(Triplete operando1, Etiqueta operando2) {
         super(null, operando1, operando2);
@@ -32,7 +33,11 @@ public class If_Operator extends Triplete {
 
     @Override
     public String devolverString() {
-        return "if" + this.operando1.devolverString() + " goto " + et.getId();
+        if (op == null) {
+            return "if" + this.operando1.devolverString() + " goto " + et.getId();
+        } else {
+            return "if" + this.op.devolverString() + " goto " + et.getId();
+        }
     }
 
     public Etiqueta getEt() {
@@ -41,6 +46,10 @@ public class If_Operator extends Triplete {
 
     public void setEt(Etiqueta et) {
         this.et = et;
+    }
+
+    public void setOp(Triplete op) {
+        this.op = new IgualOperator(this.operando1, op);
     }
 
 }

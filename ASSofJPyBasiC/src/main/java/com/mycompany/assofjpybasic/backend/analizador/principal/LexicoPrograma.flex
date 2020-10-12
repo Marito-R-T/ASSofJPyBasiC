@@ -32,7 +32,7 @@ cero= "0"
     }
 %}
 
-%state STRING, JAVA
+%state STRING, JAVA, ST
 
 %%
     /*Palabras para referenciar otros lenguajes*/
@@ -126,5 +126,15 @@ cero= "0"
       \"                             { yybegin(YYINITIAL);
                                         return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext());}
     "%d"|"%c"|"%f"                   {return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext());}
-      [^]                            {return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, yytext());}
+      [^]                           {string.append(yytext()); yybegin(ST);}
+}
+
+<ST> {
+      \"                             { yybegin(STRING); String s = string.toString(); string.setLength(0);
+                                        this.yypushback(1);
+                                        return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, s);}
+    "%d"|"%c"|"%f"                   { yybegin(STRING); String s = string.toString(); string.setLength(0);
+                                        this.yypushback(2);
+                                        return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, s);}
+    .                                {string.append(yytext());}
 }

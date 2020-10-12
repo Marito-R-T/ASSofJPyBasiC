@@ -5,6 +5,7 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TemporalArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class OperacionPrograma {
     public OperacionPrograma(Integer tipo, Triplete triplete) {
         this.tipo = tipo;
         this.triplete = triplete;
+        if (triplete instanceof TemporalArreglo) {
+            this.tripletes.add(triplete);
+        }
     }
 
     /**
@@ -117,11 +121,17 @@ public class OperacionPrograma {
         return false;
     }
 
-    public void mostrarTripletes() {
-        tripletes.forEach((trip) -> {
+    public List<Triplete> mostrarTripletes() {
+        List<Triplete> trr = new ArrayList<>();
+        trr.addAll(this.tripletes);
+        if (!(this.triplete instanceof TerminalOperator)) {
+            trr.add(this.triplete);
+        }
+        /*tripletes.forEach((trip) -> {
             System.out.println(trip.devolverString());
         });
-        System.out.println(triplete.devolverString());
+        System.out.println(triplete.devolverString());*/
+        return trr;
     }
 
 }

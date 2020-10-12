@@ -20,17 +20,15 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class GetchOperator extends Triplete {
+public class Return extends Triplete {
 
-    private final String tipo = "int-float";
-
-    public GetchOperator() {
-        super(null, null, null);
+    public Return(Triplete operando1) {
+        super(null, operando1, null);
     }
 
     @Override
     public String devolverString() {
-        return "getch();";
+        return "return " + this.operando1.id + ";";
     }
 
 }

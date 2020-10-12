@@ -14,23 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
+package com.mycompany.assofjpybasic.backend.semantica.python;
+
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class GetchOperator extends Triplete {
+public class Input extends TerminalOperator {
 
-    private final String tipo = "int-float";
+    private final String tipo;
 
-    public GetchOperator() {
-        super(null, null, null);
+    public Input(String tipo) {
+        super(tipo);
+        this.tipo = tipo;
     }
 
     @Override
     public String devolverString() {
-        return "getch();";
+        return this.id + "scanf(\"\")";
+    }
+
+    public static String tipoPython(OperacionPython op) {
+        if (op.getTipo().equals(PythonSemantica.CHAR)) {
+            return "%c";
+        } else if (op.getTipo().equals(PythonSemantica.FLOAT)) {
+            return "%f";
+        } else if (op.getTipo().equals(PythonSemantica.INT)) {
+            return "%d";
+        }
+        return "%v";
     }
 
 }

@@ -6,7 +6,8 @@
 package com.mycompany.assofjpybasic.backend.semantica.python;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
-import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +19,8 @@ public class MetodoPython {
     private final String id;
     private String TIPO;
     private final List<VariablePython> parametros;
+    private final List<Triplete> trip = new ArrayList<>();
+    private String nombre;
 
     /**
      *
@@ -28,6 +31,7 @@ public class MetodoPython {
     public MetodoPython(String id, List<VariablePython> parametros) {
         this.id = id;
         this.parametros = parametros;
+        String params = "";
     }
 
     /**
@@ -105,6 +109,18 @@ public class MetodoPython {
         } else {
             return tipo1.equals(PythonSemantica.CHAR) && tipo2 == 1;
         }
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public List<Triplete> getTrip() {
+        return trip;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
 }
