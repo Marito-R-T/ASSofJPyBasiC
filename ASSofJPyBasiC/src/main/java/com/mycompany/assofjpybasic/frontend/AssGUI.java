@@ -7,6 +7,7 @@ package com.mycompany.assofjpybasic.frontend;
 
 import com.mycompany.assofjpybasic.backend.archivos.AperturaMLG;
 import com.mycompany.assofjpybasic.backend.archivos.GuardarArchivo;
+import com.mycompany.assofjpybasic.frontend.analizador.ManejadorAnalisis;
 import com.mycompany.assofjpybasic.frontend.tabulador.TabbedPanel;
 import java.io.File;
 import javax.swing.JScrollPane;
@@ -71,6 +72,7 @@ public class AssGUI extends javax.swing.JFrame {
         itemCerrar = new javax.swing.JMenuItem();
         itemSalir = new javax.swing.JMenuItem();
         menuCodigo = new javax.swing.JMenu();
+        itemGenerarCod3 = new javax.swing.JMenuItem();
         menuEjecutar = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -154,6 +156,15 @@ public class AssGUI extends javax.swing.JFrame {
         jMenuBar1.add(menuArchivo);
 
         menuCodigo.setText("Generar Código");
+
+        itemGenerarCod3.setText("Codigo 3 Direcciones");
+        itemGenerarCod3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemGenerarCod3ActionPerformed(evt);
+            }
+        });
+        menuCodigo.add(itemGenerarCod3);
+
         jMenuBar1.add(menuCodigo);
 
         menuEjecutar.setText("Ejecutar");
@@ -258,10 +269,18 @@ public class AssGUI extends javax.swing.JFrame {
         tabbedArchivo.remove(tabbedArchivo.getSelectedIndex());
     }//GEN-LAST:event_itemCerrarActionPerformed
 
+    private void itemGenerarCod3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGenerarCod3ActionPerformed
+        // TODO add your handling code here:
+        TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
+        tabbed.getPaneCodigoT().
+                setText(ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText()));
+    }//GEN-LAST:event_itemGenerarCod3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static final javax.swing.JEditorPane editorTerminal = new javax.swing.JEditorPane();
     private javax.swing.JMenuItem itemAbrir;
     private javax.swing.JMenuItem itemCerrar;
+    private javax.swing.JMenuItem itemGenerarCod3;
     private javax.swing.JMenuItem itemGuardar;
     private javax.swing.JMenuItem itemGuardarComo;
     private javax.swing.JMenuItem itemNuevo;

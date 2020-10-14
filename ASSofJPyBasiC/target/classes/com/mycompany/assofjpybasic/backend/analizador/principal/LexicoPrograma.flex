@@ -103,7 +103,7 @@ cero= "0"
 /* Expresiones Regulares */
 <YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
 <YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
-<YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")*(".h") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.idlib, yycolumn, yyline, yytext());}
+<YYINITIAL> "<"{letras}({letras}|{onenine}|{cero}|"_")*(".h")">" {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.idlib, yycolumn, yyline, yytext());}
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.decimal, yycolumn, yyline, yytext());}

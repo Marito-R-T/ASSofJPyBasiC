@@ -11,7 +11,9 @@ import com.mycompany.assofjpybasic.backend.analizador.python.LexicoPython;
 import com.mycompany.assofjpybasic.backend.analizador.python.SintaxisPython;
 import com.mycompany.assofjpybasic.backend.analizador.visual.LexicoVisual;
 import com.mycompany.assofjpybasic.backend.analizador.visual.SintaxisVisual;
+import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.MetodoVisual;
 import java.io.StringReader;
@@ -31,6 +33,9 @@ public class ProgramaSemantica {
     private List<MetodoPython> metodosPython = new ArrayList<>();
     private List<TablaJava> clasesJava = new ArrayList<>();
     private List<TablaJava> clasesImportadas = new ArrayList<>();
+    private List<Triplete> tripletes = new ArrayList<>();
+    private List<Triplete> var = new ArrayList<>();
+    private List<String> imports = new ArrayList<>();
 
     /**
      * Constructor de la semantica del programa, donde se inicializa el ambito a
@@ -93,6 +98,21 @@ public class ProgramaSemantica {
             }
         }
         return null;
+    }
+
+    /**
+     * Metodo para verificar existencia de una variable objeto
+     *
+     * @param var Variable a verificar su existencia
+     * @return retorna el tipo de variable que es, si no lo encuentra regresa ""
+     */
+    public String existeObjeto(String var) {
+        for (VariablePrograma variable : variables) {
+            if (variable.getId().equals(var)) {
+                return variable.getTip();
+            }
+        }
+        return "";
     }
 
     /**
@@ -216,8 +236,13 @@ public class ProgramaSemantica {
      * @return True si el metodo Python existe con las especificaciones, False
      * si no existe
      */
-    public boolean existeMetodoPY(String id, List<OperacionPrograma> vars) {
-        return metodosPython.stream().anyMatch((metodoPython) -> (metodoPython.equals(id, vars)));
+    public MetodoPython existeMetodoPY(String id, List<OperacionPrograma> vars) {
+        for (MetodoPython metodoPython : this.metodosPython) {
+            if (metodoPython.equals(id, vars)) {
+                return metodoPython;
+            }
+        }
+        return null;
     }
 
     /**
@@ -228,8 +253,13 @@ public class ProgramaSemantica {
      * @return True si existe metodo Visual con estas especificaciones, False si
      * no existe
      */
-    public boolean existeMetodoVB(String id, List<OperacionPrograma> vars) {
-        return metodosVisual.stream().anyMatch((metodoPython) -> (metodoPython.equals(id, vars)));
+    public MetodoVisual existeMetodoVB(String id, List<OperacionPrograma> vars) {
+        for (MetodoVisual metodoVisual : this.metodosVisual) {
+            if (metodoVisual.equals(id.toLowerCase(), vars)) {
+                return metodoVisual;
+            }
+        }
+        return null;
     }
 
     /**
@@ -241,13 +271,105 @@ public class ProgramaSemantica {
      * @return True si existe el metodo en la clase indicada, False si no existe
      * el metodo
      */
-    public boolean existeMetodoJV(String clase, String metodo, List<OperacionPrograma> vars) {
+    public MetodoJava existeMetodoJV(String clase, String metodo, List<OperacionPrograma> vars) {
         for (TablaJava clasesImportada : clasesImportadas) {
             if (clasesImportada.getId().equals(clase)) {
                 return clasesImportada.existeMetodo(metodo, vars);
             }
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * Metodo para verificar existencia de la clase y metodo en Java importado
+     *
+     * @param clase Id de la clase java que pertenece el parametro
+     * @param metodo Id del metodo que se quiere buscar
+     * @param vars Parametros del metodo a buscar
+     * @return True si existe el metodo en la clase indicada, False si no existe
+     * el metodo
+     */
+    public MetodoJava existeConstructorJV(String clase, String metodo, List<OperacionPrograma> vars) {
+        for (TablaJava clasesImportada : clasesImportadas) {
+            if (clasesImportada.getId().equals(clase)) {
+                return clasesImportada.existeConstructor(metodo, vars);
+            }
+        }
+        return null;
+    }
+
+    public String mostrarCodigo() {
+        String s = "";
+        s = this.imports.stream().map(aImport -> aImport + "\n").reduce(s, String::concat);
+        if (metodosPython != null) {
+            s += this.Python();
+        }
+        if (metodosVisual != null) {
+            s += this.Visual();
+        }
+        if (this.clasesImportadas != null) {
+            s += this.importadas();
+        }
+        s += "\n//Variables y constantes Globales \n";
+        s += this.var();
+        s += "\n//Main de C \n";
+        s += this.main();
+        return s;
+    }
+
+    public String Python() {
+        String s = "";
+        for (MetodoPython metodoPython : this.metodosPython) {
+            s += "\n";
+            s += metodoPython.mostrarMetodo();
+        }
+        return s;
+    }
+
+    public String Visual() {
+        String s = "";
+        for (MetodoVisual metodoVisual : this.metodosVisual) {
+            s += "\n";
+            s += metodoVisual.mostrarMetodo();
+        }
+        return s;
+    }
+
+    public String importadas() {
+        String s = "";
+        for (TablaJava clasesImportada : this.clasesImportadas) {
+            s += clasesImportada.mostrarClase();
+        }
+        return s;
+    }
+
+    public String main() {
+        String s = "int main() {\n";
+        for (Triplete triplete : this.tripletes) {
+            s += triplete.devolverString() + "\n";
+        }
+        s += "}\n";
+        return s;
+    }
+
+    private String var() {
+        String s = "";
+        for (Triplete triplete : this.var) {
+            s += triplete.devolverString() + "\n";
+        }
+        return s;
+    }
+
+    public List<Triplete> getTripletes() {
+        return tripletes;
+    }
+
+    public List<Triplete> getVar() {
+        return var;
+    }
+
+    public List<String> getImports() {
+        return imports;
     }
 
 }

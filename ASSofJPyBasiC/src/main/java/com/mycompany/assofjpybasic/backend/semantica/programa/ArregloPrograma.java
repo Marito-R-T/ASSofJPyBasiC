@@ -154,11 +154,6 @@ public class ArregloPrograma extends VariablePrograma {
                 super.getTripletes().add(tri);
                 this.finales.add(tri);
             }
-            if (anterior != null) {
-                super.getTripletes().add(new PorOperator(null, anterior.getTriplete(),
-                        operacionPrograma.getTriplete(),
-                        Triplete.devolverTipo(anterior, operacionPrograma)));
-            }
             anterior = operacionPrograma;
         }
     }
@@ -173,15 +168,8 @@ public class ArregloPrograma extends VariablePrograma {
      */
     public final Triplete obtenerTriplete(List<OperacionPrograma> tam, List<Triplete> trip, OperacionPrograma op) {
         this.hacerTripletes2(tam);
-        Triplete tr = null;
         if (this.finales.size() > 1) {
-            for (int i = this.finales.size() - 1; i > 0; i--) {
-                if (i != 0) {
-                    Triplete por = new PorOperator(null, this.finales.get(i), trip.get(i - 1), "int");
-                    this.getTripletes().add(por);
-                    this.getTripletes().add(new SumOperator(null, this.finales.get(i - 1), por, "int"));
-                }
-            }
+            this.obtenerS(trip, 0, this.finales.size() - 1);
         } else {
             this.getTripletes().add(this.finales.get(0));
         }
@@ -198,19 +186,31 @@ public class ArregloPrograma extends VariablePrograma {
      */
     public final Triplete obtenerTriplete(List<OperacionPrograma> tam, List<Triplete> trip) {
         this.hacerTripletes(tam);
-        Triplete tr = null;
         if (this.finales.size() > 1) {
-            for (int i = this.finales.size() - 1; i > 0; i--) {
-                if (i != 0) {
-                    Triplete por = new PorOperator(null, this.finales.get(i), trip.get(i - 1), "int");
-                    this.getTripletes().add(por);
-                    this.getTripletes().add(new SumOperator(null, this.finales.get(i - 1), por, "int"));
-                }
-            }
+            this.obtenerS(trip, 0, this.finales.size() - 1);
         } else {
             this.getTripletes().add(this.finales.get(0));
         }
         return this.getTripletes().get(this.getTripletes().size() - 1);
+    }
+
+    public final Triplete obtenerS(List<Triplete> trip, int posi, int posf) {
+        if (posi == posf) {
+            return obtener(trip, 0, posf);
+        }
+        Triplete sum = new SumOperator(null, this.obtener(trip, 0, posi), this.obtenerS(trip, (posi + 1), posf), "int");
+        this.getTripletes().add(sum);
+        return sum;
+    }
+
+    public final Triplete obtener(List<Triplete> trip, int posi, int posf) {
+        if (posi == posf) {
+            return this.finales.get(posf);
+        } else {
+            Triplete por = new PorOperator(null, trip.get(posi), this.obtener(trip, (posi + 1), posf), "int");
+            this.getTripletes().add(por);
+            return por;
+        }
     }
 
 }

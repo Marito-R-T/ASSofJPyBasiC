@@ -111,6 +111,17 @@ public class OperacionPython {
         }
     }
 
+    public static String obtenerTipo(String op1) {
+        switch (op1) {
+            case "FLOAT":
+                return "float";
+            case "INT":
+                return "int";
+            default:
+                return "char";
+        }
+    }
+
     public List<Triplete> mostrarTripletes() {
         List<Triplete> trr = new ArrayList<>();
         trr.addAll(this.tripletes);

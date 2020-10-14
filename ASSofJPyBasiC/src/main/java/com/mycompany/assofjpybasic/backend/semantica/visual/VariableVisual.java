@@ -5,13 +5,14 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.List;
 
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class VariableVisual {
+public class VariableVisual extends OperacionVisual {
 
     private final String id;
     private String tipo;
@@ -25,11 +26,14 @@ public class VariableVisual {
      * @param id Id de la variable
      * @param ambito ambito al que pertenece la variable
      * @param tipo Tipo de la variable
+     * @param tri Triplete que corresponde a la variable
      */
-    public VariableVisual(String id, Integer ambito, String tipo) {
+    public VariableVisual(String id, Integer ambito, String tipo, Triplete tri) {
+        super(tipo, tri);
         this.id = id.toLowerCase();
         this.ambito = ambito;
         this.tipo = tipo;
+        this.triplete = tri;
     }
 
     /**
@@ -38,12 +42,15 @@ public class VariableVisual {
      *
      * @param id Id de la variable
      * @param ambito ambito al que pertenece la variable
+     * @param tri Triplete de la variable
      */
-    public VariableVisual(String id, Integer ambito) {
+    public VariableVisual(String id, Integer ambito, Triplete tri) {
+        super(null, tri);
         this.id = id.toLowerCase();
         this.ambito = ambito;
     }
 
+    @Override
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }

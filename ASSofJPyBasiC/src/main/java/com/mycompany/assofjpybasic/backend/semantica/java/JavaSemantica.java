@@ -41,4 +41,31 @@ public class JavaSemantica {
         }
     }
 
+    public void mostrarClases() {
+        for (TablaJava tablaJava : tabla) {
+            System.out.println("");
+            System.out.println(tablaJava.getId() + "  CLASE");
+            tablaJava.getPrincipales().forEach((prin) -> {
+                System.out.println(prin.devolverString());
+            });
+            System.out.println("");
+            tablaJava.getConstructores().forEach((con) -> {
+                System.out.println("");
+                System.out.println(con.getId() + " CONSTRUCTOR");
+                con.getTripletes().forEach((tri) -> {
+                    System.out.println(tri.devolverString());
+                });
+                System.out.println("------------------------");
+            });
+            tablaJava.getMetodos().forEach((con) -> {
+                System.out.println("");
+                System.out.println(con.getId() + " METODOS");
+                con.getTripletes().forEach((tri) -> {
+                    System.out.println(tri.devolverString());
+                });
+                System.out.println("------------------------");
+            });
+        }
+    }
+
 }

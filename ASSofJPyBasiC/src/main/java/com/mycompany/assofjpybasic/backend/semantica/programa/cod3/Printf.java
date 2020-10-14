@@ -54,9 +54,9 @@ public class Printf extends Triplete {
     @Override
     public String devolverString() {
         if (tipo != null) {
-            return "printf(\"" + tipo + "\", " + this.operando2.getId() + ")";
+            return "printf(\"" + tipo + "\", " + this.operando2.getId() + ");";
         } else {
-            return "printf(\"" + valor + "\")";
+            return "printf(\"" + valor + "\");";
         }
     }
 

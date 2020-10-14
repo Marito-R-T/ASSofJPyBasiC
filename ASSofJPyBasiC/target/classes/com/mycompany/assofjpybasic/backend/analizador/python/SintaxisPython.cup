@@ -110,14 +110,19 @@ PC ::= puntocoma
 STATEMENTLINE ::= AS_VAR:e1 {:RESULT = e1;:}
         | WRITE:e1 {:RESULT = e1;:}
         | INPUT:e1 {:AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, e1.getTipo()),null
-                ,OperacionPython.obtenerTipo(e1)); 
+                ,OperacionPython.obtenerTipo(e1));
                 List<Triplete> tri = new ArrayList<>(); tri.add(vl); 
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
-        | returnn D:e1 {:if(actual.getTIPO() == null || actual.getTIPO().equals(PythonSemantica.VAR)){
-                actual.setTIPO(e1.getTipo());
+        | returnn D:e1 {:List<Triplete> tri = new ArrayList<>();
+        if(actual.getTIPO() == null || actual.getTIPO().equals(PythonSemantica.VAR)){
+                actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
+                tri.add(new Return(e1.getTriplete()));
         } else if(!actual.getTIPO().contains(e1.getTipo())){
                 syntax_error(getS());
-        } RESULT = new ArrayList<>();:}
+        } else {
+                actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
+                tri.add(new Return(e1.getTriplete()));
+        } RESULT = tri;:}
 ;
 
 AS_VAR ::= LISTVAR:e1 coma igual LISTDEF:e2 coma {:if(!sem.addVar(e1, e2)){syntax_error(getS()); RESULT  = new ArrayList<>();} 
@@ -140,7 +145,7 @@ D ::= character:e1 {:RESULT = new OperacionPython(PythonSemantica.CHAR, new Term
     | INPUT:e1 {:RESULT = e1;:}
 ;
 
-WRITE ::= print para STRING:e1 parc {:RESULT = e1;:}
+WRITE ::= print para STRING:e1 parc {:e1.add(new Printf("\n")); RESULT = e1;:}
 ;
 
 INPUT ::= intinput para string:e1 parc {:OperacionPython op = new OperacionPython(PythonSemantica.INT,

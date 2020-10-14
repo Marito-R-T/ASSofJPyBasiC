@@ -745,7 +745,7 @@ PythonSemantica.AMBITO += 1;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		OperacionPython e1 = (OperacionPython)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
 		AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, e1.getTipo()),null
-                ,OperacionPython.obtenerTipo(e1)); 
+                ,OperacionPython.obtenerTipo(e1));
                 List<Triplete> tri = new ArrayList<>(); tri.add(vl); 
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",23, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
@@ -759,11 +759,16 @@ PythonSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		OperacionPython e1 = (OperacionPython)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		if(actual.getTIPO() == null || actual.getTIPO().equals(PythonSemantica.VAR)){
-                actual.setTIPO(e1.getTipo());
+		List<Triplete> tri = new ArrayList<>();
+        if(actual.getTIPO() == null || actual.getTIPO().equals(PythonSemantica.VAR)){
+                actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
+                tri.add(new Return(e1.getTriplete()));
         } else if(!actual.getTIPO().contains(e1.getTipo())){
                 syntax_error(getS());
-        } RESULT = new ArrayList<>();
+        } else {
+                actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
+                tri.add(new Return(e1.getTriplete()));
+        } RESULT = tri;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",23, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;
@@ -898,7 +903,7 @@ PythonSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).right;
 		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).value;
-		RESULT = e1;
+		e1.add(new Printf("\n")); RESULT = e1;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("WRITE",31, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;

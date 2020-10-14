@@ -16,7 +16,10 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.python;
 
+import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
+import com.mycompany.assofjpybasic.backend.semantica.visual.OperacionVisual;
+import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
 
 /**
  *
@@ -43,6 +46,33 @@ public class Input extends TerminalOperator {
             return "%f";
         } else if (op.getTipo().equals(PythonSemantica.INT)) {
             return "%d";
+        }
+        return "%v";
+    }
+
+    public static String tipoVisual(OperacionVisual op) {
+        if (op.getTipo().equals(VisualSemantica.CHAR)) {
+            return "%c";
+        } else if (op.getTipo().equals(VisualSemantica.FLOAT)) {
+            return "%f";
+        } else if (op.getTipo().equals(VisualSemantica.INT)) {
+            return "%d";
+        }
+        return "%v";
+    }
+
+    public static String tipoJAVA(OperacionJava op) {
+        if (null != op.getTipo()) {
+            switch (op.getTipo()) {
+                case 1:
+                    return "%c";
+                case 2:
+                    return "%f";
+                case 3:
+                    return "%d";
+                default:
+                    break;
+            }
         }
         return "%v";
     }

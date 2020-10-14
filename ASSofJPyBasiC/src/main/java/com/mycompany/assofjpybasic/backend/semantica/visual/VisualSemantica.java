@@ -5,6 +5,8 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +70,7 @@ public class VisualSemantica {
     public static void cambiarT(List<VariableVisual> var, String tipo) {
         var.stream().filter((variableVisual) -> (variableVisual.getTipo() == null)).forEachOrdered((variableVisual) -> {
             variableVisual.setTipo(tipo);
+            ((AsignarValor) variableVisual.getTriplete()).setTipo(OperacionVisual.obtenerTipo(tipo));
         });
     }
 
@@ -180,6 +183,23 @@ public class VisualSemantica {
 
     public List<MetodoVisual> getMetodos() {
         return metodos;
+    }
+
+    public static List<Triplete> devolverTrip(List<VariableVisual> va) {
+        List<Triplete> tri = new ArrayList<>();
+        va.forEach((variableVisual) -> {
+            tri.addAll(variableVisual.mostrarTripletes());
+        });
+        return tri;
+    }
+
+    public void mostrarMetodos() {
+        this.metodos.forEach((metodo) -> {
+            System.out.println(metodo.getId() + " METODO \n");
+            metodo.getTripletes().forEach((triplete) -> {
+                System.out.println(triplete.devolverString());
+            });
+        });
     }
 
 }

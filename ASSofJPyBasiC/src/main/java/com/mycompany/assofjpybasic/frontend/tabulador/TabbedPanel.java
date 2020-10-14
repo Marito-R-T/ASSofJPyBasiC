@@ -8,6 +8,7 @@ package com.mycompany.assofjpybasic.frontend.tabulador;
 import com.mycompany.assofjpybasic.backend.archivos.GuardarArchivo;
 import com.mycompany.assofjpybasic.frontend.NumeroLinea;
 import java.io.File;
+import javax.swing.JTextPane;
 
 /**
  *
@@ -17,6 +18,7 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     private final File[] archivo;
     private boolean compilado;
+
     /**
      * Creates new form TabbedPanel
      *
@@ -193,6 +195,14 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     public File[] getArchivo() {
         return archivo;
+    }
+
+    public JTextPane getPaneCodigoT() {
+        return paneCodigoT;
+    }
+
+    public JTextPane getPanePrograma() {
+        return panePrograma;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

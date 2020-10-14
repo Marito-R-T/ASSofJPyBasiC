@@ -16,6 +16,7 @@ public class VariablePrograma extends OperacionPrograma {
     protected final String id;
     protected final Integer ambito;
     protected Integer tipo;
+    protected String tip;
     public final static Integer CHAR = 1, INT = 2, FLOAT = 3, CLASS = 4;
 
     /**
@@ -31,6 +32,22 @@ public class VariablePrograma extends OperacionPrograma {
         this.id = id;
         this.ambito = ambito;
         this.tipo = tipo;
+    }
+
+    /**
+     * Constructor de una variable del programa principal C
+     *
+     * @param id Es el id que tiene la variable
+     * @param ambito Es el ambito al que pertenece la variable
+     * @param tipo Tipo de la que es el variable, 1->char 2->int 3->float
+     * @param tri Triplete que sera esta variable
+     */
+    public VariablePrograma(String id, Integer ambito, String tipo, Triplete tri) {
+        super(5, tri);
+        this.id = id;
+        this.ambito = ambito;
+        this.tipo = 5;
+        this.tip = tipo;
     }
 
     /**
@@ -78,6 +95,10 @@ public class VariablePrograma extends OperacionPrograma {
     @Override
     public void setTipo(Integer tipo) {
         this.tipo = tipo;
+    }
+
+    public String getTip() {
+        return tip;
     }
 
 }

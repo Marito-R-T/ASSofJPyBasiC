@@ -51,7 +51,7 @@ public class prueba {
                 + "    Num = N\n"
                 + "    If N = 0 Then\n"
                 + "	Fact = 1\n"
-                + "    Elseif N != 0 Then\n"
+                + "    Elseif N <> 0 Then\n"
                 + "     fact = 2\n"
                 + "    Else\n"
                 + "        Fact = 1\n"
@@ -66,6 +66,11 @@ public class prueba {
                 + "public class algo {\n"
                 + "\n"
                 + "     int s2 = 25;\n"
+                + "     public algo(){\n"
+                + "     }\n"
+                + "     public algo(int i){\n"
+                + "         s2 = i;\n"
+                + "     }\n"
                 + "	    public int holaMundo() {\n"
                 + "         int i2 = 12*3-2/8;\n"
                 + "         System.out.println(\"la suma es:\"+i2);\n"
@@ -98,19 +103,21 @@ public class prueba {
                 + "	edad = intinput(\"Ingrese su edad:\")\n"
                 + "	meses = edad * 12.2\n"
                 + "	print(\"meses = \",meses)\n"
-                + "	intinput(\"\")"
+                + "	intinput(\"\")\n"
+                + "	return meses"
                 + "%%PROGRAMA\n"
                 + "\n"
                 + "#include <stdio.h>\n"
                 + "#include <stdlib.h>\n"
                 + "#include \"VB\"\n"
                 + "#include \"PY\"\n"
+                + "#include \"JAVA.*\"\n"
                 + "\n"
                 + "// Constantes\n"
                 + "const int constante1 = 10;\n"
                 + "\n"
                 + "// Variables globales\n"
-                + "int Arreglo1[1][4];\n"
+                + "int Arreglo1[1][4][5];\n"
                 + "\n"
                 + "void main()\n"
                 + "{\n"
@@ -129,13 +136,13 @@ public class prueba {
                 + "\n"
                 + "  // Factorial\n"
                 + "  resultado = VB.Factorial(i);\n"
-                + "  i = Arreglo1[1*1][2];\n"
+                + "  i = Arreglo1[1*1][2][2];\n"
                 + " \n"
                 + "  printf(\"El factorial de %d es %d\",i,resultado);\n"
                 + "    \n"
                 + "  printf(\"Conversion de años a meses\");\n"
                 + "\n"
-                + "  PY.edadmeses(0 , 12);\n"
+                + "  float mes = PY.edadmeses(0 , 12);\n"
                 + "  if(3<2 && i*3==6){\n"
                 + "\n"
                 + "  }\n"
@@ -150,7 +157,7 @@ public class prueba {
                 + "  printf(\"aaaa\");"
                 + "  }\n"
                 + "  // Arreglo\n"
-                + "  Arreglo1[1][1] = 0;\n"
+                + "  Arreglo1[1][1][5] = 0;\n"
                 + "  \n"
                 + "  // inicio for\n"
                 + "  for(i = 0; i <= exp; i = i + 1)\n"
@@ -162,7 +169,8 @@ public class prueba {
                 + "  printf(\"%d \",base);\n"
                 + "  printf(\"^ %d\",exp);\n"
                 + "  printf(\" = %d\",resultado);\n"
-                + "\n"
+                + "  JAVA.algo idalgo2(1);\n"
+                + "  int entero = JAVA.idalgo2.holaMundo();\n"
                 + "  getch();\n"
                 + "}";
         SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
@@ -179,7 +187,7 @@ public class prueba {
         jv.parse();
         SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
         pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
-        pro.parse();
+        System.out.println(pro.parse().value);
     }
 
 }

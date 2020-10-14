@@ -28,7 +28,7 @@ public abstract class Triplete {
     protected final Triplete operando1;
     protected final Triplete operando2;
     protected static int VARNUM = 0, ETNUM = 0;
-    public static final String[] tipos = {"char", "int", "float"};
+    public static final String[] tipos = {"char", "int", "float", "void"};
 
     /**
      * Constructor para iniciar Triplete
@@ -64,6 +64,10 @@ public abstract class Triplete {
         } else {
             return Triplete.tipos[op2.getTipo() - 1];
         }
+    }
+
+    public static String devolverTipo(OperacionPrograma op1) {
+        return Triplete.tipos[op1.getTipo() - 1];
     }
 
 }

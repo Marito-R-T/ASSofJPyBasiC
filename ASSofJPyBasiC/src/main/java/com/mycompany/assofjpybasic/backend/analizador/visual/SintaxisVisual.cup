@@ -2,6 +2,9 @@ package com.mycompany.assofjpybasic.backend.analizador.visual;
 
 import java_cup.runtime.*;
 import com.mycompany.assofjpybasic.backend.semantica.visual.*;
+import com.mycompany.assofjpybasic.backend.semantica.programa.*;
+import com.mycompany.assofjpybasic.backend.semantica.python.*;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,18 +44,24 @@ terminal String com, id, decimal, entero, character, y, string;
 terminal String write, writeln, charinput, floatinput, intinput;
 terminal String returnn;
 
-non terminal VISUAL, STATESM, STATEM, SUB, FUNCTION, DEFVAR, ASIGVAR, ID;
-non terminal STATEMENTS, STATEMENT, CASEELSE, ESP;
-non terminal IF_ELSE, BLOQUEIF, ELSE_IF, THEN, STATEMENTLINE, SELECT, CASE, CASES, STEP, CA, PUBLIC;
-non terminal LIST_CASE, FOR, WHILE, DO_WHILE, CONSOLEWRITE, INPUT, CONDICION, AND, NOT, COMPARACION, STRING;
-non terminal STATEMENTSF;
+non terminal VISUAL, STATESM, STATEM, SUB, FUNCTION;
+non terminal ESP;
+non terminal THEN, CA, PUBLIC;
 non terminal List<VariableVisual> LISTPARAMM, LISTPARAM, LISTVAR;
 non terminal String TYPE, TYPEE;
-non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, D, DEF;
+non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, D, DEF, INPUT, STEP;
+non terminal List<Triplete> STATEMENTS, STATEMENT, CONSOLEWRITE, STRING, CASEELSE, STATEMENTSF, ASIGVAR;
+non terminal List<Triplete> ELSE, IF_ELSE, SELECT, STATEMENTLINE, WHILE, DO_WHILE, FOR, DEFVAR;
+non terminal CondicionPrograma CONDICION, NOT, AND;
+non terminal Triplete COMPARACION;
+non terminal String ID;
+non terminal List<OperacionVisual> LIST_CASE;
+non terminal CaseVisual CASES;
+non terminal Else_Operator ELSE_IF;
 
 start with VISUAL;
 
-VISUAL ::= ESP STATESM
+VISUAL ::= ESP STATESM {:sem.mostrarMetodos();:}
 ;
 
 ESP ::= espacio
@@ -76,53 +85,69 @@ SUB ::= PUBLIC subb id:e1 para LISTPARAMM:e2 parc espacio {:VisualSemantica.AMBI
                                         actual = met;
                                         sem.addListVar(e2);
                                         if(!sem.addMetodo(met)){syntax_error(getS());}:}
-                                        STATEMENTS endd subb espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
-                                        VisualSemantica.AMBITO -= 1;:}
+                                        STATEMENTS:e3 endd subb espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
+                                        VisualSemantica.AMBITO -= 1;
+                                        actual.getTripletes().addAll(e3);:}
 ;
 
 FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
-                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3));
+                                        actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3,
+                                        new AsignarValor(new TerminalOperator(e1), null, e3)));
                                         sem.addListVar(e2);
                                         if(!sem.addMetodo(met)){syntax_error(getS());}:} 
-                                        STATEMENTSF endd functionn espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
-                                        VisualSemantica.AMBITO -= 1;:}
+                                        STATEMENTSF:e4 endd functionn espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
+                                        VisualSemantica.AMBITO -= 1;
+                                        actual.getTripletes().addAll(e4);:}
 ;
 
 DEFVAR ::= dimm LISTVAR:e1 espacio {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
-                                        else{syntax_error(getS());}:}
+                                        else{syntax_error(getS());} RESULT = VisualSemantica.devolverTrip(e1);:}
 ;
 
 LISTPARAMM ::= LISTPARAM:e1 {:RESULT = e1;:}
             | {:RESULT = new ArrayList<>();:}
 ;
 
-LISTPARAM ::= LISTPARAM:e1 coma id:e2 TYPE:e3 {:e1.add(new VariableVisual(e2, (VisualSemantica.AMBITO + 1), e3));
+LISTPARAM ::= LISTPARAM:e1 coma id:e2 TYPE:e3 {:e1.add(new VariableVisual(e2, (VisualSemantica.AMBITO + 1), e3, new TerminalOperator(e2)));
                                         RESULT = e1;:}
         | id:e1 TYPE:e2 {:List<VariableVisual> var = new ArrayList<>();
-                        var.add(new VariableVisual(e1, (VisualSemantica.AMBITO + 1), e2));
+                        var.add(new VariableVisual(e1, (VisualSemantica.AMBITO + 1), e2, new TerminalOperator(e1)));
                         RESULT = var;:}
 ;
 
-LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual.verificarTipo(e3, e4);
-                        VariableVisual va = new VariableVisual(e2, VisualSemantica.AMBITO, tipo);
+LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual.verificarTipo(e3, e4); VariableVisual va;
+                        if(e4!=null){va = new VariableVisual(e2, VisualSemantica.AMBITO, tipo, 
+                        new AsignarValor(new TerminalOperator(e2), e4.getTriplete(), OperacionVisual.obtenerTipo(e3)));
+                        va.getTripletes().addAll(e4.mostrarTripletes());
+                        }else{va = new VariableVisual(e2, VisualSemantica.AMBITO, tipo, 
+                        new AsignarValor(new TerminalOperator(e2), null,OperacionVisual.obtenerTipo(e3)));}
                         va.setDefinido(e4 != null); va.setAstipo(e3 != null && e4 == null);
                         if(tipo == null && e3 != null && e4 != null){
                                 syntax_error(getS());
                         } else if(e3 != null && e4 == null){
                                 e1.add(va);
                                 VisualSemantica.cambiarT(e1, e3);
+                        } else {
+                                e1.add(va);
                         } RESULT = e1;:}
-        | id:e1 TYPEE:e2 DEF:e3 {:List<VariableVisual> vars = new ArrayList<>(); String tipo = VariableVisual.verificarTipo(e2, e3);
-                        VariableVisual va = new VariableVisual(e1, VisualSemantica.AMBITO, tipo);
+        | id:e1 TYPEE:e2 DEF:e3 {:List<VariableVisual> vars = new ArrayList<>(); String tipo = VariableVisual.verificarTipo(e2, e3); VariableVisual va;
+                        if(e3!=null){va = new VariableVisual(e1, VisualSemantica.AMBITO, tipo, 
+                        new AsignarValor(new TerminalOperator(e1), e3.getTriplete(),e2));
+                        va.getTripletes().addAll(e3.mostrarTripletes());
+                        }else{va = new VariableVisual(e1, VisualSemantica.AMBITO, tipo, 
+                        new AsignarValor(new TerminalOperator(e1), null,e2));}
                         va.setDefinido(e3 != null); va.setAstipo(e2 != null && e3 == null);
                         if(tipo == null && e2 != null && e3 != null){
                                 syntax_error(getS());
                         } vars.add(va); RESULT = vars;:}
 ;
 
-ASIGVAR ::= id:e1 igual EXPR:e2 espacio {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO));
-                                if(var==null || !var.getTipo().contains(e2.getTipo())){syntax_error(getS());}:}
+ASIGVAR ::= id:e1 igual EXPR:e2 espacio {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
+                                List<Triplete> trip = new ArrayList<>();
+                                if(var==null || !var.getTipo().contains(e2.getTipo())){syntax_error(getS());}
+                                else{trip.addAll(e2.mostrarTripletes()); trip.add(new AsignarValor(new TerminalOperator(e1), e2.getTriplete(), null));}
+                                RESULT = trip;:}
 ;
 
 TYPE ::= ass integerr {:RESULT = VisualSemantica.INT;:}
@@ -140,80 +165,98 @@ DEF ::= igual EXPR:e1 {:RESULT = e1;:}
         | {:RESULT = null;:}
 ;
 
-OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
+OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+                        new SumOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));};:}
+        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+                        new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));}:}
         | OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
-        | OPERACION_M:e1 div OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
-        | OPERACION_M:e1 floor OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
-        | OPERACION_M:e1 mod OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2);}:}
+OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+                                new PorOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));}:}
+        | OPERACION_M:e1 div OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+                                new DivOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));}:}
+        | OPERACION_M:e1 mod OPERACION_U:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+                                new ModOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));}:}
         | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = e1;:}
+OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionVisual(new OperacionVisual(PythonSemantica.INT, new TerminalOperator("0")),
+                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));:}
         | mas OPERACION_U:e1 {:RESULT = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
 ;
 
-ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO)); 
+ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null)); 
                 if(var==null){syntax_error(getS());} else {
-                RESULT = new OperacionVisual(var.getTipo());
+                RESULT = new OperacionVisual(var.getTipo(), new TerminalOperator(e1));
                 }:}
-        | entero {:RESULT = new OperacionVisual(VisualSemantica.INT);:}
-        | decimal {:RESULT = new OperacionVisual(VisualSemantica.FLOAT);:}
+        | entero:e1 {:RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));:}
+        | decimal:e1 {:RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
 ;
 
-STATEMENTS ::= STATEMENTS STATEMENT
-        |
+STATEMENTS ::= STATEMENTS:e1 STATEMENT:e2 {:e1.addAll(e2); RESULT = e1;:}
+        | {:RESULT = new ArrayList<>();:}
 ;
 
-STATEMENTSF ::= STATEMENT STATEMENTSF
-        | returnn EXPR:e1 {:if(e1 == null || !actual.getTIPO().contains(e1.getTipo())){syntax_error(getS());}:}
-        |
+STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:e1.addAll(e2); RESULT = e1;:}
+        | returnn EXPR:e1 {:List<Triplete> tri = new ArrayList<>();
+                if(e1 == null || !actual.getTIPO().contains(e1.getTipo())){syntax_error(getS());}
+                else{
+                tri.addAll(e1.mostrarTripletes());
+                tri.add(new Return(e1.getTriplete()));}
+                RESULT = tri;:}
+        | {:RESULT = new ArrayList<>();:}
 ;
 
 EXPR ::= OPERACION_A:e1 {:RESULT = e1;:}
-        | D:e1 {:RESULT = e1;:}
-        | character {:RESULT = new OperacionVisual(VisualSemantica.CHAR);:}
+        | INPUT:e1 {:RESULT = e1;:}
+        | character:e1 {:RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator(e1));:}
 ;
 
-STATEMENT ::= IF_ELSE
-        | SELECT
-        | FOR
-        | WHILE
-        | DO_WHILE
-        | STATEMENTLINE
+STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}
+        | SELECT:e1 {:RESULT = e1;:}
+        | FOR:e1 {:RESULT = e1;:}
+        | WHILE:e1 {:RESULT = e1;:}
+        | DO_WHILE:e1 {:RESULT = e1;:}
+        | STATEMENTLINE:e1 {:RESULT = e1;:}
 ;
 
-IF_ELSE ::= iff CONDICION BLOQUEIF
+IF_ELSE ::= iff CONDICION:e1 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF:e3 ELSE:e4 endd iff espacio 
+                {:e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);:}
+        | iff CONDICION:e1 thenn {:VisualSemantica.AMBITO += 1;:} STATEMENTLINE:e2
+                espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; 
+                RESULT = Else_Operator.IFSIMPLE(e1, e2);:}
 ;
 
-BLOQUEIF ::= thenn {:VisualSemantica.AMBITO += 1;:} STATEMENTLINE 
-                espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
-        | THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS 
-                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF endd iff espacio 
+ELSE_IF ::= ELSE_IF:e1 elseiff CONDICION:e2 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = e1.agregarElseIf(e2, e3);:}
+        | {:RESULT = new Else_Operator();:}
 ;
 
-ELSE_IF ::= elseiff CONDICION THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS
-                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF
-        | elsee espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
-        |
+ELSE ::= elsee espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e1 
+        {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;
+        RESULT = e1;:}
+        | {:RESULT = new ArrayList<>();:}
 ;
 
 THEN ::= thenn
         |
 ;
 
-STATEMENTLINE ::= CONSOLEWRITE
-        | INPUT
-        | DEFVAR
-        | ASIGVAR
+STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
+        | INPUT:e1 {:AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, e1.getTipo()),null
+                ,OperacionVisual.obtenerTipo(e1)); 
+                List<Triplete> tri = new ArrayList<>(); tri.add(vl); 
+                tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
+        | DEFVAR:e1 {:RESULT = e1;:}
+        | ASIGVAR:e1 {:RESULT = e1;:}
 ;
 
-SELECT ::= selectt CA EXPR espacio CASES CASEELSE endd selectt espacio
+SELECT ::= selectt CA EXPR:e1 espacio CASES:e2 CASEELSE:e3 endd selectt espacio
+                {:RESULT = e2.agregarDefault(e1, e3);:}
 ;
 
 CA ::= casee
@@ -221,78 +264,94 @@ CA ::= casee
 ;
 
 CASEELSE ::= casee elsee espacio {:VisualSemantica.AMBITO += 1;:}
-                STATEMENTS {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+                STATEMENTS:e1 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = e1;:}
         |
 ;
 
-CASES ::= CASES CASE
-        |
+CASES ::= CASES:e1 casee LIST_CASE:e2 espacio {:VisualSemantica.AMBITO += 1;:}
+                 STATEMENTS:e3 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = e1.agregarCase(e2, e3);:}
+        | {:RESULT = new CaseVisual();:}
 ;
 
-CASE ::= casee LIST_CASE espacio {:VisualSemantica.AMBITO += 1;:}
-                 STATEMENTS {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+LIST_CASE ::= LIST_CASE:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
+        | OPERACION_A:e1 {:List<OperacionVisual> op = new ArrayList<>(); op.add(e1); RESULT =op;:}
 ;
 
-LIST_CASE ::= LIST_CASE coma OPERACION_A
-        | OPERACION_A
+FOR ::= forr id:e1 TYPE:e2 igual OPERACION_A:e3 to OPERACION_A:e4 STEP:e5 espacio {:VisualSemantica.AMBITO += 1;:}
+                STATEMENTS:e6 nextt ID:e7 espacio 
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;
+                if(e7!=null && !e1.equals(e1)){syntax_error(getS());} else{RESULT = Else_Operator.FORV(e1, e2, e3, e4, e5, e6);}:}
 ;
 
-FOR ::= forr id TYPE igual OPERACION_A to OPERACION_A STEP espacio {:VisualSemantica.AMBITO += 1;:}
-                STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+ID ::= id:e1 {:RESULT = e1;:}
+    | {:RESULT = null;:}
 ;
 
-ID ::= id
-    |
+STEP ::= stepp OPERACION_A:e1 {:RESULT = e1;:}
 ;
 
-STEP ::= stepp OPERACION_A
-        |
+WHILE ::= whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e2 endd whilee espacio
+         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.WHILE(e1, e2);:}
 ;
 
-WHILE ::= whilee CONDICION espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS endd whilee espacio
-;
-
-DO_WHILE ::= doo whilee CONDICION espacio {:VisualSemantica.AMBITO += 1;:} 
-                STATEMENTS loopp espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+DO_WHILE ::= doo whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:} 
+                STATEMENTS:e2 loopp espacio 
+        {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.DOWHILE(e1, e2);:}
         | doo espacio {:VisualSemantica.AMBITO += 1;:} 
-                STATEMENTS loopp whilee CONDICION espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:}
+                STATEMENTS:e2 loopp whilee CONDICION:e1 espacio
+        {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.DOWHILE(e1, e2);:}
 ;
 
-CONSOLEWRITE ::= write para STRING parc espacio
-        | writeln para STRING parc espacio
+CONSOLEWRITE ::= write para STRING:e1 parc espacio {:RESULT = e1;:}
+        | writeln para STRING:e1 parc espacio {:e1.add(new Printf("\n")); RESULT = e1;:}
 ;
 
-INPUT ::= D espacio
+INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.CHAR,
+                                new Input("%d"));
+                                op.getTripletes().add(new Printf(e1));
+                                RESULT = op;:}
+        | floatinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.FLOAT,
+                                new Input("%c"));
+                                op.getTripletes().add(new Printf(e1));
+                                RESULT = op;:}
+        | intinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.INT,
+                                new Input("%f"));
+                                op.getTripletes().add(new Printf(e1));
+                                RESULT = op;:}
 ;
 
-D ::= charinput para string parc {:RESULT = new OperacionVisual(VisualSemantica.CHAR);:}
-        | floatinput para string parc {:RESULT = new OperacionVisual(VisualSemantica.FLOAT);:}
-        | intinput para string parc {:RESULT = new OperacionVisual(VisualSemantica.INT);:}
+CONDICION ::= CONDICION:e1 orr AND:e2 {:RESULT = IfPrograma.OR(e1, e2);:}
+        | AND:e1 {:RESULT = e1;:}
 ;
 
-CONDICION ::= CONDICION orr AND
-        | AND
+AND ::= AND:e1 andd NOT:e2 {:RESULT = IfPrograma.AND(e1, e2);:}
+        | NOT:e1 {:RESULT = e1;:}
 ;
 
-AND ::= AND andd NOT
-        | NOT
+NOT ::= nott NOT:e1 {:RESULT = IfPrograma.NOT(e1);:}
+    | COMPARACION:e1 {:RESULT = new IfPrograma(new If_Operator(e1, new Etiqueta()), ((CondicionalOperator)e1).getTripletes());:}
+    | para CONDICION:e1 parc {:RESULT = e1;:}
 ;
 
-NOT ::= nott NOT
-    | COMPARACION
+COMPARACION ::= OPERACION_A:e1 igual OPERACION_A:e2 {:RESULT = new IgualOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
+    | OPERACION_A:e1 noigual OPERACION_A:e2 {:RESULT = new NoIgualOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
+    | OPERACION_A:e1 menor OPERACION_A:e2 {:RESULT = new MenorOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
+    | OPERACION_A:e1 menorig OPERACION_A:e2 {:RESULT = new MenorIgOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
+    | OPERACION_A:e1 mayor OPERACION_A:e2 {:RESULT = new MayorOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
+    | OPERACION_A:e1 mayorig OPERACION_A:e2 {:RESULT = new MayorIgOperator(e1.getTriplete(), e2.getTriplete(),
+                e1.getTripletes(), e2.getTripletes());:}
 ;
 
-COMPARACION ::= OPERACION_A igual OPERACION_A
-    | OPERACION_A noigual OPERACION_A
-    | OPERACION_A menor OPERACION_A
-    | OPERACION_A menorig OPERACION_A
-    | OPERACION_A mayor OPERACION_A
-    | OPERACION_A mayorig OPERACION_A
-    | para CONDICION parc
-;
-
-STRING ::= STRING y EXPR
-        | STRING y string
-        | EXPR
-        | string
+STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete())); RESULT = e1;:}
+        | STRING:e1 y string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
+        | EXPR:e1 {:List<Triplete> tri = new ArrayList<>(); tri.addAll(e1.getTripletes());
+                tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete()));
+                RESULT = tri;:}
+        | string:e1 {:List<Triplete> tri = new ArrayList<>(); tri.add(new Printf(e1));
+                RESULT = tri;:}
 ;

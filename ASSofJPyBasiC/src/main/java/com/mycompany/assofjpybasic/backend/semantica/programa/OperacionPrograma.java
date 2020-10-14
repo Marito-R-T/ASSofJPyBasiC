@@ -38,6 +38,21 @@ public class OperacionPrograma {
     /**
      * Constructor con el tipo de operacion
      *
+     * @param tipo 1 -> Char || 2 -> Int || 3-FLOAT -> Float
+     * @param triplete Triplete que va a representar esta función
+     */
+    public OperacionPrograma(Triplete triplete, OperacionPrograma tipo) {
+        this.tipo = tipo.getTipo();
+        this.triplete = triplete;
+        if (triplete instanceof TemporalArreglo) {
+            this.tripletes.add(triplete);
+        }
+        this.hacerTripletes(tipo);
+    }
+
+    /**
+     * Constructor con el tipo de operacion
+     *
      * @param tipo1 1 -> Char || 2 -> Int || 3-FLOAT -> Float
      * @param tipo2 1 -> Char || 2 -> Int || 3-FLOAT -> Float
      * @param triplete Triplete que va a representar esta funcion
@@ -113,7 +128,7 @@ public class OperacionPrograma {
      * @param op1 Operación uno que tiene las tripletas
      * @return True si se agreago todo correctamente
      */
-    protected boolean hacerTripletes(OperacionPrograma op1) {
+    protected final boolean hacerTripletes(OperacionPrograma op1) {
         this.tripletes.addAll(op1.getTripletes());
         if (!(op1.getTriplete() instanceof TerminalOperator)) {
             this.tripletes.add(op1.getTriplete());

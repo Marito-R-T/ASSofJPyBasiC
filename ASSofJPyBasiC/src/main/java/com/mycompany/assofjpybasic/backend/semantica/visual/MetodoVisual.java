@@ -6,6 +6,9 @@
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +21,7 @@ public class MetodoVisual {
     private final String TIPO;
     private final List<VariableVisual> parametros;
     private VariableVisual visual;
+    private final List<Triplete> tripletes = new ArrayList<>();
 
     /**
      *
@@ -118,6 +122,26 @@ public class MetodoVisual {
         } else {
             return tipo1.equals(VisualSemantica.CHAR) && tipo2 == 1;
         }
+    }
+
+    public List<Triplete> getTripletes() {
+        return tripletes;
+    }
+
+    public String mostrarMetodo() {
+        String com = "//Metodo de VISUAL BASIC con id: " + this.id + "\n";
+        String params = "VB_";
+        params += this.id;
+        for (VariableVisual parametro : this.parametros) {
+            params += "_" + OperacionVisual.obtenerTipo(parametro.getTipo());
+        }
+        params += "()";
+        String metodo = "{\n";
+        for (Triplete triplete : tripletes) {
+            metodo += triplete.devolverString() + "\n";
+        }
+        metodo += "}\n";
+        return com + params + metodo;
     }
 
 }

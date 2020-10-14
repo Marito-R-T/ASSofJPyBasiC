@@ -25,7 +25,7 @@ import com.mycompany.assofjpybasic.backend.semantica.python.Input;
 public class AsignarValor extends Triplete {
 
     private final String OPERADOR = "=";
-    private String tipo;
+    protected String tipo;
 
     /**
      * Coonstructor para asignar un valor a una variable ya existente.

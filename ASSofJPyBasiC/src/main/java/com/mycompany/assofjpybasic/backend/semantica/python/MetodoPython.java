@@ -123,4 +123,20 @@ public class MetodoPython {
         return nombre;
     }
 
+    public String mostrarMetodo() {
+        String com = "//Metodo de PYTHON con id: " + this.id + "\n";
+        String params = "PY_";
+        params += this.id;
+        for (VariablePython parametro : this.parametros) {
+            params += "_" + OperacionPython.obtenerTipo(parametro.getTipo());
+        }
+        params += "()";
+        String metodo = "{\n";
+        for (Triplete triplete : this.trip) {
+            metodo += triplete.devolverString() + "\n";
+        }
+        metodo += "}\n";
+        return com + params + metodo;
+    }
+
 }

@@ -18,6 +18,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.CondicionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
+import com.mycompany.assofjpybasic.backend.semantica.visual.OperacionVisual;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,6 +188,54 @@ public class Else_Operator extends ArrayList<Triplete> {
         }
         nuevos.add(new GoToOperator(et));
         nuevos.add(mala);
+        return nuevos;
+    }
+
+    /**
+     * Armar el For de Visual
+     *
+     * @param id Nombre del Id
+     * @param tipo Tipo del Id
+     * @param inicio Operación de Inicio
+     * @param fin Operacion del Fin
+     * @param step Operación del Step
+     * @param tri Lista de tripletes dentro del For
+     * @return Regresa los tripletes del for
+     */
+    public static List<Triplete> FORV(String id, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, List<Triplete> tri) {
+        TerminalOperator term = new TerminalOperator(id);
+        Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
+        List<Triplete> nuevos = new ArrayList<>();
+        nuevos.addAll(inicio.mostrarTripletes());
+        nuevos.add(new AsignarValor(term, inicio.getTriplete(), tipo));
+        nuevos.add(et);
+        nuevos.addAll(fin.mostrarTripletes());
+        MenorOperator op = new MenorOperator(term, fin.getTriplete());
+        nuevos.add(new If_Operator(op, buena));
+        nuevos.add(new GoToOperator(mala));
+        nuevos.add(buena);
+        nuevos.addAll(tri);
+        nuevos.addAll(step.mostrarTripletes());
+        SumOperator sum = new SumOperator(null, term, step.getTriplete(), tipo);
+        nuevos.add(sum);
+        nuevos.add(new AsignarValor(term, sum, null));
+        nuevos.add(new GoToOperator(et));
+        nuevos.add(mala);
+        return nuevos;
+    }
+
+    /**
+     *
+     * @param con Condicion
+     * @param tri
+     * @return
+     */
+    public static List<Triplete> IFSIMPLE(CondicionPrograma con, List<Triplete> tri) {
+        List<Triplete> nuevos = new ArrayList<>();
+        nuevos.addAll(con.getTriplete());
+        nuevos.addAll(con.getBueno());
+        nuevos.addAll(tri);
+        nuevos.addAll(con.getMalo());
         return nuevos;
     }
 

@@ -40,7 +40,7 @@ public class Scanf extends Triplete {
 
     @Override
     public String devolverString() {
-        return "scanf(" + "\"" + this.tipo + "\", &" + operando2.getId() + ")";
+        return "scanf(" + "\"" + this.tipo + "\", &" + operando2.getId() + ");";
     }
 
     /**

@@ -6,8 +6,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
-import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
-import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +23,8 @@ public class TablaJava {
     private final List<VariableJava> variables = new ArrayList<>();
     private final List<VariableJava> var_definidas = new ArrayList<>();
     private final List<MetodoJava> metodos = new ArrayList<>();
+    private final List<MetodoJava> constructores = new ArrayList<>();
+    private final List<Triplete> principales = new ArrayList<>();
 
     /**
      * constructor para incializar AMBITO a 0 e Inicializar el primer ambito
@@ -139,6 +140,22 @@ public class TablaJava {
         return true;
     }
 
+    /**
+     * Metodo para verificar los metodos de llava al momento de ingresarlo
+     *
+     * @param metodo Metodo Java a ingresar
+     * @return true si se pudo ingresar, false si ya estaba repetido
+     */
+    public boolean addConstructor(MetodoJava metodo) {
+        for (MetodoJava constructor : this.constructores) {
+            if (constructor.equalsConstructor(metodo)) {
+                return false;
+            }
+        }
+        constructores.add(metodo);
+        return true;
+    }
+
     public List<VariableJava> getVariables() {
         return variables;
     }
@@ -155,8 +172,63 @@ public class TablaJava {
      * @param params Parametros del metodo a verificar similitud
      * @return True si existe el metodo, False si no existe el metodo
      */
-    public boolean existeMetodo(String id, List<OperacionPrograma> params) {
-        return metodos.stream().anyMatch((metodo) -> (metodo.equals(id, params)));
+    public MetodoJava existeMetodo(String id, List<OperacionPrograma> params) {
+        for (MetodoJava metodo : this.metodos) {
+            if (metodo.equals(id, params)) {
+                return metodo;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Metodo para mostrar si existe o no un metodo que tenga los mismos
+     * parametros y mismo id
+     *
+     * @param id Id del metodo a buscar
+     * @param params Parametros del metodo a verificar similitud
+     * @return True si existe el metodo, False si no existe el metodo
+     */
+    public MetodoJava existeConstructor(String id, List<OperacionPrograma> params) {
+        for (MetodoJava metodo : this.constructores) {
+            if (metodo.equals(id, params)) {
+                return metodo;
+            }
+        }
+        return null;
+    }
+
+    public List<VariableJava> getVar_definidas() {
+        return var_definidas;
+    }
+
+    public List<MetodoJava> getMetodos() {
+        return metodos;
+    }
+
+    public List<MetodoJava> getConstructores() {
+        return constructores;
+    }
+
+    public List<Triplete> getPrincipales() {
+        return principales;
+    }
+
+    public String mostrarClase() {
+        String s = "// Clase de JAVA con nombre " + this.id + "\n";
+        for (MetodoJava constructor : this.constructores) {
+            s += constructor.mostrarMetodo(this.id, this.principales);
+        }
+        for (MetodoJava metodo : this.metodos) {
+            s += metodo.mostrarMetodo(this.id);
+        }
+        return s;
+    }
+
+    public void verificarConstructores() {
+        if (constructores.isEmpty()) {
+            constructores.add(new MetodoJava(this.id, 5, new ArrayList<>()));
+        }
     }
 
 }

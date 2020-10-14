@@ -6,8 +6,8 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
-import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
-import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +20,7 @@ public class MetodoJava {
     private final String id;
     private final Integer TIPO;
     private final List<VariableJava> parametros;
+    private final List<Triplete> tripletes = new ArrayList<>();
 
     /**
      *
@@ -28,7 +29,7 @@ public class MetodoJava {
      * @param TIPO Tipo del metodo 1 - CHAR 2 - INT 3 - FLOAT 4 - VOID
      * @param parametros lista de parametros del metodo
      */
-    public MetodoJava(final String id, final Integer TIPO, final List<VariableJava> parametros) {
+    public MetodoJava(String id, Integer TIPO, List<VariableJava> parametros) {
         this.id = id;
         this.TIPO = TIPO;
         this.parametros = parametros;
@@ -42,6 +43,16 @@ public class MetodoJava {
      */
     public boolean isnotEquals(MetodoJava var) {
         return !this.id.equals(var.getId()) || !Objects.equals(this.TIPO, var.TIPO) || !MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
+    }
+
+    /**
+     * Metodo para verificar si ya existe este Constructor
+     *
+     * @param var el metodo con el que se comparara este metodo
+     * @return true si es igual, false si no lo es
+     */
+    public boolean equalsConstructor(MetodoJava var) {
+        return MetodoJava.sonMismosParametros(this.parametros, var.getParametros());
     }
 
     /**
@@ -101,7 +112,52 @@ public class MetodoJava {
      * es menor al tipo 2
      */
     private boolean isMismoTipo(Integer tipo1, Integer tipo2) {
-        return tipo1 > tipo2;
+        return tipo1 >= tipo2;
+    }
+
+    public List<Triplete> getTripletes() {
+        return tripletes;
+    }
+
+    public String mostrarMetodo(String id) {
+        String comentario;
+        if (id.equals(this.id)) {
+            comentario = "//Constructor de la clase " + id + "\n";
+        } else {
+            comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
+        }
+        String params = "JV_" + id + "_" + this.id;
+        for (VariableJava parametro : this.parametros) {
+            params += "_" + OperacionJava.obtenerTipo(parametro.getTipo());
+        }
+        params += "()";
+        String metodo = "{\n";
+        for (Triplete triplete : this.tripletes) {
+            metodo += triplete.devolverString() + "\n";
+        }
+        metodo += "}\n";
+        return comentario + params + metodo;
+    }
+
+    public String mostrarMetodo(String id, List<Triplete> tri) {
+        String comentario;
+        if (id.equals(this.id)) {
+            comentario = "//Constructor de la clase " + id + "\n";
+        } else {
+            comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
+        }
+        String params = "JV_" + id + "_" + this.id;
+        params = this.parametros.stream().map((parametro) -> "_" + OperacionJava.obtenerTipo(parametro.getTipo())).reduce(params, String::concat);
+        params += "()";
+        String metodo = "{\n";
+        metodo = tri.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
+        metodo = this.tripletes.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
+        metodo += "}\n";
+        return comentario + params + metodo;
+    }
+
+    public Integer getTIPO() {
+        return TIPO;
     }
 
 }
