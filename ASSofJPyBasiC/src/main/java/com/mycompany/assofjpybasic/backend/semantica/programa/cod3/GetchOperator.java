@@ -25,7 +25,7 @@ public class GetchOperator extends Triplete {
     private final String tipo = "int-float";
 
     public GetchOperator() {
-        super(null, null, null);
+        super("getch()", null, null);
     }
 
     @Override
