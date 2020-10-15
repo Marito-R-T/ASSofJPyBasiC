@@ -22,6 +22,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Etiqueta;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.GoToOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.If_Operator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,21 +49,26 @@ public class CasePrograma extends ArrayList<Triplete> {
      * @return regresa el Case en cuestión
      */
     public CasePrograma agregarCase(OperacionPrograma operacion, List<Triplete> tri) {
-        this.addAll(operacion.getTripletes());
-        Etiqueta n1 = new Etiqueta();
-        If_Operator op = new If_Operator(operacion.getTriplete(), n1);
-        this.iffs.add(op);
-        this.add(op);
-        Etiqueta n2 = new Etiqueta();
-        this.add(new GoToOperator(n2));
-        this.add(n1);
-        if (!tri.isEmpty() && tri.get(tri.size() - 1) instanceof Break) {
-            tri.remove(tri.size() - 1);
-            tri.add(gotoo);
+        if (operacion != null && tri != null) {
+            this.addAll(operacion.getTripletes());
+            Etiqueta n1 = new Etiqueta();
+            If_Operator op = new If_Operator(operacion.getTriplete(), n1);
+            this.iffs.add(op);
+            this.add(op);
+            Etiqueta n2 = new Etiqueta();
+            this.add(new GoToOperator(n2));
+            this.add(n1);
+            if (!tri.isEmpty() && tri.get(tri.size() - 1) instanceof Break) {
+                tri.remove(tri.size() - 1);
+                tri.add(gotoo);
+            }
+            this.addAll(tri);
+            this.add(n2);
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Case\n");
+            return this;
         }
-        this.addAll(tri);
-        this.add(n2);
-        return this;
     }
 
     /**
@@ -73,41 +79,56 @@ public class CasePrograma extends ArrayList<Triplete> {
      * @return regresa el Case en cuestión
      */
     public CasePrograma agregarCase(OperacionJava operacion, List<Triplete> tri) {
-        this.addAll(operacion.getTripletes());
-        Etiqueta n1 = new Etiqueta();
-        If_Operator op = new If_Operator(operacion.getTriplete(), n1);
-        this.iffs.add(op);
-        this.add(op);
-        Etiqueta n2 = new Etiqueta();
-        this.add(new GoToOperator(n2));
-        this.add(n1);
-        if (!tri.isEmpty() && tri.get(tri.size() - 1) instanceof Break) {
-            tri.remove(tri.size() - 1);
-            tri.add(gotoo);
+        if (operacion != null && tri != null) {
+            this.addAll(operacion.getTripletes());
+            Etiqueta n1 = new Etiqueta();
+            If_Operator op = new If_Operator(operacion.getTriplete(), n1);
+            this.iffs.add(op);
+            this.add(op);
+            Etiqueta n2 = new Etiqueta();
+            this.add(new GoToOperator(n2));
+            this.add(n1);
+            if (!tri.isEmpty() && tri.get(tri.size() - 1) instanceof Break) {
+                tri.remove(tri.size() - 1);
+                tri.add(gotoo);
+            }
+            this.addAll(tri);
+            this.add(n2);
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Case\n");
+            return this;
         }
-        this.addAll(tri);
-        this.add(n2);
-        return this;
     }
 
     public List<Triplete> agregarDefault(OperacionPrograma operacion, List<Triplete> tri) {
-        this.addAll(0, operacion.mostrarTripletes());
-        for (If_Operator aIf : iffs) {
-            aIf.setOp(operacion.getTriplete());
+        if (operacion != null && tri != null) {
+            this.addAll(0, operacion.mostrarTripletes());
+            for (If_Operator aIf : iffs) {
+                aIf.setOp(operacion.getTriplete());
+            }
+            this.addAll(tri);
+            this.add(salida);
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un default\n");
+            return this;
         }
-        this.addAll(tri);
-        this.add(salida);
-        return this;
     }
 
     public List<Triplete> agregarDefault(OperacionJava operacion, List<Triplete> tri) {
-        this.addAll(0, operacion.mostrarTripletes());
-        for (If_Operator aIf : iffs) {
-            aIf.setOp(operacion.getTriplete());
+        if (operacion != null && tri != null) {
+            this.addAll(0, operacion.mostrarTripletes());
+            for (If_Operator aIf : iffs) {
+                aIf.setOp(operacion.getTriplete());
+            }
+            this.addAll(tri);
+            this.add(salida);
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Default\n");
+            return this;
         }
-        this.addAll(tri);
-        this.add(salida);
-        return this;
     }
 
 }

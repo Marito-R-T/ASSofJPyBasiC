@@ -45,7 +45,7 @@ parser code
             this.java = java;
             this.vb = vb;
             this.py = py;
-            sem.iniciarJAVA(this.java, this.j);
+            sem.iniciarJAVA(this.java, j);
     }
     
     public void reportarSem(String texto){
@@ -62,11 +62,11 @@ terminal String iff, elsee, forr, switchh, casee, whilee, defaultt, breakk, doo,
 terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div, mod;
 terminal String para, parc, llavea, llavec, cora, corc, coma, puntocoma, dosp, punto;
 terminal String printf, scanf, clrs, getch, igual, masmas, menosmenos, java, py, vb;
-terminal String com, idlib, id, entero, decimal, character, comilla;
+terminal String idlib, id, entero, decimal, character, comilla;
 terminal String pyy, vbb, javaa;
-terminal String string, str;
+terminal String string;
 
-non terminal INCLUDE_LENG, IN_LENG, CONST, VARGLOB;
+non terminal INCLUDE_LENG, IN_LENG, CONST;
 non terminal MAIN;
 non terminal Integer TYPE;
 non terminal List<VariablePrograma> LIST_ASIG, ASIG_VAR;
@@ -80,7 +80,6 @@ non terminal List<Triplete> OP_VAR, STEP, INICIO, IF_ELSE, ELSE, WHILE, DO_WHILE
 non terminal List<TerminalOperator> VARSS;
 non terminal List<OperacionPrograma> VARS;
 non terminal List<String> STRING;
-non terminal String STR;
 non terminal Else_Operator ELSE_IF;
 non terminal CasePrograma CASES;
 non terminal String PROGRAMA;
@@ -168,7 +167,7 @@ ASIG ::= igual EXPR:e1 {:RESULT = e1;:}
 
 OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
                 new SumOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
+        | OPERACION_A:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
                 new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
         | error OPERACION_M:e1 {:RESULT = e1;:}

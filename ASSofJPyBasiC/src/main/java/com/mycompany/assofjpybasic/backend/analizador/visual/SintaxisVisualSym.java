@@ -10,58 +10,56 @@ public class SintaxisVisualSym {
   /* terminals */
   public static final int doo = 26;
   public static final int ass = 8;
-  public static final int floatinput = 53;
+  public static final int floatinput = 51;
   public static final int endd = 5;
   public static final int mod = 38;
-  public static final int floor = 39;
-  public static final int write = 50;
-  public static final int com = 43;
+  public static final int write = 48;
   public static final int dimm = 7;
-  public static final int coma = 42;
+  public static final int coma = 41;
   public static final int thenn = 18;
   public static final int igual = 28;
   public static final int nott = 9;
   public static final int mayorig = 33;
-  public static final int string = 49;
+  public static final int string = 47;
   public static final int menorig = 31;
   public static final int elsee = 17;
   public static final int casee = 20;
   public static final int nextt = 24;
   public static final int andd = 10;
-  public static final int intinput = 54;
+  public static final int intinput = 52;
   public static final int functionn = 4;
   public static final int loopp = 27;
-  public static final int returnn = 55;
-  public static final int charinput = 52;
+  public static final int returnn = 53;
+  public static final int charinput = 50;
   public static final int menos = 35;
   public static final int menor = 30;
   public static final int elseiff = 16;
   public static final int iff = 15;
   public static final int EOF = 0;
-  public static final int parc = 41;
+  public static final int parc = 40;
   public static final int mas = 34;
-  public static final int para = 40;
+  public static final int para = 39;
   public static final int whilee = 25;
   public static final int error = 1;
   public static final int mayor = 32;
-  public static final int entero = 46;
+  public static final int entero = 44;
   public static final int decimall = 13;
   public static final int por = 36;
   public static final int forr = 21;
   public static final int subb = 3;
   public static final int publicc = 6;
-  public static final int id = 44;
-  public static final int y = 48;
+  public static final int id = 42;
+  public static final int y = 46;
   public static final int stepp = 23;
   public static final int orr = 11;
   public static final int noigual = 29;
   public static final int selectt = 19;
   public static final int espacio = 2;
-  public static final int character = 47;
-  public static final int writeln = 51;
+  public static final int character = 45;
+  public static final int writeln = 49;
   public static final int div = 37;
   public static final int integerr = 12;
-  public static final int decimal = 45;
+  public static final int decimal = 43;
   public static final int charr = 14;
   public static final int to = 22;
   public static final String[] terminalNames = new String[] {
@@ -104,11 +102,9 @@ public class SintaxisVisualSym {
   "por",
   "div",
   "mod",
-  "floor",
   "para",
   "parc",
   "coma",
-  "com",
   "id",
   "decimal",
   "entero",

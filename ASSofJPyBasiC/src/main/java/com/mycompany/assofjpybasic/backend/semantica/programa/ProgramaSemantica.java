@@ -16,6 +16,7 @@ import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.MetodoVisual;
+import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +158,7 @@ public class ProgramaSemantica {
             visual.parse();
             metodosVisual = visual.getVisual().getMetodos();
         } catch (Exception ex) {
-            System.out.println(ex);
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "ERROR TERMINAL EN VISUALBASIC \n");
         }
     }
 
@@ -174,7 +175,7 @@ public class ProgramaSemantica {
             python.parse();
             metodosPython = python.getPython().getMetodos();
         } catch (Exception ex) {
-            System.out.println(ex);
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "ERROR TERMINAL EN PYTHON \n");
         }
     }
 
@@ -191,7 +192,7 @@ public class ProgramaSemantica {
             jv.parse();
             this.clasesJava = jv.getJava().getTabla();
         } catch (Exception ex) {
-            System.out.println(ex);
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "ERROR TERMINAL EN JAVA \n");
         }
     }
 

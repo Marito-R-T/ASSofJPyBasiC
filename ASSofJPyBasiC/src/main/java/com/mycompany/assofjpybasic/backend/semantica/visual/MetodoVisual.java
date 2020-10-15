@@ -7,11 +7,11 @@ package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
-import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase como representasión del metodo que ingresa el usuario de Visual Basic
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

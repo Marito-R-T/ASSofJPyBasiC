@@ -8,60 +8,59 @@ package com.mycompany.assofjpybasic.backend.analizador.java;
 /** CUP generated class containing symbol constants. */
 public class SintaxisJavaSym {
   /* terminals */
-  public static final int doo = 16;
-  public static final int floatinput = 46;
-  public static final int thiss = 22;
-  public static final int mod = 35;
-  public static final int switchh = 17;
-  public static final int com = 13;
-  public static final int coma = 40;
-  public static final int igual = 47;
+  public static final int doo = 15;
+  public static final int floatinput = 45;
+  public static final int thiss = 21;
+  public static final int mod = 34;
+  public static final int switchh = 16;
+  public static final int coma = 39;
+  public static final int igual = 46;
   public static final int nott = 10;
-  public static final int mayorig = 29;
-  public static final int string = 54;
+  public static final int mayorig = 28;
+  public static final int string = 53;
   public static final int intt = 5;
   public static final int classs = 3;
-  public static final int menorig = 27;
-  public static final int llavec = 39;
+  public static final int menorig = 26;
+  public static final int llavec = 38;
   public static final int floatt = 6;
-  public static final int menosmenos = 49;
-  public static final int llavea = 38;
+  public static final int menosmenos = 48;
+  public static final int llavea = 37;
   public static final int elsee = 12;
-  public static final int casee = 18;
+  public static final int casee = 17;
   public static final int andd = 8;
-  public static final int intinput = 45;
-  public static final int masmas = 48;
+  public static final int intinput = 44;
+  public static final int masmas = 47;
   public static final int voidd = 4;
-  public static final int charinput = 44;
-  public static final int returnn = 21;
-  public static final int menos = 32;
-  public static final int menor = 26;
+  public static final int charinput = 43;
+  public static final int returnn = 20;
+  public static final int menos = 31;
+  public static final int menor = 25;
   public static final int iff = 11;
   public static final int EOF = 0;
-  public static final int dosp = 19;
-  public static final int parc = 37;
-  public static final int mas = 31;
-  public static final int para = 36;
-  public static final int whilee = 15;
+  public static final int dosp = 18;
+  public static final int parc = 36;
+  public static final int mas = 30;
+  public static final int para = 35;
+  public static final int whilee = 14;
   public static final int error = 1;
-  public static final int mayor = 28;
-  public static final int breakk = 24;
-  public static final int entero = 51;
-  public static final int por = 33;
-  public static final int forr = 14;
-  public static final int punto = 23;
-  public static final int defaultt = 20;
+  public static final int mayor = 27;
+  public static final int breakk = 23;
+  public static final int entero = 50;
+  public static final int por = 32;
+  public static final int forr = 13;
+  public static final int punto = 22;
+  public static final int defaultt = 19;
   public static final int publicc = 2;
-  public static final int id = 50;
-  public static final int println = 42;
+  public static final int id = 49;
+  public static final int println = 41;
   public static final int orr = 9;
-  public static final int noigual = 25;
-  public static final int puntocoma = 41;
-  public static final int igig = 30;
-  public static final int print = 43;
-  public static final int character = 53;
-  public static final int div = 34;
-  public static final int decimal = 52;
+  public static final int noigual = 24;
+  public static final int puntocoma = 40;
+  public static final int igig = 29;
+  public static final int print = 42;
+  public static final int character = 52;
+  public static final int div = 33;
+  public static final int decimal = 51;
   public static final int charr = 7;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -77,7 +76,6 @@ public class SintaxisJavaSym {
   "nott",
   "iff",
   "elsee",
-  "com",
   "forr",
   "whilee",
   "doo",

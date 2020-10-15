@@ -94,7 +94,6 @@ cero= "0"
 <YYINITIAL> ("*") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.por, yycolumn, yyline, yytext());}
 <YYINITIAL> ("/") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.div, yycolumn, yyline, yytext());}
 <YYINITIAL> ("%") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.mod, yycolumn, yyline, yytext());}
-<YYINITIAL> ("//") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.floor, yycolumn, yyline, yytext());}
     /*Palabras de agrupacion*/
 <YYINITIAL> ("(") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.para, yycolumn, yyline, yytext());}
 <YYINITIAL> (")") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.parc, yycolumn, yyline, yytext());}
@@ -110,8 +109,8 @@ cero= "0"
 <YYINITIAL> ("=") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.igual, yycolumn, yyline, yytext());}
 
 /* Expresiones Regulares */
-<YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.com, yycolumn, yyline, yytext());}
-<YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.com, yycolumn, yyline, yytext());}
+<YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); /*return new Symbol(SintaxisPythonSym.com, yycolumn, yyline, yytext());*/}
+<YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); /*return new Symbol(SintaxisPythonSym.com, yycolumn, yyline, yytext());*/}
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisPythonSym.decimal, yycolumn, yyline, yytext());}

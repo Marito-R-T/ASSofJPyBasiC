@@ -1,0 +1,114 @@
+PYTHON                  ::=     ESP DEFS
+PYTHON                  ::=     ESP
+
+ESP                     ::=     newline
+ESP                     ::=     
+
+DEFS                    ::=     DEFS DEFS
+DEFS                    ::=     DEF 
+
+DEF                     ::=     deff id para PAR_LIST parc dosp SUITE
+DEFS                    ::=     deff id para parc dosp
+
+PAR_LIST                ::=     PAR_LIST coma id
+PAR_LIST                ::=     id
+
+SUITE                   ::=     STMT_LIST newline
+SUITE                   ::=     newline indent STATEMENTS dedent
+
+STMT_LIST               ::=     STATEMENTLINE puntocoma STMT_LIST
+STMT_LIST               ::=     STATEMENTLINE
+
+PC                      ::=     puntocoma
+PC                      ::=     
+
+STATEMENTLINE           ::=     AS_VAR
+STATEMENTLINE           ::=     WRITE
+STATEMENTLINE           ::=     INPUT
+STATEMENTLINE           ::=     returnn D
+
+AS_VAR                  ::=     LISTVAR coma igual LISTDEF coma
+AS_VAR                  ::=     LISTVAR igual LISTDEF
+
+LISTVAR                 ::=     LISTVAR coma id
+LISTVAR                 ::=     id
+
+LISTDEF                 ::=     LISTDEF coma D
+LISTDEF                 ::=     D
+
+D                       ::=     character
+D                       ::=     OPERACION_A
+D                       ::=     INPUT
+
+WRITE                   ::=     print para STRING parc
+
+INPUT                   ::=     intinput para string parc
+INPUT                   ::=     charinput para string parc
+INPUT                   ::=     floatinput para string parc
+
+STATEMENTS              ::=     STATEMENT STATEMENTS
+STATEMENTS              ::=     STATEMENT
+
+STATEMENT               ::=     IF
+STATEMENT               ::=     FOR
+STATEMENT               ::=     WHILE
+STATEMENT               ::=     STMT_LIST
+
+IF                      ::=     iff CONDICION dosp SUITE ELSEIF ELSE 
+
+ELSEIF                  ::=     ELSEIF elseiff CONDICION dosp SUITE
+ELSEIF                  ::=     
+
+ELSE                    ::=     elsee dosp SUITE
+ELSE                    ::=     
+
+WHILE                   ::=     whilee CONDICION dosp SUITE
+
+COMA                    ::=     coma
+COMA                    ::=     
+
+FOR                     ::=     forr id COMA inn RANGE dosp SUITE
+
+RANGE                   ::=     range para OPERACION_A parc
+RANGE                   ::=     range para OPERACION_A coma OPERACION_A parc
+RANGE                   ::=     range para OPERACION_A coma OPERACION_A coma OPERACION_A parc
+
+OPERACION_A             ::=     OPERACION_A mas OPERACION_M
+OPERACION_A             ::=     OPERACION_A menos OPERACION_M
+OPERACION_A             ::=     OPERACION_M
+
+OPERACION_M             ::=     OPERACION_M por OPERACION_U
+OPERACION_M             ::=     OPERACION_M div OPERACION_U
+OPERACION_M             ::=     OPERACION_M mod OPERACION_U
+OPERACION_M             ::=     OPERACION_U
+
+OPERACION_U             ::=     menos OPERACION_U
+OPERACION_U             ::=     mas OPERACION_U
+OPERACION_U             ::=     ATOM
+
+ATOM                    ::=     THIS id
+ATOM                    ::=     entero
+ATOM                    ::=     decimal
+ATOM                    ::=     para OPERACION_A parc
+
+CONDICION               ::=     CONDICION orr AND
+CONDICION               ::=     AND
+
+AND                     ::=     AND andd NOT
+AND                     ::=     NOT
+
+NOT                     ::=     nott NOT 
+NOT                     ::=     COMPARACION
+NOT                     ::=     para CONDICION parc
+
+COMPARACION             ::=     OPERACION_A igig OPERACION_A
+COMPARACION             ::=     OPERACION_A noigual OPERACION_A
+COMPARACION             ::=     OPERACION_A menor OPERACION_A
+COMPARACION             ::=     OPERACION_A menorig OPERACION_A
+COMPARACION             ::=     OPERACION_A mayor OPERACION_A
+COMPARACION             ::=     OPERACION_A mayorig OPERACION_A
+
+STRING                  ::=     STRING coma D
+STRING                  ::=     STRING coma string
+STRING                  ::=     D
+STRING                  ::=     string

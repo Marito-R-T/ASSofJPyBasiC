@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase donde se ingresan los metodos que crea el usuario de python
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

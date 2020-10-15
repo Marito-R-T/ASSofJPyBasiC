@@ -45,13 +45,12 @@ parser code
 
 terminal String deff, nott, andd, orr, iff, elseiff, elsee, forr, inn, range, whilee;
 terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div;
-terminal String mod, floor, para, parc, coma, dosp, print, charinput, intinput, floatinput;
+terminal String mod, para, parc, coma, dosp, print, charinput, intinput, floatinput;
 terminal String igual, puntocoma, returnn;
-terminal String com, id, entero, decimal, character, string, indent, dedent, newline;
+terminal String id, entero, decimal, character, string, indent, dedent, newline;
 
 non terminal PYTHON, ESP, DEFS, PC;
 non terminal COMA;
-non terminal RETURN;
 non terminal CondicionPrograma NOT, AND, CONDICION;
 non terminal Triplete COMPARACION;
 non terminal DEF;
@@ -221,7 +220,7 @@ RANGE ::= range para OPERACION_A:e1 parc {:List<OperacionPython> op = new ArrayL
 
 OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:RESULT = new OperacionPython(e1, e2,
                         new SumOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionPython.obtenerTipo(e1, e2)));:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:RESULT = new OperacionPython(e1, e2,
+        | OPERACION_A:e1 menos OPERACION_M:e2 {:RESULT = new OperacionPython(e1, e2,
                         new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionPython.obtenerTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
         | error OPERACION_M:e1 {:RESULT = e1;:}

@@ -48,8 +48,8 @@ parser code
 terminal String espacio, subb, functionn, endd, publicc, dimm, ass, nott, andd;
 terminal String orr, integerr, decimall, charr, iff, elseiff, elsee, thenn, selectt;
 terminal String casee, forr, to, stepp, nextt, whilee, doo, loopp, igual, noigual, menor;
-terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, floor, para, parc, coma;
-terminal String com, id, decimal, entero, character, y, string;
+terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, para, parc, coma;
+terminal String id, decimal, entero, character, y, string;
 terminal String write, writeln, charinput, floatinput, intinput;
 terminal String returnn;
 
@@ -58,7 +58,7 @@ non terminal ESP;
 non terminal THEN, CA, PUBLIC;
 non terminal List<VariableVisual> LISTPARAMM, LISTPARAM, LISTVAR;
 non terminal String TYPE, TYPEE;
-non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, D, DEF, INPUT, STEP;
+non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, DEF, INPUT, STEP;
 non terminal List<Triplete> STATEMENTS, STATEMENT, CONSOLEWRITE, STRING, CASEELSE, STATEMENTSF, ASIGVAR;
 non terminal List<Triplete> ELSE, IF_ELSE, SELECT, STATEMENTLINE, WHILE, DO_WHILE, FOR, DEFVAR;
 non terminal CondicionPrograma CONDICION, NOT, AND;
@@ -183,7 +183,7 @@ DEF ::= igual EXPR:e1 {:RESULT = e1;:}
 
 OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
                         new SumOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));};:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
+        | OPERACION_A:e1 menos OPERACION_M:e2 {:if(e1!=null && e2 !=null){RESULT = new OperacionVisual(e1, e2,
                         new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionVisual.obtenerTipo(e1, e2)));}:}
         | OPERACION_M:e1 {:RESULT = e1;:}
 ;

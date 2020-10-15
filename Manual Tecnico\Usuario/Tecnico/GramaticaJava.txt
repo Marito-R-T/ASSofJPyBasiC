@@ -1,0 +1,149 @@
+JAVA                    ::=     CLASSES
+
+CLASSES                 ::=     CLASSES CLASSES
+CLASSES                 ::=     
+
+CLASS                   ::=     public class id llavea STATEMENTS_CLASS llavec
+
+STATEMENTS_CLASS        ::=     METODO
+STATEMENTS_CLASS        ::=     CONSTRUCTOR
+STATEMENTS_CLASS        ::=     DEF_VAR puntcoma
+
+CONSTRUCTOR             ::=     publicc id para LIST_PAR parc llavea STATEMENTS_METODO
+
+METODO                  ::=     publicc TYPE_V id para LIST_PAR parc llavea STATEMENTS_METODO
+
+TYPE_V                  ::=     voidd
+TYPE_V                  ::=     TYPE
+
+TYPE                    ::=     intt
+TYPE                    ::=     floatt
+TYPE                    ::=     charr
+
+LIST_PAR                ::=     TYPE id LIST_PAR
+LIST_PAR                ::=     
+
+LIST_PARR               ::=     coma TYPE id LIST_PARR
+LIST_PARR               ::=     
+
+STATEMENTS_METODO       ::=     STATEMENT_METODO STATEMENTS_METODO
+STATEMENTS_METODO       ::=     RETURN
+STATEMENTS_METODO       ::=     breakk puntocoma
+STATEMENTS_METODO       ::=     
+
+RETURN                  ::=     return OPERACION_A puntocoma
+
+STATEMENT_METODO        ::=     COMP_STATE
+STATEMENT_METODO        ::=     STATEMENT_LINE
+
+DEF_VAR                 ::=     TYPE LIST_PAR
+
+LIST_VAR                ::=     LIST_VAR coma AS_VAR
+LIST_VAR                ::=     AS_VAR
+
+AS_VAR                  ::=     id igual OPERACION_A
+AS_VAR                  ::=     id
+
+COMP_STATE              ::=     WHILE
+COMP_STATE              ::=     FOR
+COMP_STATE              ::=     DO_WHILE
+COMP_STATE              ::=     IF_ELSE
+COMP_STATE              ::=     SWITCH
+
+WHILE                   ::=     whilee para CONDICION parc BLOQUE
+
+BLOQUE                  ::=     llavea STATEMENTS_METODO llavec
+BLOQUE                  ::=     STATEMENT_LINE
+
+FOR                     ::=     forr para INICIO puntocoma CONDICION puntocoma STEP parc BLOQUE
+
+INICIO                  ::=     THIS id
+INICIO                  ::=     TYPE AS_VAR
+
+STEP                    ::=     AS_VAR_LINE
+STEP                    ::=     OP_VAR
+
+DO_WHILE                ::=     doo BLOQUE whilee para CONDICION parc puntocoma
+
+IF_ELSE                 ::=     iff para CONDICION parc BLOQUE ELSEIF ELSE
+IF_ELSE                 ::=     
+
+ELSE                    ::=     elsee BLOQUE
+ELSE                    ::=     
+
+SWITCH                  ::=     switchh para OPERACION_A parc llavea CASES DEFAULT llavec
+
+CASES                   ::=     CASES casee OPERACION_A dosp
+CASES                   ::=     
+
+DEFAULT                 ::=     defaultt dosp
+DEFAULT                 ::=     
+
+STATEMENT_LINE          ::=     AS_VAR_LINE puntocoma
+STATEMENT_LINE          ::=     DEF_VAR puntocoma
+STATEMENT_LINE          ::=     WRITE puntocoma
+STATEMENT_LINE          ::=     INPUT puntocoma
+
+AS_VAR_LINE             ::=     THIS id igual OPERACION_A
+
+WRITE                   ::=     println para STRING parc
+WRITE                   ::=     print para STRING parc
+
+OP_VAR                  ::=     THIS id masms
+OP_VAR                  ::=     THIS id menosmenos
+
+OPERACION_A             ::=     OPERACION_A mas OPERACION_M
+OPERACION_A             ::=     OPERACION_A menos OPERACION_M
+OPERACION_A             ::=     OPERACION_M
+
+OPERACION_M             ::=     OPERACION_M por OPERACION_U
+OPERACION_M             ::=     OPERACION_M div OPERACION_U
+OPERACION_M             ::=     OPERACION_M mod OPERACION_U
+OPERACION_M             ::=     OPERACION_U
+
+OPERACION_U             ::=     menos OPERACION_U
+OPERACION_U             ::=     mas OPERACION_U
+OPERACION_U             ::=     ATOM
+
+ATOM                    ::=     THIS id
+ATOM                    ::=     entero
+ATOM                    ::=     decimal
+ATOM                    ::=     character
+ATOM                    ::=     para OPERACION_A parc
+ATOM                    ::=     INPUT
+
+THIS                    ::=     this puntocoma
+THIS                    ::=
+
+CONDICION               ::=     CONDICION orr AND
+CONDICION               ::=     AND
+
+AND                     ::=     AND andd NOT 
+AND                     ::=     NOT
+
+NOT                     ::=     nott NOT 
+NOT                     ::=     COMPARACION
+NOT                     ::=     para CONDICION parc
+
+COMPARACION             ::=     OPERACION_A igig OPERACION_A
+COMPARACION             ::=     OPERACION_A noigual OPERACION_A
+COMPARACION             ::=     OPERACION_A menor OPERACION_A
+COMPARACION             ::=     OPERACION_A menorig OPERACION_A
+COMPARACION             ::=     OPERACION_A mayor OPERACION_A
+COMPARACION             ::=     OPERACION_A mayorig OPERACION_A
+
+STRING                  ::=     STRING mas EXPR
+STRING                  ::=     STRING mas string
+STRING                  ::=     EXPR
+STRING                  ::=     string 
+
+EXPR                    ::=     INPUT
+EXPR                    ::=     THIS id
+EXPR                    ::=     entero
+EXPR                    ::=     decimal
+EXPR                    ::=     character
+EXPR                    ::=     para OPERACION_A parc
+
+INPUT                   ::=     charinput para string parc
+INPUT                   ::=     intinput para string parc
+INPUT                   ::=     floatinput para string parc

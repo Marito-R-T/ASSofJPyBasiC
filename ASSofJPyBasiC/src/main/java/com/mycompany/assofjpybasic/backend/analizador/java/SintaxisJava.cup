@@ -48,7 +48,7 @@ parser code
     }
 :};
 
-terminal String publicc, classs, voidd, intt, floatt, charr, andd, orr, nott, iff, elsee, com;
+terminal String publicc, classs, voidd, intt, floatt, charr, andd, orr, nott, iff, elsee;
 terminal String forr, whilee, doo, switchh, casee, dosp, defaultt, returnn, thiss, punto, breakk;
 terminal String noigual, menor, menorig, mayor, mayorig, igig, mas, menos, por, div, mod;
 terminal String para, parc, llavea, llavec, coma, puntocoma, println, print, charinput, intinput, floatinput;
@@ -301,7 +301,7 @@ OP_VAR ::= THIS:e0 id:e1 masmas {: List<Triplete> tri = new ArrayList<>();
 OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null&&e2!=null){
                         RESULT = new OperacionJava(e1, e2,
                         new SumOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionJava.obtenerTipo(e1, e2)));}:}
-        | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1!=null&&e2!=null){
+        | OPERACION_A:e1 menos OPERACION_M:e2 {:if(e1!=null&&e2!=null){
                         RESULT = new OperacionJava(e1, e2,
                         new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionJava.obtenerTipo(e1, e2)));}:}
         | OPERACION_M:e1 {:RESULT = e1;:}

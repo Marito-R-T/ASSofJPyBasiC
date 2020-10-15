@@ -8,50 +8,48 @@ package com.mycompany.assofjpybasic.backend.analizador.python;
 /** CUP generated class containing symbol constants. */
 public class SintaxisPythonSym {
   /* terminals */
-  public static final int newline = 44;
-  public static final int floatinput = 32;
+  public static final int newline = 42;
+  public static final int floatinput = 31;
   public static final int mod = 23;
-  public static final int floor = 24;
-  public static final int com = 36;
-  public static final int coma = 27;
-  public static final int dedent = 43;
-  public static final int igual = 33;
+  public static final int coma = 26;
+  public static final int dedent = 41;
+  public static final int igual = 32;
   public static final int range = 11;
   public static final int nott = 3;
   public static final int mayorig = 17;
-  public static final int string = 41;
+  public static final int string = 39;
   public static final int menorig = 15;
-  public static final int indent = 42;
+  public static final int indent = 40;
   public static final int elsee = 8;
   public static final int andd = 4;
-  public static final int intinput = 31;
-  public static final int returnn = 35;
-  public static final int charinput = 30;
+  public static final int intinput = 30;
+  public static final int charinput = 29;
+  public static final int returnn = 34;
   public static final int menos = 20;
   public static final int menor = 14;
   public static final int elseiff = 7;
   public static final int iff = 6;
   public static final int EOF = 0;
-  public static final int dosp = 28;
-  public static final int parc = 26;
+  public static final int dosp = 27;
+  public static final int parc = 25;
   public static final int mas = 19;
   public static final int whilee = 12;
-  public static final int para = 25;
+  public static final int para = 24;
   public static final int error = 1;
   public static final int mayor = 16;
-  public static final int entero = 38;
+  public static final int entero = 36;
   public static final int por = 21;
   public static final int forr = 9;
-  public static final int id = 37;
+  public static final int id = 35;
   public static final int orr = 5;
   public static final int noigual = 13;
   public static final int inn = 10;
-  public static final int puntocoma = 34;
+  public static final int puntocoma = 33;
   public static final int igig = 18;
-  public static final int print = 29;
-  public static final int character = 40;
+  public static final int print = 28;
+  public static final int character = 38;
   public static final int div = 22;
-  public static final int decimal = 39;
+  public static final int decimal = 37;
   public static final int deff = 2;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -78,7 +76,6 @@ public class SintaxisPythonSym {
   "por",
   "div",
   "mod",
-  "floor",
   "para",
   "parc",
   "coma",
@@ -90,7 +87,6 @@ public class SintaxisPythonSym {
   "igual",
   "puntocoma",
   "returnn",
-  "com",
   "id",
   "entero",
   "decimal",

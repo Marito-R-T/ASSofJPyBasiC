@@ -275,8 +275,11 @@ public class AssGUI extends javax.swing.JFrame {
     private void itemGenerarCod3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGenerarCod3ActionPerformed
         // TODO add your handling code here:
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
-        tabbed.getPaneCodigoT().
-                setText(ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText()));
+        String s = ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText());
+        tabbed.getPaneCodigoT().setText(s);
+        if (s != null) {
+            tabbed.getTabedGeneral().setSelectedIndex(1);
+        }
     }//GEN-LAST:event_itemGenerarCod3ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,6 +25,8 @@ import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.io.StringReader;
 
 /**
+ * Clase donde se llama a los Analizadores Sintacticos y Lexicos, y cualquier
+ * error lo informa a la terminal principal
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -42,10 +44,11 @@ public class ManejadorAnalisis {
             SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
             ArchivoMLG archivo = (ArchivoMLG) lengua.parse().value;
             SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
-            pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
             pro.setLineas(lengua.getJV(), lengua.getPY(), lengua.getVB(), lengua.getC());
+            pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
+            String string = (String) pro.parse().value;
             if (AssGUI.editorTerminal.getText().equals("")) {
-                return (String) pro.parse().value;
+                return string;
             } else {
                 AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "\n"
                         + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");

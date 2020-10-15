@@ -1,0 +1,143 @@
+VISUAL                  ::=         ESP STATESM
+
+ESP                     ::=         espacio
+ESP                     ::=         
+
+PUBLIC                  ::=         publicc 
+PUBLIC                  ::=         
+
+STATESM                 ::=         STATEM STATESM
+STATESM                 ::=         
+
+STATEM                  ::=         SUB
+STATEM                  ::=         FUNCTION
+
+SUB                     ::=         PUBLIC subb id para LISTPARAM parc espacio
+
+FUNCTION                ::=         PUBLIC functionn id para LISTPARAMM parc TYPE espacio ESTATEMENTS endd subb espacio
+
+FUNCTION                ::=         PUBLIC functionn id para LISTPARAMM parc TYPE espacio STATEMENTSF endd functionn espacio
+
+DEFVAR                  ::=         dimm LISTVAR espacio
+
+LISTPARAMM              ::=         LISTPARAM
+LISTPARAMM              ::=         
+
+LISTPARAM               ::=         LISTPARAM coma id TYPE
+LISTPARAM               ::=         id TYPE
+
+LISTVAR                 ::=         LISTVAR coma id TYPEE DEF
+LISTVAR                 ::=         id TYPEE DEF 
+
+ASIGVAR                 ::=         id igual EXPR espacio
+
+TYPE                    ::=         ass integerr
+TYPE                    ::=         ass charr
+TYPE                    ::=         ass decimall
+TYPE                    ::=         
+
+DEF                     ::=     igual EXPR
+DEF                     ::=     
+
+OPERACION_A             ::=     OPERACION_A mas OPERACION_M
+OPERACION_A             ::=     OPERACION_A menos OPERACION_M
+OPERACION_A             ::=     OPERACION_M
+
+OPERACION_M             ::=     OPERACION_M por OPERACION_U
+OPERACION_M             ::=     OPERACION_M div OPERACION_U
+OPERACION_M             ::=     OPERACION_M mod OPERACION_U
+OPERACION_M             ::=     OPERACION_U
+
+OPERACION_U             ::=     menos OPERACION_U
+OPERACION_U             ::=     mas OPERACION_U
+OPERACION_U             ::=     ATOM
+
+ATOM                    ::=     THIS id
+ATOM                    ::=     entero
+ATOM                    ::=     decimal
+ATOM                    ::=     para OPERACION_A parc
+
+CONDICION               ::=     CONDICION orr AND
+CONDICION               ::=     AND
+
+AND                     ::=     AND andd NOT
+AND                     ::=     NOT
+
+NOT                     ::=     nott NOT 
+NOT                     ::=     COMPARACION
+NOT                     ::=     para CONDICION parc
+
+COMPARACION             ::=     OPERACION_A igig OPERACION_A
+COMPARACION             ::=     OPERACION_A noigual OPERACION_A
+COMPARACION             ::=     OPERACION_A menor OPERACION_A
+COMPARACION             ::=     OPERACION_A menorig OPERACION_A
+COMPARACION             ::=     OPERACION_A mayor OPERACION_A
+COMPARACION             ::=     OPERACION_A mayorig OPERACION_A
+
+STATEMENTS              ::=     STATEMENT STATEMENTSF
+STATEMENTS              ::=         returnn EXPR espacio
+STATEMENTS              ::=     
+
+EXPR                    ::=     OPERACION_A
+EXPR                    ::=     INPUT
+EXPR                    ::=     character
+
+STATEMENT               ::=     IF_ELSE
+STATEMENT               ::=     SELECT
+STATEMENT               ::=     FOR
+STATEMENT               ::=     WHILE
+STATEMENT               ::=     DO_WHILE
+STATEMENT               ::=     STATEMENTLINE
+
+IF_ELSE                 ::=     iff CONDICION THEN espacio STATEMENTS
+IF_ELSE                 ::=     iff CONDICION thenn STATEMENTLINE espacio
+
+ELSE_IF                 ::=     ELSE_IF elseiff CONDICION THEN espacio STATEMENT
+ELSE_IF                 ::=
+
+THEN                    ::=     then
+THEN                    ::=     
+
+STATEMENTLINE           ::=     CONSOLEWRITE
+STATEMENTLINE           ::=     INPUT
+STATEMENTLINE           ::=     DEFVAR
+STATEMENTLINE           ::=     ASIGVAR
+
+SELECT                  ::=     selectt CA EXPR espacio CASES CASEELSE endd selectt espacio
+
+CA                      ::=     casee
+                        |
+;
+
+CASEELSE                ::=     case elsee espacio STATEMENTS
+CASEELSE                ::=     
+
+CASES                   ::=     CASES casee LIST_CASE espacio STATEMENTS
+CASES                   ::=     
+
+LIST_CASE               ::=     LIST_CASE coma OPERACION_A
+LIST_CASE               ::=     OPERACION_A
+
+FOR                     ::=     forr id TYPE igual OPERACION_A to OPERACION_A STEP espacio STATEMENT nextt ID espacio
+
+ID                      ::=     id
+ID                      ::=     
+
+STEP                    ::=     stepp OPERACION_A
+
+WHILE                   ::=     whilee CONDICION espacio
+
+DO_WHILE                ::=     doo whilee CONDICION espacio STATEMENT loop espacio
+DO_WHILE                ::=     doo espacio STATEMENTS loop whilee CONDICION espacio
+
+CONSOLEWRITE            ::=     write para STRING parc espacio
+CONSOLEWRITE            ::=     writeln para STRING parc espacio
+
+INPUT                   ::=     charinput para string parc
+INPUT                   ::=     floatinput para string parc
+INPUT                   ::=     intinput para string parc
+
+STRING                  ::=     STRING y EXPR
+STRING                  ::=     STRING y string
+STRING                  ::=     EXPR
+STRING                  ::=     string

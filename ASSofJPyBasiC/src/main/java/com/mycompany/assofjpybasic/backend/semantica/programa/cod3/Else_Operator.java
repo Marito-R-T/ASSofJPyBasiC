@@ -19,6 +19,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 import com.mycompany.assofjpybasic.backend.semantica.programa.CondicionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.OperacionVisual;
+import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,13 +47,17 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @param tri Lista de tripletes del If
      */
     public void agregarIf(CondicionPrograma con, List<Triplete> tri) {
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.addAll(con.getTriplete());
-        nuevos.addAll(con.getBueno());
-        nuevos.addAll(tri);
-        nuevos.add(gotoo);
-        nuevos.addAll(con.getMalo());
-        this.addAll(0, nuevos);
+        if (con != null && tri != null) {
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.addAll(con.getTriplete());
+            nuevos.addAll(con.getBueno());
+            nuevos.addAll(tri);
+            nuevos.add(gotoo);
+            nuevos.addAll(con.getMalo());
+            this.addAll(0, nuevos);
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en el if\n");
+        }
     }
 
     /**
@@ -63,12 +68,17 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return
      */
     public Else_Operator agregarElseIf(CondicionPrograma con, List<Triplete> tri) {
-        this.addAll(con.getTriplete());
-        this.addAll(con.getBueno());
-        this.addAll(tri);
-        this.add(gotoo);
-        this.addAll(con.getMalo());
-        return this;
+        if (con != null && tri != null) {
+            this.addAll(con.getTriplete());
+            this.addAll(con.getBueno());
+            this.addAll(tri);
+            this.add(gotoo);
+            this.addAll(con.getMalo());
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Else If\n");
+            return this;
+        }
     }
 
     /**
@@ -78,9 +88,14 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return Retorn todos los tripletes de todos los Ifs
      */
     public List<Triplete> juntarTripletes(List<Triplete> tri) {
-        this.addAll(tri);
-        this.add(salida);
-        return this;
+        if (tri != null) {
+            this.addAll(tri);
+            this.add(salida);
+            return this;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Else\n");
+            return this;
+        }
     }
 
     /**
@@ -91,15 +106,20 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return Retora todos los del While
      */
     public static List<Triplete> WHILE(CondicionPrograma con, List<Triplete> tri) {
-        Etiqueta et = new Etiqueta();
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.add(et);
-        nuevos.addAll(con.getTriplete());
-        nuevos.addAll(con.getBueno());
-        nuevos.addAll(tri);
-        nuevos.add(new GoToOperator(et));
-        nuevos.addAll(con.getMalo());
-        return nuevos;
+        if (con != null && tri != null) {
+            Etiqueta et = new Etiqueta();
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.add(et);
+            nuevos.addAll(con.getTriplete());
+            nuevos.addAll(con.getBueno());
+            nuevos.addAll(tri);
+            nuevos.add(new GoToOperator(et));
+            nuevos.addAll(con.getMalo());
+            return nuevos;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un While\n");
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -110,38 +130,48 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return Retora la lista de todo el While
      */
     public static List<Triplete> DOWHILE(CondicionPrograma con, List<Triplete> tri) {
-        Etiqueta et = new Etiqueta();
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.add(et);
-        nuevos.addAll(tri);
-        nuevos.addAll(con.getTriplete());
-        nuevos.addAll(con.getBueno());
-        nuevos.add(new GoToOperator(et));
-        nuevos.addAll(con.getMalo());
-        return nuevos;
+        if (con != null && tri != null) {
+            Etiqueta et = new Etiqueta();
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.add(et);
+            nuevos.addAll(tri);
+            nuevos.addAll(con.getTriplete());
+            nuevos.addAll(con.getBueno());
+            nuevos.add(new GoToOperator(et));
+            nuevos.addAll(con.getMalo());
+            return nuevos;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un Do While\n");
+            return new ArrayList<>();
+        }
     }
 
     /**
      * Armar el For
      *
      * @param asignacion Inicialización del For
-     * @param definición Step del For
+     * @param definicion Lista de definicion
      * @param con Condición para finalización del for
      * @param tri Tripletes del For
      * @return Regresa los tripletes del for
      */
-    public static List<Triplete> FOR(List<Triplete> asignacion, List<Triplete> definición, CondicionPrograma con, List<Triplete> tri) {
-        Etiqueta et = new Etiqueta();
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.addAll(asignacion);
-        nuevos.add(et);
-        nuevos.addAll(con.getTriplete());
-        nuevos.addAll(con.getBueno());
-        nuevos.addAll(tri);
-        nuevos.addAll(definición);
-        nuevos.add(new GoToOperator(et));
-        nuevos.addAll(con.getMalo());
-        return nuevos;
+    public static List<Triplete> FOR(List<Triplete> asignacion, List<Triplete> definicion, CondicionPrograma con, List<Triplete> tri) {
+        if (asignacion != null && definicion != null && con != null && tri != null) {
+            Etiqueta et = new Etiqueta();
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.addAll(asignacion);
+            nuevos.add(et);
+            nuevos.addAll(con.getTriplete());
+            nuevos.addAll(con.getBueno());
+            nuevos.addAll(tri);
+            nuevos.addAll(definicion);
+            nuevos.add(new GoToOperator(et));
+            nuevos.addAll(con.getMalo());
+            return nuevos;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un For\n");
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -153,42 +183,47 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return Regresa los tripletes del for
      */
     public static List<Triplete> FORP(String id, List<OperacionPython> op, List<Triplete> tri) {
-        TerminalOperator terminal = new TerminalOperator(id);
-        Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
-        MenorOperator men;
-        List<Triplete> nuevos = new ArrayList<>();
-        if (op.size() >= 2) {
-            nuevos.addAll(op.get(0).getTripletes());
-            nuevos.add(new AsignarValor(terminal, op.get(0).getTriplete(), "int"));
+        if (id != null && op != null && tri != null) {
+            TerminalOperator terminal = new TerminalOperator(id);
+            Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
+            MenorOperator men;
+            List<Triplete> nuevos = new ArrayList<>();
+            if (op.size() >= 2) {
+                nuevos.addAll(op.get(0).getTripletes());
+                nuevos.add(new AsignarValor(terminal, op.get(0).getTriplete(), "int"));
+            } else {
+                nuevos.add(new AsignarValor(terminal, new TerminalOperator("0"), "int"));
+            }
+            nuevos.add(et);
+            if (op.size() < 2) {
+                nuevos.addAll(op.get(0).mostrarTripletes());
+                men = new MenorOperator(op.get(0).getTriplete(), terminal);
+            } else {
+                nuevos.addAll(op.get(1).mostrarTripletes());
+                men = new MenorOperator(op.get(1).getTriplete(), terminal);
+            }
+            If_Operator iff = new If_Operator(men, buena);// Manejo del If
+            nuevos.add(iff);
+            nuevos.add(new GoToOperator(mala));
+            nuevos.add(buena);
+            nuevos.addAll(tri);
+            if (op.size() < 3) {
+                SumOperator sum = new SumOperator(null, terminal, new TerminalOperator("1"), "int");
+                nuevos.add(sum);
+                nuevos.add(new AsignarValor(terminal, sum, null));
+            } else {
+                nuevos.addAll(op.get(2).getTripletes());
+                SumOperator sum = new SumOperator(null, terminal, op.get(2).getTriplete(), "int");
+                nuevos.add(sum);
+                nuevos.add(new AsignarValor(terminal, sum, null));
+            }
+            nuevos.add(new GoToOperator(et));
+            nuevos.add(mala);
+            return nuevos;
         } else {
-            nuevos.add(new AsignarValor(terminal, new TerminalOperator("0"), "int"));
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un for de Python\n");
+            return new ArrayList<>();
         }
-        nuevos.add(et);
-        if (op.size() < 2) {
-            nuevos.addAll(op.get(0).mostrarTripletes());
-            men = new MenorOperator(op.get(0).getTriplete(), terminal);
-        } else {
-            nuevos.addAll(op.get(1).mostrarTripletes());
-            men = new MenorOperator(op.get(1).getTriplete(), terminal);
-        }
-        If_Operator iff = new If_Operator(men, buena);// Manejo del If
-        nuevos.add(iff);
-        nuevos.add(new GoToOperator(mala));
-        nuevos.add(buena);
-        nuevos.addAll(tri);
-        if (op.size() < 3) {
-            SumOperator sum = new SumOperator(null, terminal, new TerminalOperator("1"), "int");
-            nuevos.add(sum);
-            nuevos.add(new AsignarValor(terminal, sum, null));
-        } else {
-            nuevos.addAll(op.get(2).getTripletes());
-            SumOperator sum = new SumOperator(null, terminal, op.get(2).getTriplete(), "int");
-            nuevos.add(sum);
-            nuevos.add(new AsignarValor(terminal, sum, null));
-        }
-        nuevos.add(new GoToOperator(et));
-        nuevos.add(mala);
-        return nuevos;
     }
 
     /**
@@ -203,25 +238,30 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return Regresa los tripletes del for
      */
     public static List<Triplete> FORV(String id, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, List<Triplete> tri) {
-        TerminalOperator term = new TerminalOperator(id);
-        Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.addAll(inicio.mostrarTripletes());
-        nuevos.add(new AsignarValor(term, inicio.getTriplete(), tipo));
-        nuevos.add(et);
-        nuevos.addAll(fin.mostrarTripletes());
-        MenorOperator op = new MenorOperator(term, fin.getTriplete());
-        nuevos.add(new If_Operator(op, buena));
-        nuevos.add(new GoToOperator(mala));
-        nuevos.add(buena);
-        nuevos.addAll(tri);
-        nuevos.addAll(step.mostrarTripletes());
-        SumOperator sum = new SumOperator(null, term, step.getTriplete(), tipo);
-        nuevos.add(sum);
-        nuevos.add(new AsignarValor(term, sum, null));
-        nuevos.add(new GoToOperator(et));
-        nuevos.add(mala);
-        return nuevos;
+        if (id != null && tipo != null && inicio != null && fin != null && step != null && tri != null) {
+            TerminalOperator term = new TerminalOperator(id);
+            Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.addAll(inicio.mostrarTripletes());
+            nuevos.add(new AsignarValor(term, inicio.getTriplete(), tipo));
+            nuevos.add(et);
+            nuevos.addAll(fin.mostrarTripletes());
+            MenorOperator op = new MenorOperator(term, fin.getTriplete());
+            nuevos.add(new If_Operator(op, buena));
+            nuevos.add(new GoToOperator(mala));
+            nuevos.add(buena);
+            nuevos.addAll(tri);
+            nuevos.addAll(step.mostrarTripletes());
+            SumOperator sum = new SumOperator(null, term, step.getTriplete(), tipo);
+            nuevos.add(sum);
+            nuevos.add(new AsignarValor(term, sum, null));
+            nuevos.add(new GoToOperator(et));
+            nuevos.add(mala);
+            return nuevos;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un For de Visual\n");
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -231,12 +271,17 @@ public class Else_Operator extends ArrayList<Triplete> {
      * @return
      */
     public static List<Triplete> IFSIMPLE(CondicionPrograma con, List<Triplete> tri) {
-        List<Triplete> nuevos = new ArrayList<>();
-        nuevos.addAll(con.getTriplete());
-        nuevos.addAll(con.getBueno());
-        nuevos.addAll(tri);
-        nuevos.addAll(con.getMalo());
-        return nuevos;
+        if (con != null && tri != null) {
+            List<Triplete> nuevos = new ArrayList<>();
+            nuevos.addAll(con.getTriplete());
+            nuevos.addAll(con.getBueno());
+            nuevos.addAll(tri);
+            nuevos.addAll(con.getMalo());
+            return nuevos;
+        } else {
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "Error en un If\n");
+            return new ArrayList<>();
+        }
     }
 
 }

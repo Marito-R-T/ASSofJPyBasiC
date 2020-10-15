@@ -9,22 +9,21 @@ package com.mycompany.assofjpybasic.backend.analizador.principal;
 public class SintaxisProgramaSym {
   /* terminals */
   public static final int doo = 20;
-  public static final int comilla = 59;
+  public static final int comilla = 58;
   public static final int printf = 43;
   public static final int mod = 32;
   public static final int switchh = 15;
   public static final int asig = 8;
-  public static final int com = 53;
   public static final int py = 51;
   public static final int coma = 39;
   public static final int igual = 47;
   public static final int nott = 11;
   public static final int mayorig = 26;
-  public static final int string = 63;
-  public static final int pyy = 60;
+  public static final int string = 62;
+  public static final int pyy = 59;
   public static final int intt = 5;
   public static final int menorig = 24;
-  public static final int vbb = 61;
+  public static final int vbb = 60;
   public static final int llavec = 36;
   public static final int floatt = 6;
   public static final int menosmenos = 49;
@@ -37,7 +36,7 @@ public class SintaxisProgramaSym {
   public static final int getch = 46;
   public static final int vb = 52;
   public static final int menos = 29;
-  public static final int javaa = 62;
+  public static final int javaa = 61;
   public static final int menor = 23;
   public static final int includee = 21;
   public static final int iff = 12;
@@ -45,7 +44,7 @@ public class SintaxisProgramaSym {
   public static final int dosp = 41;
   public static final int EOF = 0;
   public static final int parc = 34;
-  public static final int idlib = 54;
+  public static final int idlib = 53;
   public static final int mas = 28;
   public static final int whilee = 17;
   public static final int para = 33;
@@ -54,13 +53,12 @@ public class SintaxisProgramaSym {
   public static final int mayor = 25;
   public static final int cora = 37;
   public static final int breakk = 19;
-  public static final int entero = 56;
+  public static final int entero = 55;
   public static final int por = 30;
   public static final int punto = 42;
   public static final int forr = 14;
-  public static final int str = 64;
   public static final int defaultt = 18;
-  public static final int id = 55;
+  public static final int id = 54;
   public static final int clrs = 45;
   public static final int orr = 10;
   public static final int java = 50;
@@ -68,9 +66,9 @@ public class SintaxisProgramaSym {
   public static final int mainn = 3;
   public static final int puntocoma = 40;
   public static final int igig = 27;
-  public static final int character = 58;
+  public static final int character = 57;
   public static final int div = 31;
-  public static final int decimal = 57;
+  public static final int decimal = 56;
   public static final int scanf = 44;
   public static final int charr = 7;
   public static final String[] terminalNames = new String[] {
@@ -127,7 +125,6 @@ public class SintaxisProgramaSym {
   "java",
   "py",
   "vb",
-  "com",
   "idlib",
   "id",
   "entero",
@@ -137,8 +134,7 @@ public class SintaxisProgramaSym {
   "pyy",
   "vbb",
   "javaa",
-  "string",
-  "str"
+  "string"
   };
 }
 
