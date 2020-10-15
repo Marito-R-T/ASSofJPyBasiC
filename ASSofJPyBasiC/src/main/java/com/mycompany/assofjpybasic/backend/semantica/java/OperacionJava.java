@@ -30,9 +30,6 @@ public class OperacionJava {
     public OperacionJava(Integer entero, Triplete trip) {
         this.tipo = entero;
         this.triplete = trip;
-        if (triplete instanceof TemporalArreglo) {
-            this.tripletes.add(triplete);
-        }
     }
 
     /**

@@ -116,14 +116,17 @@ public class OperacionVisual {
     }
 
     public static String obtenerTipo(String op1) {
-        switch (op1) {
-            case "INT-FLOAT":
-                return "float";
-            case "INT":
-                return "int";
-            default:
-                return "char";
+        if (op1 != null) {
+            switch (op1) {
+                case "INT-FLOAT":
+                    return "float";
+                case "INT":
+                    return "int";
+                default:
+                    return "char";
+            }
         }
+        return null;
     }
 
     public List<Triplete> mostrarTripletes() {

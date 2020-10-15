@@ -5,6 +5,7 @@ import com.mycompany.assofjpybasic.backend.semantica.java.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
 import com.mycompany.assofjpybasic.backend.semantica.python.*;
+import com.mycompany.assofjpybasic.backend.error.Errores;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,21 +18,29 @@ parser code
     private TablaJava tabla;
     private List<VariableJava> variables;
     private MetodoJava actual;
+    private Errores errores = new Errores();
     int ret = 4;
     int cas = 0;
+    private int linea;
+
+    public void setLinea(int line){
+            this.linea = line;
+    }
     
     public void syntax_error(Symbol sym){
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, linea); 
     }
 
     public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, linea); 
     }
 
     public JavaSemantica getJava() {
             return java;
+    }
+    
+    public void reportarSem(String texto){
+            errores.errorSemantico(getS(), texto, linea);
     }
 
     public Symbol getS(){
@@ -70,10 +79,11 @@ CLASSES ::= CLASSES CLASS
 ;
 
 CLASS ::= publicc classs id:e1 llavea {:TablaJava sem = new TablaJava(e1); if(!java.agregarTabla(sem)){
-                                syntax_error(getS()); }
-                                tabla = sem; TablaJava.AMBITO += 1;:} 
+                                reportarSem("Clase ya existente con id: <"+e1+">");}
+                                tabla = sem; TablaJava.AMBITO += 1;:}
         STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1; 
                 tabla.verificarConstructores(); tabla = null;:}
+        | error CLASS
 ;
 
 STATEMENTS_CLASS ::= STATEMENTS_CLASS STATEMENT_CLASS
@@ -83,13 +93,14 @@ STATEMENTS_CLASS ::= STATEMENTS_CLASS STATEMENT_CLASS
 STATEMENT_CLASS ::= METODO
         | CONSTRUCTOR
         | DEF_VAR:e1 puntocoma {:tabla.getPrincipales().addAll(e1);:}
+        | error STATEMENT_CLASS
 ;
 
 CONSTRUCTOR ::= publicc id:e2 para LIST_PAR:e3 parc llavea {:
                 MetodoJava met = new MetodoJava(e2, 5, e3);
                 actual = met;
                 if(!tabla.addConstructor(met)){
-                        syntax_error(getS());
+                        reportarSem("Constructor de la clase : "+ e2 +" ya existente con mismos parametros");
                 }
                         TablaJava.AMBITO += 1;:}
                 STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;
@@ -102,7 +113,7 @@ METODO ::= publicc TYPE_V:e1 id:e2 para LIST_PAR:e3 parc llavea {:ret = e1;
                 MetodoJava met = new MetodoJava(e2, e1, e3);
                 actual = met;
                 if(!tabla.addMetodo(met)){
-                        syntax_error(getS());
+                        reportarSem("Metodo ya existente con id: <"+e2+"> con mismos parametros");
                 }
                         TablaJava.AMBITO += 1;:}
                 STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;
@@ -132,22 +143,30 @@ LIST_PARR ::= coma TYPE:e1 id:e2 LIST_PARR:e3 {:tabla.getVariables().add(0, new 
 
 STATEMENTS_METODO ::= STATEMENT_METODO:e1 STATEMENTS_METODO:e2 {:e1.addAll(e2); RESULT = e1;:}
         | RETURN:e1 {:RESULT = e1;:}
-        | breakk puntocoma {:if(cas==0){syntax_error(getS());} RESULT = new ArrayList<>();:}
+        | breakk puntocoma {:if(cas==0){
+                reportarSem("Break no esta dentro de un switch");
+                } RESULT = new ArrayList<>();:}
         | {:RESULT = new ArrayList<>();:}
 ;
 
 RETURN ::= returnn OPERACION_A:e1 puntocoma {:List<Triplete> tri = new ArrayList<>();
-                        if(e1==null || e1.getTipo() != ret){syntax_error(getS()); RESULT = tri;}
+                        if(e1==null || e1.getTipo() != ret){
+                                reportarSem("Return de tipo " + OperacionJava.obtenerTipo(e1.getTipo())
+                                + " y se espera un tipo: " + OperacionJava.obtenerTipo(actual.getTIPO()));
+                                RESULT = tri;}
                         else{tri.addAll(e1.mostrarTripletes()); tri.add(new Return(e1.getTriplete()));
                         RESULT = tri;}:}
 ;
 
 STATEMENT_METODO ::= COMP_STATE:e1 {:RESULT = e1;:}
         | STATEMENT_LINE:e1 {:RESULT = e1;:}
+        | error STATEMENT_METODO:e1 {:RESULT = e1;:}
 ;
 
 DEF_VAR ::= TYPE:e1 {:variables = new ArrayList<>();:} LIST_VAR:e2 {:VariableJava.agregarTipo(variables, e1);
-                        if(!tabla.addListVar(variables)){syntax_error(getS());} variables = new ArrayList<>();
+                        if(!tabla.addListVar(variables)){
+                                reportarSem("Unas variables de las registradas ya existen");}
+                                variables = new ArrayList<>();
                         RESULT = VariableJava.obtenerTripletes(e2, e1);:}
 ;
 
@@ -185,11 +204,15 @@ FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc BLOQUE
 INICIO ::= THIS:e0 id:e1 {:List<Triplete> tri = new ArrayList<>();
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){syntax_error(getS());}
+                        if(num == -1){
+                        reportarSem("No existe variable con id: " + e1);
+                                }
                         RESULT = new ArrayList<>();:}
         | TYPE:e1 {:TablaJava.AMBITO += 1; variables = new ArrayList<>();:} 
-                AS_VAR:e2 {: List<Triplete> tri = new ArrayList<>();
-                if(!tabla.addListVar(variables)){syntax_error(getS());} TablaJava.AMBITO -= 1;
+                AS_VAR:e2 {: List<Triplete> tri = new ArrayList<>(); VariableJava.agregarTipo(variables, e1);
+                if(!tabla.addListVar(variables)){
+                        reportarSem("Ya existe variable con id: " + e2.getId());
+                        } TablaJava.AMBITO -= 1;
                 ((AsignarValor) e2.getTriplete()).setTipo(OperacionJava.obtenerTipo(e1));
                 tri.addAll(e2.mostrarTripletes()); RESULT = tri;:}
 ;
@@ -218,8 +241,8 @@ ELSE ::= elsee BLOQUE:e1 {:RESULT = e1;:}
 SWITCH ::= switchh para OPERACION_A:e1 parc llavea CASES:e2 DEFAULT:e3 llavec {:RESULT = e2.agregarDefault(e1, e3);:}
 ;
 
-CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:cas++;:} STATEMENTS_METODO:e3 {:cas--;:}
-        {:if(e2!=null){RESULT  = e1.agregarCase(e2, e3);}:}
+CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:cas++;:} STATEMENTS_METODO:e3
+        {:cas--; if(e2!=null){RESULT  = e1.agregarCase(e2, e3);}:}
         | {:RESULT = new CasePrograma();:}
 ;
 
@@ -240,7 +263,12 @@ STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
 
 AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {: List<Triplete> tri = new ArrayList<>();
                         int num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null)); 
-                        if(num==-1 || num<e2.getTipo()){syntax_error(getS());}
+                        if(num==-1){
+                        reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                        } else if (num<e2.getTipo()) {
+                        reportarSem("Variable con tipo: "+ OperacionJava.obtenerTipo(num) 
+                        + " solo acepta tipo " + OperacionJava.obtenerTipo(e2.getTipo()));
+                        }
                         else{tri.addAll(e2.mostrarTripletes());
                         tri.add(new AsignarValor(new TerminalOperator(e1), e2.getTriplete(), null));}
                         RESULT = tri;:}
@@ -253,14 +281,18 @@ WRITE ::= println para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:
 OP_VAR ::= THIS:e0 id:e1 masmas {: List<Triplete> tri = new ArrayList<>();
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){syntax_error(getS());}else{
+                        if(num == -1){
+                                reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                        }else{
                                 SumOperator sum = new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
                                 tri.add(sum); tri.add(new AsignarValor(new TerminalOperator(e1), sum, null));}
                                 RESULT = tri;:}
         | THIS:e0 id:e1 menosmenos {: List<Triplete> tri = new ArrayList<>();
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){syntax_error(getS());}else{
+                        if(num == -1){
+                                reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                        } else {
                                 RestOperator rest = new RestOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
                                 tri.add(rest); tri.add(new AsignarValor(new TerminalOperator(e1), rest, null));}
                                 RESULT = tri;:}
@@ -273,6 +305,7 @@ OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null&&e2!=null){
                         RESULT = new OperacionJava(e1, e2,
                         new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionJava.obtenerTipo(e1, e2)));}:}
         | OPERACION_M:e1 {:RESULT = e1;:}
+        | error OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
 OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1!=null&&e2!=null){
@@ -293,9 +326,15 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionJava(new OperacionJ
         | ATOM:e1 {:RESULT = e1;:}
 ;
 
-ATOM ::= THIS:e0 id:e1 {:int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){syntax_error(getS());}else{RESULT = new OperacionJava(num, new TerminalOperator(e1));}:}
+ATOM ::= THIS:e0 id:e1 {:int num;
+                        if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, 
+                        new TerminalOperator(e1)));}
+                        else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO,
+                        new TerminalOperator(e1)));}
+                        if(num == -1){
+                                reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                        } else {
+                                RESULT = new OperacionJava(num, new TerminalOperator(e1));}:}
         | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}
@@ -346,7 +385,10 @@ STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Prin
 EXPR ::= INPUT:e1 {:RESULT = e1;:}
         | THIS:e0 id:e1 {:int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){syntax_error(getS());}else{RESULT = new OperacionJava(num, new TerminalOperator(e1));}:}
+                        if(num == -1){
+                                reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                        }else{
+                                RESULT = new OperacionJava(num, new TerminalOperator(e1));}:}
         | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}

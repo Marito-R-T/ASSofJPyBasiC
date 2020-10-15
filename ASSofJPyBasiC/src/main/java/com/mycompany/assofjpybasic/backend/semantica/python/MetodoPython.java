@@ -139,4 +139,12 @@ public class MetodoPython {
         return com + params + metodo;
     }
 
+    public void setParams() {
+        for (VariablePython parametro : this.parametros) {
+            if (parametro.getTipo().equals("VAR")) {
+                parametro.setTipo("FLOAT");
+            }
+        }
+    }
+
 }

@@ -107,7 +107,7 @@ cero= "0"
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.decimal, yycolumn, yyline, yytext());}
-<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.character, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));} // "char"c
+<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.character, yycolumn, yyline, yytext());} // "char"c
 <YYINITIAL> \" {yybegin(STRING); return new Symbol(SintaxisProgramaSym.comilla, yycolumn, yyline, yytext());}
 
 /* Espacios en blanco */

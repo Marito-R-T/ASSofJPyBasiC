@@ -5,6 +5,7 @@ import com.mycompany.assofjpybasic.backend.semantica.visual.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.*;
 import com.mycompany.assofjpybasic.backend.semantica.python.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
+import com.mycompany.assofjpybasic.backend.error.Errores;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,21 +17,29 @@ parser code
     private VisualSemantica sem = new VisualSemantica();
     private boolean error = false;
     private MetodoVisual actual;
+    private Errores errores = new Errores();
+    private int linea;
+
+    public void setLinea(int line){
+            this.linea = line;
+    }
 
     public void syntax_error(Symbol sym){
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, this.linea);
     }
 
     public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, this.linea); 
     }
 
     public VisualSemantica getVisual(){
             return sem;
     }
-
+    
+    public void reportarSem(String texto){
+            errores.errorSemantico(getS(), texto, this.linea);
+    }
+    
     public Symbol getS(){
         return this.cur_token;
     }
@@ -78,13 +87,15 @@ STATESM ::= STATEM STATESM
 
 STATEM ::= SUB
         | FUNCTION
+        | error STATEM {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO = 0;:}
 ;
 
 SUB ::= PUBLIC subb id:e1 para LISTPARAMM:e2 parc espacio {:VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, VisualSemantica.VOID);
                                         actual = met;
                                         sem.addListVar(e2);
-                                        if(!sem.addMetodo(met)){syntax_error(getS());}:}
+                                        if(!sem.addMetodo(met)){
+                                                reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");}:}
                                         STATEMENTS:e3 endd subb espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
                                         actual.getTripletes().addAll(e3);:}
@@ -94,15 +105,19 @@ FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:Vi
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
                                         actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3,
                                         new AsignarValor(new TerminalOperator(e1), null, e3)));
-                                        sem.addListVar(e2);
-                                        if(!sem.addMetodo(met)){syntax_error(getS());}:} 
+                                        sem.addVar(new VariableVisual(e1, VisualSemantica.AMBITO, e3, new TerminalOperator(e1)));
+                                        if(!sem.addListVar(e2)){
+                                                reportarSem("Un parametro tiene el mismo nombre del de la función con id: <"+e1+">");
+                                        } if(!sem.addMetodo(met)){
+                                                reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");}:}
                                         STATEMENTSF:e4 endd functionn espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
                                         actual.getTripletes().addAll(e4);:}
 ;
 
 DEFVAR ::= dimm LISTVAR:e1 espacio {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
-                                        else{syntax_error(getS());} RESULT = VisualSemantica.devolverTrip(e1);:}
+                                        else{reportarSem("Error con el tipado de variables");} 
+                                        RESULT = VisualSemantica.devolverTrip(e1);:}
 ;
 
 LISTPARAMM ::= LISTPARAM:e1 {:RESULT = e1;:}
@@ -124,7 +139,7 @@ LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual
                         new AsignarValor(new TerminalOperator(e2), null,OperacionVisual.obtenerTipo(e3)));}
                         va.setDefinido(e4 != null); va.setAstipo(e3 != null && e4 == null);
                         if(tipo == null && e3 != null && e4 != null){
-                                syntax_error(getS());
+                                reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);
                         } else if(e3 != null && e4 == null){
                                 e1.add(va);
                                 VisualSemantica.cambiarT(e1, e3);
@@ -133,19 +148,20 @@ LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual
                         } RESULT = e1;:}
         | id:e1 TYPEE:e2 DEF:e3 {:List<VariableVisual> vars = new ArrayList<>(); String tipo = VariableVisual.verificarTipo(e2, e3); VariableVisual va;
                         if(e3!=null){va = new VariableVisual(e1, VisualSemantica.AMBITO, tipo, 
-                        new AsignarValor(new TerminalOperator(e1), e3.getTriplete(),e2));
+                        new AsignarValor(new TerminalOperator(e1), e3.getTriplete(),OperacionVisual.obtenerTipo(e2)));
                         va.getTripletes().addAll(e3.mostrarTripletes());
                         }else{va = new VariableVisual(e1, VisualSemantica.AMBITO, tipo, 
-                        new AsignarValor(new TerminalOperator(e1), null,e2));}
+                        new AsignarValor(new TerminalOperator(e1), null,OperacionVisual.obtenerTipo(e2)));}
                         va.setDefinido(e3 != null); va.setAstipo(e2 != null && e3 == null);
                         if(tipo == null && e2 != null && e3 != null){
-                                syntax_error(getS());
+                                reportarSem("No coincide el tipo con la asignación de la variable con id: " + e1);
                         } vars.add(va); RESULT = vars;:}
 ;
 
 ASIGVAR ::= id:e1 igual EXPR:e2 espacio {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
                                 List<Triplete> trip = new ArrayList<>();
-                                if(var==null || !var.getTipo().contains(e2.getTipo())){syntax_error(getS());}
+                                if(var==null || !var.getTipo().contains(e2.getTipo())){
+                                reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);}
                                 else{trip.addAll(e2.mostrarTripletes()); trip.add(new AsignarValor(new TerminalOperator(e1), e2.getTriplete(), null));}
                                 RESULT = trip;:}
 ;
@@ -188,7 +204,9 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionVisual(new Operacio
 ;
 
 ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null)); 
-                if(var==null){syntax_error(getS());} else {
+                if(var==null){
+                        reportarSem("No existe la variable con id: " + e1);
+                } else {
                 RESULT = new OperacionVisual(var.getTipo(), new TerminalOperator(e1));
                 }:}
         | entero:e1 {:RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));:}
@@ -201,8 +219,9 @@ STATEMENTS ::= STATEMENTS:e1 STATEMENT:e2 {:e1.addAll(e2); RESULT = e1;:}
 ;
 
 STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:e1.addAll(e2); RESULT = e1;:}
-        | returnn EXPR:e1 {:List<Triplete> tri = new ArrayList<>();
-                if(e1 == null || !actual.getTIPO().contains(e1.getTipo())){syntax_error(getS());}
+        | returnn EXPR:e1 espacio {:List<Triplete> tri = new ArrayList<>();
+                if(e1 == null || !actual.getTIPO().contains(e1.getTipo())){
+                        reportarSem("No coincide el tipo del return con el tipo de la función con id: " + actual.getId());}
                 else{
                 tri.addAll(e1.mostrarTripletes());
                 tri.add(new Return(e1.getTriplete()));}
@@ -212,7 +231,7 @@ STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:e1.addAll(e2); RESULT = e1;:}
 
 EXPR ::= OPERACION_A:e1 {:RESULT = e1;:}
         | INPUT:e1 {:RESULT = e1;:}
-        | character:e1 {:RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator(e1));:}
+        | character:e1 {:RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator("'"+e1+"'"));:}
 ;
 
 STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}
@@ -221,6 +240,7 @@ STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}
         | WHILE:e1 {:RESULT = e1;:}
         | DO_WHILE:e1 {:RESULT = e1;:}
         | STATEMENTLINE:e1 {:RESULT = e1;:}
+        | error {:RESULT = new ArrayList<>();:}
 ;
 
 IF_ELSE ::= iff CONDICION:e1 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
@@ -257,6 +277,7 @@ STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
 
 SELECT ::= selectt CA EXPR:e1 espacio CASES:e2 CASEELSE:e3 endd selectt espacio
                 {:RESULT = e2.agregarDefault(e1, e3);:}
+        | error espacio CASES CASEELSE endd selectt espacio {:RESULT = new ArrayList<>();:}
 ;
 
 CA ::= casee
@@ -280,7 +301,9 @@ LIST_CASE ::= LIST_CASE:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
 FOR ::= forr id:e1 TYPE:e2 igual OPERACION_A:e3 to OPERACION_A:e4 STEP:e5 espacio {:VisualSemantica.AMBITO += 1;:}
                 STATEMENTS:e6 nextt ID:e7 espacio 
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;
-                if(e7!=null && !e1.equals(e1)){syntax_error(getS());} else{RESULT = Else_Operator.FORV(e1, e2, e3, e4, e5, e6);}:}
+                if(e7!=null && !e1.equals(e1)){
+                        reportarSem("No coincide el id del for, con el next del mismo for, id1: " + e1 + "  id2: " + e7);}
+                else{RESULT = Else_Operator.FORV(e1, e2, e3, e4, e5, e6);}:}
 ;
 
 ID ::= id:e1 {:RESULT = e1;:}
@@ -322,6 +345,7 @@ INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisu
 
 CONDICION ::= CONDICION:e1 orr AND:e2 {:RESULT = IfPrograma.OR(e1, e2);:}
         | AND:e1 {:RESULT = e1;:}
+        | error AND:e1 {:RESULT = e1;:}
 ;
 
 AND ::= AND:e1 andd NOT:e2 {:RESULT = IfPrograma.AND(e1, e2);:}

@@ -148,10 +148,12 @@ public class ProgramaSemantica {
      * Iniciar el codigo VisualBasic, para obtener su codigo 3 direcciones
      *
      * @param vb Codigo Visual Basic a analizar
+     * @param v linea donde empieza el archivo
      */
-    public void iniciarVB(String vb) {
+    public void iniciarVB(String vb, int v) {
         try {
             SintaxisVisual visual = new SintaxisVisual(new LexicoVisual(new StringReader(vb)));
+            visual.setLinea(v);
             visual.parse();
             metodosVisual = visual.getVisual().getMetodos();
         } catch (Exception ex) {
@@ -163,10 +165,12 @@ public class ProgramaSemantica {
      * Iniciar el Codigo Python, para obetener su codigo 3 direcciones
      *
      * @param py Codigo Python a analizar
+     * @param p linea donde empieza el archivo
      */
-    public void iniciarPY(String py) {
+    public void iniciarPY(String py, int p) {
         try {
             SintaxisPython python = new SintaxisPython(new LexicoPython(new StringReader(py)));
+            python.setLinea(p);
             python.parse();
             metodosPython = python.getPython().getMetodos();
         } catch (Exception ex) {
@@ -178,10 +182,12 @@ public class ProgramaSemantica {
      * Inciar el codigo Python, para conseguir su codigo 3 direcciones
      *
      * @param java Codigo Java a analizar
+     * @param j linea donde empieza el archivo
      */
-    public void iniciarJAVA(String java) {
+    public void iniciarJAVA(String java, int j) {
         try {
             SintaxisJava jv = new SintaxisJava(new LexicoJava(new StringReader(java)));
+            jv.setLinea(j);
             jv.parse();
             this.clasesJava = jv.getJava().getTabla();
         } catch (Exception ex) {

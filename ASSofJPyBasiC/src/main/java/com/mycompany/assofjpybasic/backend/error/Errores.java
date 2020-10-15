@@ -14,21 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mycompany.assofjpybasic.backend;
+package com.mycompany.assofjpybasic.backend.error;
+
+import com.mycompany.assofjpybasic.frontend.AssGUI;
+import java_cup.runtime.Symbol;
 
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class prueba2 {
+public class Errores {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        String s = "\"c\"c";
-        System.out.println(s.substring(1, s.length() - 2));
+    public void errorSintactico(Symbol sym, int line) {
+        AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "No se esperaba el simbolo: " + sym.value
+                + "\n\t<linea>: " + (sym.right + line + 1) + "  <columna>: " + (sym.left + 1) + "\n\n");
+    }
+
+    public void errorSemantico(Symbol sym, String texto, int line) {
+        AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + texto
+                + "\n\tEntre la <linea>: " + (sym.right + line + 1) + " y <linea>: " + (sym.right + line) + "\n\n");
     }
 
 }

@@ -82,6 +82,9 @@ public class AssGUI extends javax.swing.JFrame {
         tabbedArchivo.setMinimumSize(new java.awt.Dimension(895, 500));
         splitPrincipal.setTopComponent(tabbedArchivo);
 
+        editorTerminal.setEditable(false);
+        editorTerminal.setBackground(new java.awt.Color(51, 51, 51));
+        editorTerminal.setForeground(new java.awt.Color(204, 204, 204));
         spTerminal.setViewportView(editorTerminal);
 
         splitPrincipal.setRightComponent(spTerminal);

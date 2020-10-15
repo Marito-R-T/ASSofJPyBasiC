@@ -32,11 +32,13 @@ public class SintaxisPrincipal extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\015\000\002\002\004\000\002\010\007\000\002\002" +
-    "\004\000\002\003\004\000\002\004\004\000\002\005\004" +
-    "\000\002\007\004\000\002\007\004\000\002\007\002\000" +
-    "\002\006\004\000\002\006\004\000\002\006\004\000\002" +
-    "\006\002" });
+    "\000\025\000\002\002\004\000\002\010\007\000\002\011" +
+    "\002\000\002\002\005\000\002\002\003\000\002\012\002" +
+    "\000\002\003\005\000\002\003\003\000\002\013\002\000" +
+    "\002\004\005\000\002\004\003\000\002\014\002\000\002" +
+    "\005\005\000\002\005\003\000\002\007\004\000\002\007" +
+    "\004\000\002\007\002\000\002\006\004\000\002\006\004" +
+    "\000\002\006\004\000\002\006\002" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -44,24 +46,31 @@ public class SintaxisPrincipal extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\025\000\010\004\ufff9\011\ufff9\012\ufff9\001\002\000" +
-    "\004\002\027\001\002\000\010\004\007\011\011\012\006" +
-    "\001\002\000\010\004\ufffa\011\ufffa\012\ufffa\001\002\000" +
-    "\012\005\ufff5\010\ufff5\011\ufff5\012\ufff5\001\002\000\004" +
-    "\005\012\001\002\000\010\004\ufffb\011\ufffb\012\ufffb\001" +
-    "\002\000\012\006\ufff5\010\ufff5\011\ufff5\012\ufff5\001\002" +
-    "\000\004\006\014\001\002\000\012\007\ufff5\010\ufff5\011" +
-    "\ufff5\012\ufff5\001\002\000\004\007\017\001\002\000\004" +
-    "\002\000\001\002\000\012\002\ufff5\010\ufff5\011\ufff5\012" +
-    "\ufff5\001\002\000\012\002\ufffc\010\021\011\023\012\022" +
-    "\001\002\000\020\002\ufff8\005\ufff8\006\ufff8\007\ufff8\010" +
-    "\ufff8\011\ufff8\012\ufff8\001\002\000\020\002\ufff6\005\ufff6" +
-    "\006\ufff6\007\ufff6\010\ufff6\011\ufff6\012\ufff6\001\002\000" +
-    "\020\002\ufff7\005\ufff7\006\ufff7\007\ufff7\010\ufff7\011\ufff7" +
-    "\012\ufff7\001\002\000\012\007\ufffd\010\021\011\023\012" +
-    "\022\001\002\000\012\006\ufffe\010\021\011\023\012\022" +
-    "\001\002\000\012\005\uffff\010\021\011\023\012\022\001" +
-    "\002\000\004\002\001\001\002" });
+    "\000\035\000\012\003\ufff1\004\ufff1\011\ufff1\012\ufff1\001" +
+    "\002\000\004\002\037\001\002\000\012\003\010\004\uffff" +
+    "\011\012\012\006\001\002\000\012\003\ufff2\004\ufff2\011" +
+    "\ufff2\012\ufff2\001\002\000\004\004\035\001\002\000\006" +
+    "\003\ufffd\005\ufffd\001\002\000\006\003\014\005\ufffc\001" +
+    "\002\000\012\003\ufff3\004\ufff3\011\ufff3\012\ufff3\001\002" +
+    "\000\004\005\033\001\002\000\006\003\ufffa\006\ufffa\001" +
+    "\002\000\006\003\017\006\ufff9\001\002\000\004\006\031" +
+    "\001\002\000\006\003\ufff7\007\ufff7\001\002\000\006\003" +
+    "\023\007\ufff6\001\002\000\004\007\024\001\002\000\004" +
+    "\002\000\001\002\000\004\002\ufff4\001\002\000\012\002" +
+    "\uffed\010\uffed\011\uffed\012\uffed\001\002\000\012\002\ufff5" +
+    "\010\026\011\030\012\027\001\002\000\022\002\ufff0\003" +
+    "\ufff0\005\ufff0\006\ufff0\007\ufff0\010\ufff0\011\ufff0\012\ufff0" +
+    "\001\002\000\022\002\uffee\003\uffee\005\uffee\006\uffee\007" +
+    "\uffee\010\uffee\011\uffee\012\uffee\001\002\000\022\002\uffef" +
+    "\003\uffef\005\uffef\006\uffef\007\uffef\010\uffef\011\uffef\012" +
+    "\uffef\001\002\000\014\003\uffed\007\uffed\010\uffed\011\uffed" +
+    "\012\uffed\001\002\000\014\003\ufff8\007\ufff8\010\026\011" +
+    "\030\012\027\001\002\000\014\003\uffed\006\uffed\010\uffed" +
+    "\011\uffed\012\uffed\001\002\000\014\003\ufffb\006\ufffb\010" +
+    "\026\011\030\012\027\001\002\000\014\003\uffed\005\uffed" +
+    "\010\uffed\011\uffed\012\uffed\001\002\000\014\003\ufffe\005" +
+    "\ufffe\010\026\011\030\012\027\001\002\000\004\002\001" +
+    "\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -69,15 +78,18 @@ public class SintaxisPrincipal extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\025\000\006\007\004\010\003\001\001\000\002\001" +
-    "\001\000\004\002\007\001\001\000\002\001\001\000\004" +
-    "\006\025\001\001\000\004\003\012\001\001\000\002\001" +
-    "\001\000\004\006\024\001\001\000\004\004\014\001\001" +
-    "\000\004\006\023\001\001\000\004\005\015\001\001\000" +
-    "\002\001\001\000\004\006\017\001\001\000\002\001\001" +
+    "\000\035\000\006\007\004\010\003\001\001\000\002\001" +
+    "\001\000\006\002\010\011\006\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\006\003\014\012" +
+    "\012\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\006\004\017\013\015\001\001\000\002\001" +
+    "\001\000\002\001\001\000\006\005\021\014\020\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001" });
+    "\004\006\024\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\004\006\031\001" +
+    "\001\000\002\001\001\000\004\006\033\001\001\000\002" +
+    "\001\001\000\004\006\035\001\001\000\002\001\001\000" +
+    "\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -117,6 +129,7 @@ public class SintaxisPrincipal extends java_cup.runtime.lr_parser {
 
 
     private Symbol s;
+    private int vb, java, py, c;
     
     public void syntax_error(Symbol sym){
         System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
@@ -125,9 +138,25 @@ public class SintaxisPrincipal extends java_cup.runtime.lr_parser {
     public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
         System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
+    
+    public int getVB() {
+        return vb;
+    }
+    
+    public int getJV() {
+        return java;
+    }
+    
+    public int getPY() {
+        return py;
+    }
+    
+    public int getC() {
+        return c;
+    }
 
     public Symbol getS(){
-        return this.s;
+        return this.cur_token;
     }
 
 
@@ -191,55 +220,135 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // VB ::= vb TEXTO 
+          case 2: // NT$0 ::= 
             {
               String RESULT =null;
-		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).left;
-		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).right;
-		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.peek()).value;
-		RESULT = e1;
-              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("VB",0, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+vb = getS().right;
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("NT$0",7, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // JV ::= java TEXTO 
+          case 3: // VB ::= NT$0 vb TEXTO 
             {
               String RESULT =null;
+              // propagate RESULT from NT$0
+                RESULT = (String) ((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.peek()).value;
 		RESULT = e1;
-              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("JV",1, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("VB",0, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // PY ::= py TEXTO 
+          case 4: // VB ::= error 
             {
               String RESULT =null;
+		RESULT = "";
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("VB",0, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 5: // NT$1 ::= 
+            {
+              String RESULT =null;
+java = getS().right;
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("NT$1",8, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // JV ::= NT$1 java TEXTO 
+            {
+              String RESULT =null;
+              // propagate RESULT from NT$1
+                RESULT = (String) ((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.peek()).value;
 		RESULT = e1;
-              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PY",2, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("JV",1, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // PROG ::= prog TEXTO 
+          case 7: // JV ::= error 
             {
               String RESULT =null;
+		RESULT = "";
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("JV",1, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // NT$2 ::= 
+            {
+              String RESULT =null;
+py = getS().right;
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("NT$2",9, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // PY ::= NT$2 py TEXTO 
+            {
+              String RESULT =null;
+              // propagate RESULT from NT$2
+                RESULT = (String) ((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.peek()).value;
 		RESULT = e1;
-              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PROG",3, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PY",2, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // ESP ::= ESP esp 
+          case 10: // PY ::= error 
+            {
+              String RESULT =null;
+		RESULT = "";
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PY",2, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 11: // NT$3 ::= 
+            {
+              String RESULT =null;
+c = getS().right;
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("NT$3",10, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 12: // PROG ::= NT$3 prog TEXTO 
+            {
+              String RESULT =null;
+              // propagate RESULT from NT$3
+                RESULT = (String) ((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)).value;
+		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()).right;
+		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrincipal$stack.peek()).value;
+		RESULT = e1;
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PROG",3, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // PROG ::= error 
+            {
+              String RESULT =null;
+		RESULT = "";
+              CUP$SintaxisPrincipal$result = parser.getSymbolFactory().newSymbol("PROG",3, ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.peek()), RESULT);
+            }
+          return CUP$SintaxisPrincipal$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 14: // ESP ::= ESP esp 
             {
               String RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)).left;
@@ -254,7 +363,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // ESP ::= ESP com 
+          case 15: // ESP ::= ESP com 
             {
               String RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)).left;
@@ -269,7 +378,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // ESP ::= 
+          case 16: // ESP ::= 
             {
               String RESULT =null;
 		RESULT = "";
@@ -278,7 +387,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // TEXTO ::= TEXTO txt 
+          case 17: // TEXTO ::= TEXTO txt 
             {
               String RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)).left;
@@ -293,7 +402,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // TEXTO ::= TEXTO esp 
+          case 18: // TEXTO ::= TEXTO esp 
             {
               String RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)).left;
@@ -308,7 +417,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // TEXTO ::= TEXTO com 
+          case 19: // TEXTO ::= TEXTO com 
             {
               String RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrincipal$stack.elementAt(CUP$SintaxisPrincipal$top-1)).left;
@@ -323,7 +432,7 @@ class CUP$SintaxisPrincipal$actions {
           return CUP$SintaxisPrincipal$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // TEXTO ::= 
+          case 20: // TEXTO ::= 
             {
               String RESULT =null;
 		RESULT = "";

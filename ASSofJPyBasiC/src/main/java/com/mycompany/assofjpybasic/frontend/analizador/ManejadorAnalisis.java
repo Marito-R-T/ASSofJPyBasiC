@@ -21,9 +21,8 @@ import com.mycompany.assofjpybasic.backend.analizador.SintaxisPrincipal;
 import com.mycompany.assofjpybasic.backend.analizador.principal.LexicoPrograma;
 import com.mycompany.assofjpybasic.backend.analizador.principal.SintaxisPrograma;
 import com.mycompany.assofjpybasic.backend.classes.ArchivoMLG;
+import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -39,13 +38,21 @@ public class ManejadorAnalisis {
      */
     public static String regresar3D(String s) {
         try {
+            AssGUI.editorTerminal.setText("");
             SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
             ArchivoMLG archivo = (ArchivoMLG) lengua.parse().value;
             SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
             pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
-            return (String) pro.parse().value;
+            pro.setLineas(lengua.getJV(), lengua.getPY(), lengua.getVB(), lengua.getC());
+            if (AssGUI.editorTerminal.getText().equals("")) {
+                return (String) pro.parse().value;
+            } else {
+                AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "\n"
+                        + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");
+            }
         } catch (Exception ex) {
-            System.out.println("Error en el reconocimiento del lenguaje");
+            AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "\n"
+                    + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");
         }
         return null;
     }

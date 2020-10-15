@@ -8,6 +8,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
 import com.mycompany.assofjpybasic.backend.semantica.python.*;
 import com.mycompany.assofjpybasic.backend.semantica.java.*;
 import com.mycompany.assofjpybasic.backend.semantica.visual.*;
+import com.mycompany.assofjpybasic.backend.error.Errores;
 
 class SintaxisPrograma;
 
@@ -17,22 +18,38 @@ parser code
     private ProgramaSemantica sem = new ProgramaSemantica();
     private boolean esCase = false;
     private String java, vb, py;
+    private int j, v, p, c;
+    private Errores errores = new Errores();
+    private int linea;
+
+    public void setLinea(int line){
+            this.linea = line;
+    }
     
     public void syntax_error(Symbol sym){
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, this.c); 
     }
 
     public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, this.c); 
+    }
+
+    public void setLineas(int j, int p, int v, int c){
+            this.j = j;
+            this.v = v;
+            this.p = p;
+            this.c = c;
     }
 
     public void setTipo(String java, String vb, String py){
             this.java = java;
             this.vb = vb;
             this.py = py;
-            sem.iniciarJAVA(this.java);
+            sem.iniciarJAVA(this.java, this.j);
+    }
+    
+    public void reportarSem(String texto){
+            errores.errorSemantico(getS(), texto, this.c);
     }
 
     public Symbol getS(){
@@ -78,10 +95,11 @@ INCLUDE_LENG ::= INCLUDE_LENG IN_LENG
         | 
 ;
 
-IN_LENG ::= py {:sem.iniciarPY(py);:}
-        | vb {:sem.iniciarVB(vb);:}
+IN_LENG ::= py {:sem.iniciarPY(py, p);:}
+        | vb {:sem.iniciarVB(vb, v);:}
         | java IN_CLASS:e1 comilla {:if(e1.equals("$$*$$")){sem.importarTodasClases();}else{sem.importarClase(e1);}:}
         | includee:e1 idlib:e2 {:sem.getImports().add(e1 + " " + e2);:}
+        | error IN_LENG
 ;
 
 IN_CLASS ::= por {:RESULT = "$$*$$";:}
@@ -90,7 +108,7 @@ IN_CLASS ::= por {:RESULT = "$$*$$";:}
 
 CONST ::= CONST constt TYPE:e1 id:e2 igual EXPR:e3 puntocoma 
         {:if(!sem.addVar(new ConstantePrograma(e2,ProgramaSemantica.AMBITO, e1, e3.getTipo(), null))){
-              syntax_error(getS());
+                reportarSem("Variable ya creda con el mismo nombre: <" + e1 + ">");
         } else {sem.getVar().addAll(e3.mostrarTripletes());
                 sem.getVar().add(new AsignarConstante(new TerminalOperator(e2), e3.getTriplete(), Triplete.tipos[e1-1]));}:}
         | CONST ASIG_VAR:e1 {:List<Triplete> tri = new ArrayList<>();
@@ -98,6 +116,7 @@ CONST ::= CONST constt TYPE:e1 id:e2 igual EXPR:e3 puntocoma
                         tri.addAll(var.mostrarTripletes());
                         } sem.getVar().addAll(tri);:}
         | {::}
+        | error
 ;
 
 TYPE ::= intt {:RESULT = VariablePrograma.INT;:}
@@ -109,7 +128,8 @@ TYPE ::= intt {:RESULT = VariablePrograma.INT;:}
         |
 ;*/
 
-ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){syntax_error(getS());
+ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
+                reportarSem("Variables con el mismo nombre");
                 RESULT = new ArrayList<>();}
                 else {for(VariablePrograma var : e2){
                         var.setTipo(e1);
@@ -120,7 +140,7 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){syntax
                 ArregloPrograma arr = new ArregloPrograma(e2, ProgramaSemantica.AMBITO, e1, e4, 
                 new DefinirArreglo(null, new TerminalOperator(e2), Triplete.tipos[e1-1]));
                 if(!sem.addVar(arr)){
-                        syntax_error(getS());
+                        reportarSem("Variable ya creda con el mismo nombre: <" + e2 + ">");
                 }else {var.add(arr);} RESULT = var;:}
 ;
 
@@ -151,6 +171,7 @@ OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1 != null && e2 != null)
         | OPERACION_M:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
                 new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
+        | error OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
 OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
@@ -174,13 +195,15 @@ OPERACION_U ::= menos OPERACION_U:e1 {:if(e1 != null && e1.getTipo()==1){e1.setT
 // Falta resolver lo de los corchetes
 ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)); 
                 if(var == null){
-                        syntax_error(getS());
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{RESULT = new OperacionPrograma(var.getTipo(), new TerminalOperator(e1));}:}
         | entero:e1 {:RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1));:}
         | character:e1 {:RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));:}
         | id:e1 CORCHETES:e2 {:VariablePrograma var = sem.existeVar(e1, e2.size());
-                if(var == null){syntax_error(getS());}else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
+                if(var == null){
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
+                } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
                 var.getTipo(), e2, (ArregloPrograma) var); arr.mostrarTripletes();
                 OperacionPrograma corch = new OperacionPrograma(var.getTipo(), new TemporalArreglo(null, e1, 
                 arr.getTriplete(),Triplete.tipos[var.getTipo()-1])); corch.getTripletes().addAll(0, arr.getTripletes()); 
@@ -198,6 +221,7 @@ STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:e1.addAll(e2); RESULT = e1;:}
 
 STATEMENT ::= COMPOUND:e1 {:RESULT = e1;:}
         | STATEMENTLINE:e1 {:RESULT = e1;:}
+        | error {:RESULT = new ArrayList<>();:}
 ;
 
 COMPOUND ::= WHILE:e1 {:RESULT = e1;:}
@@ -224,13 +248,16 @@ STATEMENTLINE ::= clrs puntocoma {:List<Triplete> tr = new ArrayList<>(); tr.add
 ;
 
 DEF_VAR ::= id:e1 igual EXPR:e2 {:List<Triplete> tri = new ArrayList<>(); 
-                if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) == null || e2 == null) {
-                        syntax_error(getS());
-                } else {AsignarValor asig = new AsignarValor(null, new TerminalOperator(e1), e2.getTriplete());
+                if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) == null) {
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
+                } else if (e2 == null) {
+                }else {AsignarValor asig = new AsignarValor(null, new TerminalOperator(e1), e2.getTriplete());
                         tri.addAll(e2.mostrarTripletes());
                         tri.add(asig);} RESULT = tri;:}
         | id:e1 CORCHETES:e2 igual EXPR:e3 {:VariablePrograma var = sem.existeVar(e1, e2.size());
-                if(var == null){syntax_error(getS());}else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
+                if(var == null){
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
+                } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
                 var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = arr.mostrarTripletes(); }:}
 ;
 
@@ -266,7 +293,7 @@ SCANF ::= scanf para comilla STRING:e1 comilla VARSS:e2 parc puntocoma
 
 VARSS ::= VARSS:e2 coma asig id:e1 {:if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) == null
                                 || e2 == null){
-                        syntax_error(getS());
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {e2.add(new TerminalOperator(e1)); RESULT = e2;}:}
         | {:List<TerminalOperator> arr = new ArrayList<>(); RESULT = arr;:}
 ;
@@ -299,7 +326,9 @@ CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:esCase = true; ProgramaSemantica.
 
 STATEMENTSC ::= STATEMENT:e1 STATEMENTSC:e2 {:e1.addAll(e2); RESULT = e1;:}
         | breakk puntocoma {:List<Triplete> tri = new ArrayList<>(); 
-                if(!esCase){syntax_error(getS());}else{tri.add(new Break());} RESULT = tri;:}
+                if(!esCase){
+                        reportarSem("Break fuera de un switch");
+                }else{tri.add(new Break());} RESULT = tri;:}
         | {:RESULT = new ArrayList<>();:}
 ;
 
@@ -326,11 +355,11 @@ FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc llavea
 
 INICIO ::= DEF_VAR:e1 {:RESULT = e1;:}
         | id:e1 {:if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null))== null){
-                syntax_error(getS());
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
                 }RESULT = new ArrayList<>();:}
         | TYPE:e2 id:e1 igual EXPR:e3 {:List<Triplete> tri = new ArrayList<>();
         if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) != null){
-                syntax_error(getS());
+                reportarSem("Variable ya existente con el id: <" + e1 + ">");
         } else {tri.addAll(e3.getTripletes()); tri.add(e3.getTriplete());
                 tri.add(new AsignarValor(new TerminalOperator(e1), e3.getTriplete(), Triplete.tipos[e2-1]));}:}
 ;
@@ -341,13 +370,13 @@ STEP ::= DEF_VAR:e1 {:RESULT = e1;:}
 
 OP_VAR ::= id:e1 masmas {:List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
-                        syntax_error(getS());
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
                         tri.add(new AsignarValor(null, new TerminalOperator(e1), tri.get(0)));
                 } RESULT = tri;:}
         | id:e1 menosmenos {:List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
-                        syntax_error(getS());
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
                         tri.add(new AsignarValor(null, new TerminalOperator(e1), tri.get(0)));
                 } RESULT = tri;:}
@@ -382,7 +411,7 @@ COMPARACION ::= OPERACION_A:e1 igig OPERACION_A:e2 {:RESULT = new IgualOperator(
 
 LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = sem.existeMetodoPY(e1, e2);
                         if(met == null){
-                                syntax_error(getS());
+                                reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
                         } else {
                                 RESULT = new CallPrograma(e2,
                                 new CallMetodo(CallPrograma.regresarPy(met)),
@@ -390,7 +419,7 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         }:}
                 | vbb punto id:e1 para LIST_PARAM:e2 parc {:MetodoVisual met = sem.existeMetodoVB(e1, e2);
                         if(met == null){
-                                syntax_error(getS());
+                                reportarSem("Metodo de Visua Basic no existente con id: <" + e1 + ">");
                         } else {
                                 RESULT = new CallPrograma(e2,
                                 new CallMetodo(CallPrograma.regresarVB(met)),
@@ -398,13 +427,16 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         }:}
                 | javaa punto id:e1 punto id:e2 para LIST_PARAM:e3 parc {:
                         String objeto = sem.existeObjeto(e1);
-                        MetodoJava met = sem.existeMetodoJV(objeto, e2, e3);
-                        if(met == null){
-                                syntax_error(getS());
+                        if(objeto == null){
+                                reportarSem("Variable que almacena un objeto de Java no existente con id: <" + e1 + ">");
                         } else {
+                                MetodoJava met = sem.existeMetodoJV(objeto, e2, e3);
+                                if(met == null) {
+                                        reportarSem("Metodo de Java no existente con id: <" + e2 + ">");
+                                } else {
                                 RESULT = new CallPrograma(e3,
-                                new CallMetodo(CallPrograma.regresarJava(met, e1)),
-                                CallPrograma.regresarTipo(met));
+                                new CallMetodo(CallPrograma.regresarJava(met, objeto)),
+                                CallPrograma.regresarTipo(met));}
                         }:}
 ;
 

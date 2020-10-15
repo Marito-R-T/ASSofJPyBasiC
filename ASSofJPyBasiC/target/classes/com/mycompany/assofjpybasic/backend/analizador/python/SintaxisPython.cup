@@ -4,6 +4,7 @@ import java_cup.runtime.*;
 import com.mycompany.assofjpybasic.backend.semantica.python.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.*;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.*;
+import com.mycompany.assofjpybasic.backend.error.Errores;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +15,27 @@ parser code
     private Symbol s;
     private PythonSemantica sem = new PythonSemantica();
     private MetodoPython actual;
+    private Errores errores = new Errores();
+    private int linea;
+
+    public void setLinea(int line){
+            this.linea = line;
+    }
     
     public void syntax_error(Symbol sym){
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, linea); 
     }
 
     public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception{
-        System.out.println("\n" + sym.value + sym.sym);
-        System.out.println("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
+            errores.errorSintactico(sym, this.linea); 
     }
 
     public PythonSemantica getPython(){
             return sem;
+    }
+    
+    public void reportarSem(String texto){
+            errores.errorSemantico(getS(), texto, this.linea);
     }
 
     public Symbol getS(){
@@ -67,24 +76,27 @@ ESP ::= newline
 ;
 
 DEFS ::= DEFS DEF
-        | DEF 
+        | DEF
 ;
 
 DEF ::= deff id:e1 para PAR_LIST:e2 parc dosp {:MetodoPython met = new MetodoPython(e1, e2);
                                 actual = met;
                                 sem.addVar(e2);
                                 if(!sem.addMetodo(met)){
-                                        syntax_error(getS());
+                                        reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");
                                 }:} SUITE:e3 {:if(actual.getTIPO() == null){
                                         actual.setTIPO(PythonSemantica.VOID);
-                                } actual.getTrip().addAll(e3);:}
+                                }
+                                actual.setParams();
+                                actual.getTrip().addAll(e3);:}
         | deff id:e1 para parc dosp {:MetodoPython met = new MetodoPython(e1, new ArrayList<>());
                                 actual = met;
                                 if(!sem.addMetodo(met)){
-                                        syntax_error(getS());
+                                        reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");
                                 }:} SUITE:e2 {:if(actual.getTIPO() == null){
                                         actual.setTIPO(PythonSemantica.VOID);
                                 } actual.getTrip().addAll(e2);:}
+        | error DEF:e1 {:RESULT = e1;:}
 ;
 
 PAR_LIST ::= PAR_LIST:e1 coma id:e2 {:e1.add(new VariablePython(e2, 1)); RESULT = e1;:}
@@ -97,6 +109,7 @@ SUITE ::=  {:PythonSemantica.AMBITO += 1;:} STMT_LIST:e1 newline  {:sem.eliminar
         |  {:PythonSemantica.AMBITO += 1;:} newline indent STATEMENTS:e1 dedent  {:sem.eliminarAmbito(PythonSemantica.AMBITO);
                                                 PythonSemantica.AMBITO -= 1;
                                                 RESULT = e1;:}
+        | error dedent {:sem.eliminarAmbito(PythonSemantica.AMBITO); PythonSemantica.AMBITO -= 1;:}
 ;
 
 STMT_LIST ::= STATEMENTLINE:e1 puntocoma STMT_LIST:e2 {:e1.addAll(e2); RESULT = e1;:}
@@ -118,16 +131,20 @@ STATEMENTLINE ::= AS_VAR:e1 {:RESULT = e1;:}
                 actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Return(e1.getTriplete()));
         } else if(!actual.getTIPO().contains(e1.getTipo())){
-                syntax_error(getS());
+                reportarSem("No coincide el tipo del return con el tipo de la función con id: " + actual.getId());
         } else {
                 actual.setTIPO(e1.getTipo()); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Return(e1.getTriplete()));
         } RESULT = tri;:}
 ;
 
-AS_VAR ::= LISTVAR:e1 coma igual LISTDEF:e2 coma {:if(!sem.addVar(e1, e2)){syntax_error(getS()); RESULT  = new ArrayList<>();} 
+AS_VAR ::= LISTVAR:e1 coma igual LISTDEF:e2 coma {:if(!sem.addVar(e1, e2)){
+        reportarSem("Una de las variables ya habia sido asignada a otro tipo diferente");
+        RESULT  = new ArrayList<>();} 
         else{RESULT = PythonSemantica.devolverAsig(e1, e2);}:}
-        | LISTVAR:e1 igual LISTDEF:e2 {:if(!sem.addVar(e1, e2)){syntax_error(getS()); RESULT  = new ArrayList<>();} 
+        | LISTVAR:e1 igual LISTDEF:e2 {:if(!sem.addVar(e1, e2)){
+        reportarSem("Una de las variables ya habia sido asignada a otro tipo diferente");
+                RESULT  = new ArrayList<>();} 
         else{RESULT = PythonSemantica.devolverAsig(e1, e2);}:}
 ;
 
@@ -170,6 +187,7 @@ STATEMENT ::= IF:e1 {:RESULT = e1;:}
         | FOR:e1 {:RESULT = e1;:}
         | WHILE:e1 {:RESULT = e1;:}
         | STMT_LIST:e1 newline {:RESULT = e1;:}
+        | error {:RESULT = new ArrayList<>();:}
 ;
 
 IF ::= iff CONDICION:e1 dosp SUITE:e2 ELSEIF:e3 ELSE:e4 {:e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);:}
@@ -206,6 +224,7 @@ OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:RESULT = new OperacionPython
         | OPERACION_M:e1 menos OPERACION_M:e2 {:RESULT = new OperacionPython(e1, e2,
                         new RestOperator(null, e1.getTriplete(), e2.getTriplete(), OperacionPython.obtenerTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
+        | error OPERACION_M:e1 {:RESULT = e1;:}
 ;
 
 OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:RESULT = new OperacionPython(e1, e2,
@@ -224,7 +243,9 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionPython(new Operacio
 ;
 
 ATOM ::= id:e1 {:VariablePython tipo = sem.existeVar(new VariablePython(e1, PythonSemantica.AMBITO));
-                if(tipo==null){syntax_error(getS());} else {RESULT = new OperacionPython(tipo.getTipo(),
+                if(tipo==null){
+                        reportarSem("La variable con id: " + e1 + " no existe");
+                } else {RESULT = new OperacionPython(tipo.getTipo(),
                  new TerminalOperator(e1));}:}
         | entero:e1 {:RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1));:}

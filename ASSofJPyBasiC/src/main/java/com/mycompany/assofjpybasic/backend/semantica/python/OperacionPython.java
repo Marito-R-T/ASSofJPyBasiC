@@ -106,8 +106,10 @@ public class OperacionPython {
                 return "float";
             case "INT":
                 return "int";
-            default:
+            case "CHAR":
                 return "char";
+            default:
+                return "VAR";
         }
     }
 
