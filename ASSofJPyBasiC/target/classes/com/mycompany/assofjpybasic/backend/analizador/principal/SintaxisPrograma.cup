@@ -343,7 +343,7 @@ WHILE ::= whilee para CONDICION:e1 parc llavea {:ProgramaSemantica.AMBITO += 1;:
 ;
 
 DO_WHILE ::= doo llavea {:ProgramaSemantica.AMBITO += 1;:} 
-        STATEMENTS:e1 llavec whilee para CONDICION:e2 parc {:sem.eliminarAmbito(ProgramaSemantica.AMBITO);
+        STATEMENTS:e1 llavec whilee para CONDICION:e2 parc puntocoma {:sem.eliminarAmbito(ProgramaSemantica.AMBITO);
         ProgramaSemantica.AMBITO -= 1; RESULT = Else_Operator.DOWHILE(e2, e1);:}
 ;
 

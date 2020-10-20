@@ -32,7 +32,7 @@ cero= "0"
     }
 %}
 
-%state STRING, JAVA, ST
+%state STRING, JAVA, ST, COM
 
 %%
     /*Palabras para referenciar otros lenguajes*/
@@ -65,7 +65,7 @@ cero= "0"
 <YYINITIAL> ("while") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.whilee, yycolumn, yyline, yytext());}
 <YYINITIAL> ("default") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.defaultt, yycolumn, yyline, yytext());}
 <YYINITIAL> ("break") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.breakk, yycolumn, yyline, yytext());}
-<YYINITIAL> ("doo") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.doo, yycolumn, yyline, yytext());}
+<YYINITIAL> ("do") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.doo, yycolumn, yyline, yytext());}
     /*Palabras de Comparacion*/
 <YYINITIAL> ("!=") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.noigual, yycolumn, yyline, yytext());}
 <YYINITIAL> ("<") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.menor, yycolumn, yyline, yytext());}
@@ -101,7 +101,7 @@ cero= "0"
 <YYINITIAL> ("--") {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.menosmenos, yycolumn, yyline, yytext());}
 
 /* Expresiones Regulares */
-<YYINITIAL> ("/*")(.|{espacio})*("*/") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
+<YYINITIAL> "/*" {yybegin(COM); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
 <YYINITIAL> ("//")(.)*("\n") {System.out.print(yytext()); /*return new Symbol(SintaxisProgramaSym.com, yycolumn, yyline, yytext());*/}
 <YYINITIAL> "<"{letras}({letras}|{onenine}|{cero}|"_")*(".h")">" {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.idlib, yycolumn, yyline, yytext());}
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisProgramaSym.id, yycolumn, yyline, yytext());}
@@ -137,4 +137,9 @@ cero= "0"
                                         this.yypushback(2);
                                         return new Symbol(SintaxisProgramaSym.string, yycolumn, yyline, s);}
     .                                {string.append(yytext());}
+}
+
+<COM> {
+    "*/"                            {yybegin(YYINITIAL);}
+    [^]                             {}
 }
