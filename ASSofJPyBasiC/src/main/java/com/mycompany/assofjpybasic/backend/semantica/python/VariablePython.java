@@ -14,6 +14,7 @@ import java.util.List;
 public class VariablePython {
 
     private final String id;
+    private Integer direccion;
     private String tipo;
     private final Integer ambito;
 
@@ -76,6 +77,14 @@ public class VariablePython {
         for (VariablePython variableJava : var) {
             variableJava.setTipo(tipo);
         }
+    }
+
+    public Integer getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Integer direccion) {
+        this.direccion = direccion;
     }
 
 }

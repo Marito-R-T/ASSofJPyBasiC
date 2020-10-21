@@ -6,6 +6,8 @@
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class VisualSemantica {
     public boolean addListVar(List<VariableVisual> var) {
         for (VariableVisual variableVisual : var) {
             if (this.existeVar(variableVisual) == null) {
+                variableVisual.setDireccion(this.variables.size());
                 variables.add(variableVisual);
             } else {
                 return false;
@@ -54,6 +57,7 @@ public class VisualSemantica {
      */
     public boolean addVar(VariableVisual var) {
         if (this.existeVar(var) == null) {
+            var.setDireccion(this.variables.size());
             variables.add(var);
             return true;
         } else {
@@ -185,10 +189,17 @@ public class VisualSemantica {
         return metodos;
     }
 
-    public static List<Triplete> devolverTrip(List<VariableVisual> va) {
+    public List<Triplete> devolverTrip(List<VariableVisual> va) {
         List<Triplete> tri = new ArrayList<>();
         va.forEach((variableVisual) -> {
-            tri.addAll(variableVisual.mostrarTripletes());
+            if (variableVisual.getTripletes().size() > 0) {
+                SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(variableVisual.getDireccion().toString()), null);
+                variableVisual.getTripletes().add(sum);
+                tri.addAll(variableVisual.getTripletes());
+                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableVisual.getTriplete().getOperando2(), null));
+            } else {
+                tri.addAll(variableVisual.getTripletes());
+            }
         });
         return tri;
     }
@@ -200,6 +211,23 @@ public class VisualSemantica {
                 System.out.println(triplete.devolverString());
             });
         });
+    }
+
+    public String devolverDireccion(String id) {
+        return "stack[" + id + "]";
+    }
+
+    public SumOperator devolverSum(String id) {
+        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+    }
+
+    public Integer obtenerDireccion(String id) {
+        for (VariableVisual variable : this.variables) {
+            if (variable.getId().equals(id.toLowerCase())) {
+                return variable.getDireccion();
+            }
+        }
+        return 0;
     }
 
 }

@@ -16,6 +16,7 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +68,8 @@ public class Printf extends Triplete {
      * @param ope Operaciones que se van a necesitar
      * @return Lista de tripletes a devolver
      */
-    public static List<Triplete> regresarTripletes(List<String> texto, List<OperacionPrograma> ope) {
-        List<Triplete> tri = new ArrayList<>();
+    public static ListaTripletes regresarTripletes(List<String> texto, List<OperacionPrograma> ope) {
+        ListaTripletes tri = new ListaTripletes();
         int term = 0;
         for (String string : texto) {
             if (string.equals("%d") || string.equals("%f") || string.equals("%c")) {

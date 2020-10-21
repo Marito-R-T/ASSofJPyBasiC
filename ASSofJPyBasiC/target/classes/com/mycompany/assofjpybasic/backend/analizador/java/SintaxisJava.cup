@@ -62,9 +62,9 @@ non terminal OperacionJava OPERACION_A, OPERACION_M, OPERACION_U, ATOM, EXPR, IN
 non terminal Else_Operator ELSEIF;
 non terminal CondicionPrograma NOT, AND, CONDICION;
 non terminal Triplete COMPARACION;
-non terminal List<Triplete> STATEMENT_CLASS, STATEMENT_LINE, WHILE, FOR, DO_WHILE, IF_ELSE, ELSE;
-non terminal List<Triplete> STATEMENTS_CLASS, BLOQUE, STATEMENTS_METODO, STATEMENT_METODO, DEF_VAR, RETURN;
-non terminal List<Triplete> COMP_STATE, SWITCH, DEFAULT, WRITE, STRING, INICIO, STEP, OP_VAR, AS_VAR_LINE;
+non terminal ListaTripletes STATEMENT_CLASS, STATEMENT_LINE, WHILE, FOR, DO_WHILE, IF_ELSE, ELSE;
+non terminal ListaTripletes STATEMENTS_CLASS, BLOQUE, STATEMENTS_METODO, STATEMENT_METODO, DEF_VAR, RETURN;
+non terminal ListaTripletes COMP_STATE, SWITCH, DEFAULT, WRITE, STRING, INICIO, STEP, OP_VAR, AS_VAR_LINE;
 non terminal CasePrograma CASES;
 non terminal VariableJava AS_VAR;
 non terminal List<VariableJava> LIST_VAR;
@@ -141,20 +141,23 @@ LIST_PARR ::= coma TYPE:e1 id:e2 LIST_PARR:e3 {:tabla.getVariables().add(0, new 
         | {:RESULT = new ArrayList<>();:}
 ;
 
-STATEMENTS_METODO ::= STATEMENT_METODO:e1 STATEMENTS_METODO:e2 {:e1.addAll(e2); RESULT = e1;:}
+STATEMENTS_METODO ::= STATEMENT_METODO:e1 STATEMENTS_METODO:e2 {:if(!e2.isFin()){
+                                                                if(e1.isRet()){
+                                                                        reportarSem("ya existe varios returns, algunos no se toman en cuenta");
+                                                                }else {e1.addAll(e2);}} RESULT = e1;:}
         | RETURN:e1 {:RESULT = e1;:}
         | breakk puntocoma {:if(cas==0){
                 reportarSem("Break no esta dentro de un switch");
-                } RESULT = new ArrayList<>();:}
-        | {:RESULT = new ArrayList<>();:}
+                } RESULT = new ListaTripletes();:}
+        | {:RESULT = new ListaTripletes(true);:}
 ;
 
-RETURN ::= returnn OPERACION_A:e1 puntocoma {:List<Triplete> tri = new ArrayList<>();
+RETURN ::= returnn OPERACION_A:e1 puntocoma {:ListaTripletes tri = new ListaTripletes();
                         if(e1==null || e1.getTipo() != ret){
                                 reportarSem("Return de tipo " + OperacionJava.obtenerTipo(e1.getTipo())
                                 + " y se espera un tipo: " + OperacionJava.obtenerTipo(actual.getTIPO()));
                                 RESULT = tri;}
-                        else{tri.addAll(e1.mostrarTripletes()); tri.add(new Return(e1.getTriplete()));
+                        else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); tri.add(new Return(e1.getTriplete()));
                         RESULT = tri;}:}
 ;
 
@@ -167,7 +170,7 @@ DEF_VAR ::= TYPE:e1 {:variables = new ArrayList<>();:} LIST_VAR:e2 {:VariableJav
                         if(!tabla.addListVar(variables)){
                                 reportarSem("Unas variables de las registradas ya existen");}
                                 variables = new ArrayList<>();
-                        RESULT = VariableJava.obtenerTripletes(e2, e1);:}
+                        RESULT = new ListaTripletes(VariableJava.obtenerTripletes(e2, e1));:}
 ;
 
 LIST_VAR ::= LIST_VAR:e1 coma AS_VAR:e2 {:e1.add(e2); RESULT = e1;:}
@@ -207,9 +210,9 @@ INICIO ::= THIS:e0 id:e1 {:List<Triplete> tri = new ArrayList<>();
                         if(num == -1){
                         reportarSem("No existe variable con id: " + e1);
                                 }
-                        RESULT = new ArrayList<>();:}
+                        RESULT = new ListaTripletes();:}
         | TYPE:e1 {:TablaJava.AMBITO += 1; variables = new ArrayList<>();:} 
-                AS_VAR:e2 {: List<Triplete> tri = new ArrayList<>(); VariableJava.agregarTipo(variables, e1);
+                AS_VAR:e2 {:ListaTripletes tri = new ListaTripletes(); VariableJava.agregarTipo(variables, e1);
                 if(!tabla.addListVar(variables)){
                         reportarSem("Ya existe variable con id: " + e2.getId());
                         } TablaJava.AMBITO -= 1;
@@ -235,7 +238,7 @@ ELSEIF ::= ELSEIF:e1 elsee iff para CONDICION:e2 parc BLOQUE:e3
 ;
 
 ELSE ::= elsee BLOQUE:e1 {:RESULT = e1;:}
-        | {:RESULT = null;:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 SWITCH ::= switchh para OPERACION_A:e1 parc llavea CASES:e2 DEFAULT:e3 llavec {:RESULT = e2.agregarDefault(e1, e3);:}
@@ -248,8 +251,8 @@ CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:cas++;:} STATEMENTS_METODO:e3
 
 
 DEFAULT ::= defaultt dosp {:cas++;:} STATEMENTS_METODO:e1  {:cas--;
-                RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+                RESULT = new ListaTripletes(e1);:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
@@ -257,11 +260,11 @@ STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
         | WRITE:e1 puntocoma {:RESULT = e1;:}
         | INPUT:e1 puntocoma {:AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, OperacionJava.obtenerTipo(e1)),null
                 ,OperacionJava.obtenerTipo(e1)); 
-                List<Triplete> tri = new ArrayList<>(); tri.add(vl); 
+                ListaTripletes tri = new ListaTripletes(); tri.add(vl); 
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
 ;
 
-AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {: List<Triplete> tri = new ArrayList<>();
+AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {:ListaTripletes tri = new ListaTripletes();
                         int num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null)); 
                         if(num==-1){
                         reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
@@ -278,7 +281,7 @@ WRITE ::= println para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:
        | print para STRING:e1 parc {:RESULT = e1;:}
 ;
 
-OP_VAR ::= THIS:e0 id:e1 masmas {: List<Triplete> tri = new ArrayList<>();
+OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
                         if(num == -1){
@@ -287,7 +290,7 @@ OP_VAR ::= THIS:e0 id:e1 masmas {: List<Triplete> tri = new ArrayList<>();
                                 SumOperator sum = new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
                                 tri.add(sum); tri.add(new AsignarValor(new TerminalOperator(e1), sum, null));}
                                 RESULT = tri;:}
-        | THIS:e0 id:e1 menosmenos {: List<Triplete> tri = new ArrayList<>();
+        | THIS:e0 id:e1 menosmenos {:ListaTripletes tri = new ListaTripletes();
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
                         if(num == -1){
@@ -375,10 +378,10 @@ COMPARACION ::= OPERACION_A:e1 igig OPERACION_A:e2 {:RESULT = new IgualOperator(
 
 STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete())); RESULT = e1;:}
         | STRING:e1 mas string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
-        | EXPR:e1 {:List<Triplete> tri = new ArrayList<>(); tri.addAll(e1.getTripletes());
+        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
                 tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete()));
                 RESULT = tri;:}
-        | string:e1 {:List<Triplete> tri = new ArrayList<>(); tri.add(new Printf(e1));
+        | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}
 ;
 

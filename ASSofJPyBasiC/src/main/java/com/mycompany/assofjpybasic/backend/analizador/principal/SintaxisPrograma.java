@@ -910,7 +910,7 @@ class CUP$SintaxisPrograma$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		List<VariablePrograma> e1 = (List<VariablePrograma>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		List<Triplete> tri = new ArrayList<>();
+		ListaTripletes tri = new ListaTripletes();
                         for(VariablePrograma var : e1){
                         tri.addAll(var.mostrarTripletes());
                         } sem.getVar().addAll(tri);
@@ -1347,7 +1347,7 @@ class CUP$SintaxisPrograma$actions {
               Object RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		sem.getTripletes().addAll(e1);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("MAIN",3, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1356,14 +1356,17 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 44: // STATEMENTS ::= STATEMENT STATEMENTS 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e2 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		e1.addAll(e2); RESULT = e1;
+		ListaTripletes e2 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		if(!e2.isFin()){
+                                        if(e1.isRet()){
+                                                reportarSem("ya existe varios returns, algunos no se toman en cuenta");
+                                        } else {e1.addAll(e2);}} RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTS",27, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1371,8 +1374,8 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 45: // STATEMENTS ::= 
             {
-              List<Triplete> RESULT =null;
-		RESULT = new ArrayList<>();
+              ListaTripletes RESULT =null;
+		RESULT = new ListaTripletes(true);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTS",27, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1380,10 +1383,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 46: // STATEMENT ::= COMPOUND 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENT",28, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1392,10 +1395,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 47: // STATEMENT ::= STATEMENTLINE 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENT",28, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1404,8 +1407,8 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 48: // STATEMENT ::= error 
             {
-              List<Triplete> RESULT =null;
-		RESULT = new ArrayList<>();
+              ListaTripletes RESULT =null;
+		RESULT = new ListaTripletes();
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENT",28, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1413,10 +1416,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 49: // COMPOUND ::= WHILE 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("COMPOUND",29, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1425,10 +1428,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 50: // COMPOUND ::= DO_WHILE 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("COMPOUND",29, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1437,10 +1440,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 51: // COMPOUND ::= FOR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("COMPOUND",29, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1449,10 +1452,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 52: // COMPOUND ::= IF_ELSE 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("COMPOUND",29, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1461,10 +1464,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 53: // COMPOUND ::= SWITCH 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("COMPOUND",29, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1473,8 +1476,8 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 54: // STATEMENTLINE ::= clrs puntocoma 
             {
-              List<Triplete> RESULT =null;
-		List<Triplete> tr = new ArrayList<>(); tr.add(new Clrs()); RESULT = tr;
+              ListaTripletes RESULT =null;
+		ListaTripletes tr = new ListaTripletes(); tr.add(new Clrs()); RESULT = tr;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1482,11 +1485,11 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 55: // STATEMENTLINE ::= ASIG_VAR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		List<VariablePrograma> e1 = (List<VariablePrograma>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		List<Triplete> tri = new ArrayList<>();
+		ListaTripletes tri = new ListaTripletes();
                         for(VariablePrograma var : e1){
                         tri.addAll(var.mostrarTripletes());
                         } RESULT = tri;
@@ -1497,10 +1500,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 56: // STATEMENTLINE ::= DEF_VAR puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1509,10 +1512,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 57: // STATEMENTLINE ::= PRINTF 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1521,10 +1524,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 58: // STATEMENTLINE ::= SCANF 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1533,11 +1536,11 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 59: // STATEMENTLINE ::= LLAMADA_METODO puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
-		List<Triplete> tri = new ArrayList<>();
+		ListaTripletes tri = new ListaTripletes();
                 if(e1 != null) {tri.addAll(e1.mostrarTripletes());
                 tri.add(e1.getTriplete());}
                 RESULT = tri;
@@ -1548,8 +1551,8 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // STATEMENTLINE ::= getch puntocoma 
             {
-              List<Triplete> RESULT =null;
-		List<Triplete> tr = new ArrayList<>(); tr.add(new GetchOperator()); RESULT = tr;
+              ListaTripletes RESULT =null;
+		ListaTripletes tr = new ListaTripletes(); tr.add(new GetchOperator()); RESULT = tr;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1557,10 +1560,10 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // STATEMENTLINE ::= CLASS 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTLINE",26, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1569,14 +1572,14 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // DEF_VAR ::= id igual EXPR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		List<Triplete> tri = new ArrayList<>(); 
+		ListaTripletes tri = new ListaTripletes(); 
                 if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) == null) {
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else if (e2 == null) {
@@ -1590,7 +1593,7 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 63: // DEF_VAR ::= id CORCHETES igual EXPR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).value;
@@ -1604,7 +1607,7 @@ class CUP$SintaxisPrograma$actions {
                 if(var == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
-                var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = arr.mostrarTripletes(); }
+                var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = new ListaTripletes(arr.mostrarTripletes()); }
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("DEF_VAR",25, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1612,7 +1615,7 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // PRINTF ::= printf para comilla STRING comilla VARS parc puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).right;
 		List<String> e1 = (List<String>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).value;
@@ -1675,7 +1678,7 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 69: // SCANF ::= scanf para comilla STRING comilla VARSS parc puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).right;
 		List<String> e1 = (List<String>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).value;
@@ -1717,7 +1720,7 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 72: // NT$0 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
 		CondicionPrograma e1 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
@@ -1729,21 +1732,21 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 73: // IF_ELSE ::= iff para CONDICION parc llavea NT$0 STATEMENTS llavec ELSE_IF ELSE 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$0
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).right;
 		CondicionPrograma e1 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).right;
-		List<Triplete> e2 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).value;
+		ListaTripletes e2 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		Else_Operator e3 = (Else_Operator)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		int e4left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e4right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e4 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e4 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("IF_ELSE",34, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1779,7 +1782,7 @@ ProgramaSemantica.AMBITO += 1;
 		CondicionPrograma e2 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e3 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1.agregarElseIf(e2, e3);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ELSE_IF",45, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1798,7 +1801,7 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 77: // NT$2 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 ProgramaSemantica.AMBITO += 1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("NT$2",51, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1807,12 +1810,12 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 78: // ELSE ::= elsee llavea NT$2 STATEMENTS llavec 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$2
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ELSE",35, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1822,8 +1825,8 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 79: // ELSE ::= 
             {
-              List<Triplete> RESULT =null;
-		RESULT = new ArrayList<>();
+              ListaTripletes RESULT =null;
+		RESULT = new ListaTripletes();
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ELSE",35, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1831,7 +1834,7 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 80: // SWITCH ::= switchh para EXPR parc llavea CASES DEFAULT llavec 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).value;
@@ -1840,7 +1843,7 @@ ProgramaSemantica.AMBITO += 1;
 		CasePrograma e2 = (CasePrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e3 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		RESULT = e2.agregarDefault(e1, e3);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("SWITCH",30, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1875,7 +1878,7 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
 		OperacionPrograma e2 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e3 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		esCase = false; sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 if(e2!=null){RESULT  = e1.agregarCase(e2, e3);}
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("CASES",46, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1894,13 +1897,13 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 84: // STATEMENTSC ::= STATEMENT STATEMENTSC 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e2 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e2 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		e1.addAll(e2); RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTSC",39, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1909,8 +1912,8 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 85: // STATEMENTSC ::= breakk puntocoma 
             {
-              List<Triplete> RESULT =null;
-		List<Triplete> tri = new ArrayList<>(); 
+              ListaTripletes RESULT =null;
+		ListaTripletes tri = new ListaTripletes(); 
                 if(!esCase){
                         reportarSem("Break fuera de un switch");
                 }else{tri.add(new Break());} RESULT = tri;
@@ -1921,8 +1924,8 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 86: // STATEMENTSC ::= 
             {
-              List<Triplete> RESULT =null;
-		RESULT = new ArrayList<>();
+              ListaTripletes RESULT =null;
+		RESULT = new ListaTripletes();
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STATEMENTSC",39, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1930,7 +1933,7 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 87: // NT$4 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 esCase = true; ProgramaSemantica.AMBITO += 1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("NT$4",53, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -1939,12 +1942,12 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 88: // DEFAULT ::= defaultt dosp NT$4 STATEMENTSC 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$4
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		esCase = false; sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("DEFAULT",40, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1954,8 +1957,8 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 89: // DEFAULT ::= 
             {
-              List<Triplete> RESULT =null;
-		RESULT = new ArrayList<>();
+              ListaTripletes RESULT =null;
+		RESULT = new ListaTripletes();
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("DEFAULT",40, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -1963,7 +1966,7 @@ esCase = true; ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 90: // NT$5 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
 		CondicionPrograma e1 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
@@ -1975,15 +1978,15 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 91: // WHILE ::= whilee para CONDICION parc llavea NT$5 STATEMENTS llavec 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$5
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).right;
 		CondicionPrograma e1 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e2 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e2 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
         RESULT = Else_Operator.WHILE(e1, e2);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("WHILE",36, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1993,7 +1996,7 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 92: // NT$6 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 ProgramaSemantica.AMBITO += 1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("NT$6",55, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2002,12 +2005,12 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 93: // DO_WHILE ::= doo llavea NT$6 STATEMENTS llavec whilee para CONDICION parc puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$6
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
 		CondicionPrograma e2 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
@@ -2020,16 +2023,16 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 94: // NT$7 ::= 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).right;
 		CondicionPrograma e2 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
-		List<Triplete> e3 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
+		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 ProgramaSemantica.AMBITO += 1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("NT$7",56, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2038,21 +2041,21 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 95: // FOR ::= forr para INICIO puntocoma CONDICION puntocoma STEP parc llavea NT$7 STATEMENTS llavec 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
               // propagate RESULT from NT$7
-                RESULT = (List<Triplete>) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
+                RESULT = (ListaTripletes) ((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-9)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).right;
 		CondicionPrograma e2 = (CondicionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-7)).value;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).right;
-		List<Triplete> e3 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).value;
+		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-5)).value;
 		int e5left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e5right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		List<Triplete> e5 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		ListaTripletes e5 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
         RESULT = Else_Operator.FOR(e1, e3, e2, e5);
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("FOR",38, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-11)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -2062,10 +2065,10 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 96: // INICIO ::= DEF_VAR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("INICIO",33, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2074,13 +2077,13 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 97: // INICIO ::= id 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null))== null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
-                }RESULT = new ArrayList<>();
+                }RESULT = new ListaTripletes();
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("INICIO",33, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -2088,7 +2091,7 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 98: // INICIO ::= TYPE id igual EXPR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).right;
 		Integer e2 = (Integer)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)).value;
@@ -2098,7 +2101,7 @@ ProgramaSemantica.AMBITO += 1;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e3 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		List<Triplete> tri = new ArrayList<>();
+		ListaTripletes tri = new ListaTripletes();
         if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) != null){
                 reportarSem("Variable ya existente con el id: <" + e1 + ">");
         } else {tri.addAll(e3.getTripletes()); tri.add(e3.getTriplete());
@@ -2110,10 +2113,10 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 99: // STEP ::= DEF_VAR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STEP",32, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2122,10 +2125,10 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 100: // STEP ::= OP_VAR 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
-		List<Triplete> e1 = (List<Triplete>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
+		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		RESULT = e1;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("STEP",32, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2134,11 +2137,11 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 101: // OP_VAR ::= id masmas 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
-		List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
+		ListaTripletes tri = new ListaTripletes(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
@@ -2151,11 +2154,11 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 102: // OP_VAR ::= id menosmenos 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
-		List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
+		ListaTripletes tri = new ListaTripletes(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
@@ -2462,14 +2465,14 @@ ProgramaSemantica.AMBITO += 1;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 122: // CLASS ::= javaa punto id LIST_CLASS puntocoma 
             {
-              List<Triplete> RESULT =null;
+              ListaTripletes RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
 		List<ObjetoPrograma> e2 = (List<ObjetoPrograma>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
-		RESULT = ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO);
+		RESULT = new ListaTripletes(ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("CLASS",41, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-4)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;

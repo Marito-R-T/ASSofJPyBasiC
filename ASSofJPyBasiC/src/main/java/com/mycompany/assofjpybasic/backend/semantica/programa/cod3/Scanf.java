@@ -16,6 +16,7 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class Scanf extends Triplete {
      * @param terminales Ids de los que se ingresaran
      * @return Lista de tripletes que se obtiene
      */
-    public static List<Triplete> regresarTripletes(List<String> texto, List<TerminalOperator> terminales) {
-        List<Triplete> tri = new ArrayList<>();
+    public static ListaTripletes regresarTripletes(List<String> texto, List<TerminalOperator> terminales) {
+        ListaTripletes tri = new ListaTripletes();
         int term = 0;
         for (String string : texto) {
             if (string.equals("%d") || string.equals("%f") || string.equals("%c")) {

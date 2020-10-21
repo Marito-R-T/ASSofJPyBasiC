@@ -6,8 +6,10 @@
 package com.mycompany.assofjpybasic.backend.semantica.python;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import com.mycompany.assofjpybasic.backend.semantica.visual.VariableVisual;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +47,7 @@ public class PythonSemantica {
                 VariablePython res = this.existeVar(py);
                 if (res == null) {
                     py.setTipo(t.getTipo());
+                    py.setDireccion(this.variables.size());
                     variables.add(py);
                 } else if (res.getTipo().equals(PythonSemantica.VAR)) {
                     res.setTipo(t.getTipo());
@@ -58,6 +61,21 @@ public class PythonSemantica {
         }
     }
 
+    public boolean addVar(VariablePython var) {
+        VariablePython res = this.existeVar(var);
+        if (res != null && !res.getTipo().equals(PythonSemantica.INT) && !res.getTipo().equals(PythonSemantica.VAR)) {
+            return false;
+        } else if (res == null) {
+            var.setDireccion(this.variables.size());
+            this.variables.add(var);
+            var.setTipo(PythonSemantica.INT);
+            return true;
+        } else {
+            var.setTipo(PythonSemantica.INT);
+            return true;
+        }
+    }
+
     /**
      * Metodo para verificar existencia de una variable y agregarla si no existe
      *
@@ -65,19 +83,38 @@ public class PythonSemantica {
      * @param tipo lista tipos de Variables
      * @return retorna los tripletes de las asignaciones
      */
-    public static List<Triplete> devolverAsig(List<VariablePython> var, List<OperacionPython> tipo) {
+    public List<Triplete> devolverAsig(List<VariablePython> var, List<OperacionPython> tipo) {
         if (var.size() == tipo.size()) {
             List<Triplete> list = new ArrayList<>();
             for (int i = 0; i < var.size(); i++) {
                 VariablePython py = var.get(i);
                 OperacionPython t = tipo.get(i);
                 list.addAll(t.mostrarTripletes());
-                list.add(new AsignarValor(new TerminalOperator(py.getId()), t.getTriplete(), OperacionPython.obtenerTipo(t)));
+                SumOperator sum = this.devolverSum(py.getId());
+                list.add(sum);
+                list.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), t.getTriplete(), null));
             }
             return list;
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public String devolverDireccion(String id) {
+        return "stack[" + id + "]";
+    }
+
+    public SumOperator devolverSum(String id) {
+        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+    }
+
+    public Integer obtenerDireccion(String id) {
+        for (VariablePython variable : this.variables) {
+            if (variable.getId().equals(id)) {
+                return variable.getDireccion() + 1;
+            }
+        }
+        return 0;
     }
 
     /**

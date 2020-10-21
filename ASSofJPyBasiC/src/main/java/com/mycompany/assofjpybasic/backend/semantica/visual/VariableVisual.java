@@ -16,6 +16,7 @@ public class VariableVisual extends OperacionVisual {
 
     private final String id;
     private String tipo;
+    private Integer direccion;
     private final Integer ambito;
     private boolean definido = false, astipo = false;
 
@@ -128,6 +129,14 @@ public class VariableVisual extends OperacionVisual {
 
     public void setAstipo(boolean astipo) {
         this.astipo = astipo;
+    }
+
+    public Integer getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Integer direccion) {
+        this.direccion = direccion;
     }
 
 }

@@ -56,6 +56,16 @@ public abstract class Triplete {
         return operando2;
     }
 
+    public boolean cambiarId(String id, String cambio) {
+        if (this.operando1 != null && operando2.getId() != null && operando1.getId().equals(id)) {
+            operando1.setId(cambio);
+        }
+        if (this.operando2 != null && operando2.getId() != null && operando2.getId().equals(id)) {
+            operando2.setId(cambio);
+        }
+        return true;
+    }
+
     public abstract String devolverString();
 
     public static String devolverTipo(OperacionPrograma op1, OperacionPrograma op2) {
@@ -68,6 +78,10 @@ public abstract class Triplete {
 
     public static String devolverTipo(OperacionPrograma op1) {
         return Triplete.tipos[op1.getTipo() - 1];
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

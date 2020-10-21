@@ -18,10 +18,10 @@ package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.CondicionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.IfPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Etiqueta;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.GoToOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.If_Operator;
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +29,14 @@ import java.util.List;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class CaseVisual extends ArrayList<Triplete> {
+public class CaseVisual extends ListaTripletes {
 
     private final Etiqueta salida;
     private final GoToOperator gotoo;
     private final List<If_Operator> iffs = new ArrayList<>();
 
     public CaseVisual() {
+        this.ret = true;
         salida = new Etiqueta();
         gotoo = new GoToOperator(salida);
     }
@@ -47,7 +48,7 @@ public class CaseVisual extends ArrayList<Triplete> {
      * @param tri Lista de Tripletes que pertenecen al Case
      * @return regresa el Case en cuestión
      */
-    public CaseVisual agregarCase(List<OperacionVisual> operacion, List<Triplete> tri) {
+    public CaseVisual agregarCase(List<OperacionVisual> operacion, ListaTripletes tri) {
         for (OperacionVisual operacionVisual : operacion) {
             this.addAll(operacionVisual.getTripletes());
         }
@@ -62,6 +63,7 @@ public class CaseVisual extends ArrayList<Triplete> {
             }
             this.iffs.add(iff);
         }
+        this.addAll(pro.getTriplete());
         this.addAll(pro.getBueno());
         this.addAll(tri);
         this.add(gotoo);
@@ -69,7 +71,7 @@ public class CaseVisual extends ArrayList<Triplete> {
         return this;
     }
 
-    public List<Triplete> agregarDefault(OperacionVisual operacion, List<Triplete> tri) {
+    public ListaTripletes agregarDefault(OperacionVisual operacion, ListaTripletes tri) {
         this.addAll(0, operacion.mostrarTripletes());
         iffs.forEach((aIf) -> {
             aIf.setOp(operacion.getTriplete());

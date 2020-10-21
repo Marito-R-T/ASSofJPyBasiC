@@ -75,8 +75,8 @@ non terminal List<OperacionPrograma> CORCHETES, LIST_PARAM, LIST, PARAM;
 non terminal String IN_CLASS;
 non terminal Triplete COMPARACION;
 non terminal CondicionPrograma NOT, AND, CONDICION;
-non terminal List<Triplete> PRINTF, SCANF, DEF_VAR, STATEMENTLINE, STATEMENTS, STATEMENT, COMPOUND, SWITCH;
-non terminal List<Triplete> OP_VAR, STEP, INICIO, IF_ELSE, ELSE, WHILE, DO_WHILE, FOR, STATEMENTSC, DEFAULT, CLASS;
+non terminal ListaTripletes PRINTF, SCANF, DEF_VAR, STATEMENTLINE, STATEMENTS, STATEMENT, COMPOUND, SWITCH;
+non terminal ListaTripletes OP_VAR, STEP, INICIO, IF_ELSE, ELSE, WHILE, DO_WHILE, FOR, STATEMENTSC, DEFAULT, CLASS;
 non terminal List<TerminalOperator> VARSS;
 non terminal List<OperacionPrograma> VARS;
 non terminal List<String> STRING;
@@ -110,7 +110,7 @@ CONST ::= CONST constt TYPE:e1 id:e2 igual EXPR:e3 puntocoma
                 reportarSem("Variable ya creda con el mismo nombre: <" + e1 + ">");
         } else {sem.getVar().addAll(e3.mostrarTripletes());
                 sem.getVar().add(new AsignarConstante(new TerminalOperator(e2), e3.getTriplete(), Triplete.tipos[e1-1]));}:}
-        | CONST ASIG_VAR:e1 {:List<Triplete> tri = new ArrayList<>();
+        | CONST ASIG_VAR:e1 {:ListaTripletes tri = new ListaTripletes();
                         for(VariablePrograma var : e1){
                         tri.addAll(var.mostrarTripletes());
                         } sem.getVar().addAll(tri);:}
@@ -214,13 +214,16 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
 MAIN ::= voidd mainn para parc llavea STATEMENTS:e1 llavec {:sem.getTripletes().addAll(e1);:}
 ;
 
-STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:e1.addAll(e2); RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:if(!e2.isFin()){
+                                        if(e1.isRet()){
+                                                reportarSem("ya existe varios returns, algunos no se toman en cuenta");
+                                        } else {e1.addAll(e2);}} RESULT = e1;:}
+        | {:RESULT = new ListaTripletes(true);:}
 ;
 
 STATEMENT ::= COMPOUND:e1 {:RESULT = e1;:}
         | STATEMENTLINE:e1 {:RESULT = e1;:}
-        | error {:RESULT = new ArrayList<>();:}
+        | error {:RESULT = new ListaTripletes();:}
 ;
 
 COMPOUND ::= WHILE:e1 {:RESULT = e1;:}
@@ -230,23 +233,23 @@ COMPOUND ::= WHILE:e1 {:RESULT = e1;:}
         | SWITCH:e1 {:RESULT = e1;:}
 ;
 
-STATEMENTLINE ::= clrs puntocoma {:List<Triplete> tr = new ArrayList<>(); tr.add(new Clrs()); RESULT = tr;:}
-        | ASIG_VAR:e1 {:List<Triplete> tri = new ArrayList<>();
+STATEMENTLINE ::= clrs puntocoma {:ListaTripletes tr = new ListaTripletes(); tr.add(new Clrs()); RESULT = tr;:}
+        | ASIG_VAR:e1 {:ListaTripletes tri = new ListaTripletes();
                         for(VariablePrograma var : e1){
                         tri.addAll(var.mostrarTripletes());
                         } RESULT = tri;:}
         | DEF_VAR:e1 puntocoma {:RESULT = e1;:}
         | PRINTF:e1 {:RESULT = e1;:}
         | SCANF:e1 {:RESULT = e1;:}
-        | LLAMADA_METODO:e1 puntocoma {:List<Triplete> tri = new ArrayList<>();
+        | LLAMADA_METODO:e1 puntocoma {:ListaTripletes tri = new ListaTripletes();
                 if(e1 != null) {tri.addAll(e1.mostrarTripletes());
                 tri.add(e1.getTriplete());}
                 RESULT = tri;:}
-        | getch puntocoma {:List<Triplete> tr = new ArrayList<>(); tr.add(new GetchOperator()); RESULT = tr;:}
+        | getch puntocoma {:ListaTripletes tr = new ListaTripletes(); tr.add(new GetchOperator()); RESULT = tr;:}
         | CLASS:e1 {:RESULT = e1;:}
 ;
 
-DEF_VAR ::= id:e1 igual EXPR:e2 {:List<Triplete> tri = new ArrayList<>(); 
+DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes(); 
                 if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) == null) {
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else if (e2 == null) {
@@ -257,7 +260,7 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:List<Triplete> tri = new ArrayList<>();
                 if(var == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
-                var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = arr.mostrarTripletes(); }:}
+                var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = new ListaTripletes(arr.mostrarTripletes()); }:}
 ;
 
 PRINTF ::= printf para comilla STRING:e1 comilla VARS:e2 parc puntocoma 
@@ -311,7 +314,7 @@ ELSE_IF ::= ELSE_IF:e1 elsee iff para CONDICION:e2 parc llavea {:ProgramaSemanti
 ELSE ::= elsee llavea {:ProgramaSemantica.AMBITO += 1;:}
         STATEMENTS:e1 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 SWITCH ::= switchh para EXPR:e1 parc llavea CASES:e2 DEFAULT:e3 llavec {:RESULT = e2.agregarDefault(e1, e3);:}
@@ -324,17 +327,17 @@ CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:esCase = true; ProgramaSemantica.
 ;
 
 STATEMENTSC ::= STATEMENT:e1 STATEMENTSC:e2 {:e1.addAll(e2); RESULT = e1;:}
-        | breakk puntocoma {:List<Triplete> tri = new ArrayList<>(); 
+        | breakk puntocoma {:ListaTripletes tri = new ListaTripletes(); 
                 if(!esCase){
                         reportarSem("Break fuera de un switch");
                 }else{tri.add(new Break());} RESULT = tri;:}
-        | {:RESULT = new ArrayList<>();:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 DEFAULT ::= defaultt dosp {:esCase = true; ProgramaSemantica.AMBITO += 1;:} 
         STATEMENTSC:e1 {:esCase = false; sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 WHILE ::= whilee para CONDICION:e1 parc llavea {:ProgramaSemantica.AMBITO += 1;:}
@@ -355,8 +358,8 @@ FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc llavea
 INICIO ::= DEF_VAR:e1 {:RESULT = e1;:}
         | id:e1 {:if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null))== null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
-                }RESULT = new ArrayList<>();:}
-        | TYPE:e2 id:e1 igual EXPR:e3 {:List<Triplete> tri = new ArrayList<>();
+                }RESULT = new ListaTripletes();:}
+        | TYPE:e2 id:e1 igual EXPR:e3 {:ListaTripletes tri = new ListaTripletes();
         if(sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)) != null){
                 reportarSem("Variable ya existente con el id: <" + e1 + ">");
         } else {tri.addAll(e3.getTripletes()); tri.add(e3.getTriplete());
@@ -367,13 +370,13 @@ STEP ::= DEF_VAR:e1 {:RESULT = e1;:}
         | OP_VAR:e1 {:RESULT = e1;:}
 ;
 
-OP_VAR ::= id:e1 masmas {:List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
+OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
                         tri.add(new AsignarValor(null, new TerminalOperator(e1), tri.get(0)));
                 } RESULT = tri;:}
-        | id:e1 menosmenos {:List<Triplete> tri = new ArrayList<>(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
+        | id:e1 menosmenos {:ListaTripletes tri = new ListaTripletes(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {tri.add(new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), Triplete.tipos[vars.getTipo()-1]));
@@ -445,7 +448,7 @@ EXPR ::= LLAMADA_METODO:e1 {:RESULT = new OperacionPrograma(new AsignarTemporal(
         | getch {:RESULT = new OperacionPrograma(VariablePrograma.INT, new GetchOperator());:}
 ;
 
-CLASS ::= javaa punto id:e1 LIST_CLASS:e2 puntocoma {:RESULT = ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO);:}
+CLASS ::= javaa punto id:e1 LIST_CLASS:e2 puntocoma {:RESULT = new ListaTripletes(ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO));:}
 ;
 
 LIST_CLASS ::= LIST_CLASS:e1 coma id:e2 PARAM:e3 {:ObjetoPrograma ob = new ObjetoPrograma(e2, e3);

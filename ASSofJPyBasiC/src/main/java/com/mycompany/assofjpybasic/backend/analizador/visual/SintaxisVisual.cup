@@ -59,8 +59,8 @@ non terminal THEN, CA, PUBLIC;
 non terminal List<VariableVisual> LISTPARAMM, LISTPARAM, LISTVAR;
 non terminal String TYPE, TYPEE;
 non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, DEF, INPUT, STEP;
-non terminal List<Triplete> STATEMENTS, STATEMENT, CONSOLEWRITE, STRING, CASEELSE, STATEMENTSF, ASIGVAR;
-non terminal List<Triplete> ELSE, IF_ELSE, SELECT, STATEMENTLINE, WHILE, DO_WHILE, FOR, DEFVAR;
+non terminal ListaTripletes STATEMENTS, STATEMENT, CONSOLEWRITE, STRING, CASEELSE, STATEMENTSF, ASIGVAR;
+non terminal ListaTripletes ELSE, IF_ELSE, SELECT, STATEMENTLINE, WHILE, DO_WHILE, FOR, DEFVAR;
 non terminal CondicionPrograma CONDICION, NOT, AND;
 non terminal Triplete COMPARACION;
 non terminal String ID;
@@ -117,7 +117,7 @@ FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:Vi
 
 DEFVAR ::= dimm LISTVAR:e1 espacio {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
                                         else{reportarSem("Error con el tipado de variables");} 
-                                        RESULT = VisualSemantica.devolverTrip(e1);:}
+                                        RESULT = new ListaTripletes(sem.devolverTrip(e1));:}
 ;
 
 LISTPARAMM ::= LISTPARAM:e1 {:RESULT = e1;:}
@@ -159,10 +159,12 @@ LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual
 ;
 
 ASIGVAR ::= id:e1 igual EXPR:e2 espacio {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
-                                List<Triplete> trip = new ArrayList<>();
+                                ListaTripletes trip = new ListaTripletes();
                                 if(var==null || !var.getTipo().contains(e2.getTipo())){
                                 reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);}
-                                else{trip.addAll(e2.mostrarTripletes()); trip.add(new AsignarValor(new TerminalOperator(e1), e2.getTriplete(), null));}
+                                else{trip.addAll(e2.mostrarTripletes()); SumOperator sum = sem.devolverSum(e1);
+                                trip.add(sum);
+                                trip.add(new AsignarValor(new TerminalOperator(sem.devolverDireccion(sum.getId())), e2.getTriplete(), null));}
                                 RESULT = trip;:}
 ;
 
@@ -207,7 +209,10 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
                 if(var==null){
                         reportarSem("No existe la variable con id: " + e1);
                 } else {
-                RESULT = new OperacionVisual(var.getTipo(), new TerminalOperator(e1));
+                        SumOperator sum = sem.devolverSum(e1);
+                        OperacionVisual op = new OperacionVisual(var.getTipo(), new TerminalOperator(sem.devolverDireccion(sum.getId())));
+                        op.getTripletes().add(sum);
+                        RESULT = op;
                 }:}
         | entero:e1 {:RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1));:}
@@ -215,18 +220,21 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
 ;
 
 STATEMENTS ::= STATEMENTS:e1 STATEMENT:e2 {:e1.addAll(e2); RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
-STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:e1.addAll(e2); RESULT = e1;:}
-        | returnn EXPR:e1 espacio {:List<Triplete> tri = new ArrayList<>();
+STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:if(e1.isRet() && e2.isRet()){
+                                                        reportarSem("ya existe varios returns, algunos no se toman en cuenta");
+                                                }else {e1.addAll(e2);} RESULT = e1;:}
+        | returnn EXPR:e1 espacio {:ListaTripletes tri = new ListaTripletes();
                 if(e1 == null || !actual.getTIPO().contains(e1.getTipo())){
                         reportarSem("No coincide el tipo del return con el tipo de la función con id: " + actual.getId());}
                 else{
-                tri.addAll(e1.mostrarTripletes());
-                tri.add(new Return(e1.getTriplete()));}
-                RESULT = tri;:}
-        | {:RESULT = new ArrayList<>();:}
+                        tri.setRet(true);
+                        tri.addAll(e1.mostrarTripletes());
+                        tri.add(new Return(e1.getTriplete()));}
+                        RESULT = tri;:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 EXPR ::= OPERACION_A:e1 {:RESULT = e1;:}
@@ -240,7 +248,7 @@ STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}
         | WHILE:e1 {:RESULT = e1;:}
         | DO_WHILE:e1 {:RESULT = e1;:}
         | STATEMENTLINE:e1 {:RESULT = e1;:}
-        | error {:RESULT = new ArrayList<>();:}
+        | error {:RESULT = new ListaTripletes();:}
 ;
 
 IF_ELSE ::= iff CONDICION:e1 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
@@ -259,7 +267,7 @@ ELSE_IF ::= ELSE_IF:e1 elseiff CONDICION:e2 THEN espacio {:VisualSemantica.AMBIT
 ELSE ::= elsee espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e1 
         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;
         RESULT = e1;:}
-        | {:RESULT = new ArrayList<>();:}
+        | {:RESULT = new ListaTripletes();:}
 ;
 
 THEN ::= thenn
@@ -269,7 +277,7 @@ THEN ::= thenn
 STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
         | INPUT:e1 {:AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, e1.getTipo()),null
                 ,OperacionVisual.obtenerTipo(e1)); 
-                List<Triplete> tri = new ArrayList<>(); tri.add(vl); 
+                ListaTripletes tri = new ListaTripletes(); tri.add(vl); 
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
         | DEFVAR:e1 {:RESULT = e1;:}
         | ASIGVAR:e1 {:RESULT = e1;:}
@@ -277,7 +285,7 @@ STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
 
 SELECT ::= selectt CA EXPR:e1 espacio CASES:e2 CASEELSE:e3 endd selectt espacio
                 {:RESULT = e2.agregarDefault(e1, e3);:}
-        | error espacio CASES CASEELSE endd selectt espacio {:RESULT = new ArrayList<>();:}
+        | error espacio CASES CASEELSE endd selectt espacio {:RESULT = new ListaTripletes();:}
 ;
 
 CA ::= casee
@@ -373,9 +381,9 @@ COMPARACION ::= OPERACION_A:e1 igual OPERACION_A:e2 {:RESULT = new IgualOperator
 
 STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete())); RESULT = e1;:}
         | STRING:e1 y string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
-        | EXPR:e1 {:List<Triplete> tri = new ArrayList<>(); tri.addAll(e1.getTripletes());
+        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
                 tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete()));
                 RESULT = tri;:}
-        | string:e1 {:List<Triplete> tri = new ArrayList<>(); tri.add(new Printf(e1));
+        | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}
 ;

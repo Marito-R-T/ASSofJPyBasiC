@@ -21,7 +21,6 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Break;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Etiqueta;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.GoToOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.If_Operator;
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,14 @@ import java.util.List;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class CasePrograma extends ArrayList<Triplete> {
+public class CasePrograma extends ListaTripletes {
 
     private final Etiqueta salida;
     private final GoToOperator gotoo;
     private final List<If_Operator> iffs = new ArrayList<>();
 
     public CasePrograma() {
+        this.ret = true;
         salida = new Etiqueta();
         gotoo = new GoToOperator(salida);
     }
@@ -48,7 +48,7 @@ public class CasePrograma extends ArrayList<Triplete> {
      * @param tri Lista de Tripletes que pertenecen al Case
      * @return regresa el Case en cuestión
      */
-    public CasePrograma agregarCase(OperacionPrograma operacion, List<Triplete> tri) {
+    public CasePrograma agregarCase(OperacionPrograma operacion, ListaTripletes tri) {
         if (operacion != null && tri != null) {
             this.addAll(operacion.getTripletes());
             Etiqueta n1 = new Etiqueta();
@@ -78,7 +78,7 @@ public class CasePrograma extends ArrayList<Triplete> {
      * @param tri Lista de Tripletes que pertenecen al Case
      * @return regresa el Case en cuestión
      */
-    public CasePrograma agregarCase(OperacionJava operacion, List<Triplete> tri) {
+    public CasePrograma agregarCase(OperacionJava operacion, ListaTripletes tri) {
         if (operacion != null && tri != null) {
             this.addAll(operacion.getTripletes());
             Etiqueta n1 = new Etiqueta();
@@ -101,7 +101,7 @@ public class CasePrograma extends ArrayList<Triplete> {
         }
     }
 
-    public List<Triplete> agregarDefault(OperacionPrograma operacion, List<Triplete> tri) {
+    public ListaTripletes agregarDefault(OperacionPrograma operacion, ListaTripletes tri) {
         if (operacion != null && tri != null) {
             this.addAll(0, operacion.mostrarTripletes());
             for (If_Operator aIf : iffs) {
@@ -116,7 +116,7 @@ public class CasePrograma extends ArrayList<Triplete> {
         }
     }
 
-    public List<Triplete> agregarDefault(OperacionJava operacion, List<Triplete> tri) {
+    public ListaTripletes agregarDefault(OperacionJava operacion, ListaTripletes tri) {
         if (operacion != null && tri != null) {
             this.addAll(0, operacion.mostrarTripletes());
             for (If_Operator aIf : iffs) {
