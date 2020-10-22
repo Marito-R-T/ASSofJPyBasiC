@@ -6,6 +6,9 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,8 @@ public class TablaJava {
         if (!variables.stream().noneMatch((variable) -> (variable.getId().equals(var.getId())))) {
             return false;
         }
-        variables.add(0, var);
+        var.setDireccion(variables.size());
+        variables.add(var);
         return true;
     }
 
@@ -103,9 +107,9 @@ public class TablaJava {
      * @return retorna el tipo de variable que es, si no lo encuentra regresa -1
      */
     public int existeVar(VariableJava var) {
-        for (VariableJava variable : variables) {
-            if (variable.getId().equals(var.getId())) {
-                return variable.getTipo();
+        for (int i = this.variables.size() - 1; i >= 0; i--) {
+            if (variables.get(i).getId().equals(var.getId())) {
+                return variables.get(i).getTipo();
             }
         }
         return -1;
@@ -229,6 +233,55 @@ public class TablaJava {
         if (constructores.isEmpty()) {
             constructores.add(new MetodoJava(this.id, 5, new ArrayList<>()));
         }
+    }
+
+    public List<Triplete> obtenerTripletes(List<VariableJava> var, Integer tipo) {
+        List<Triplete> tri = new ArrayList<>();
+        for (VariableJava variableJava : var) {
+            ((AsignarValor) variableJava.getTriplete()).setTipo(OperacionJava.obtenerTipo(tipo));
+            System.out.println(variableJava.getId());
+            tri.addAll(variableJava.getTripletes());
+            if (variableJava.getTriplete().getOperando2() != null) {
+                SumOperator sum = this.devolverSum(variableJava.getId());
+                tri.add(sum);
+                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+            }
+        }
+        return tri;
+    }
+
+    public String devolverDireccion(String id) {
+        return "stack[" + id + "]";
+    }
+
+    public SumOperator devolverSum(String id) {
+        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+    }
+
+    public SumOperator devolverSum(String id, boolean global) {
+        if (global) {
+            return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
+        } else {
+            return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+        }
+    }
+
+    public Integer obtenerDireccion(String id) {
+        for (int i = this.variables.size() - 1; i >= 0; i--) {
+            if (variables.get(i).getId().equals(id)) {
+                return variables.get(i).getDireccion() + 1;
+            }
+        }
+        return 0;
+    }
+
+    public Integer obtenerDireccionG(String id) {
+        for (VariableJava variable : this.variables) {
+            if (variable.getId().equals(id) && variable.getAmbito() == 1) {
+                return variable.getDireccion() + 1;
+            }
+        }
+        return 0;
     }
 
 }

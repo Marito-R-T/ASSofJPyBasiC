@@ -15,6 +15,8 @@ public class VariablePrograma extends OperacionPrograma {
 
     protected final String id;
     protected final Integer ambito;
+    private Integer tamano = 0;
+    private Integer direccion = 0;
     protected Integer tipo;
     protected String tip;
     public final static Integer CHAR = 1, INT = 2, FLOAT = 3, CLASS = 4;
@@ -99,6 +101,22 @@ public class VariablePrograma extends OperacionPrograma {
 
     public String getTip() {
         return tip;
+    }
+
+    public Integer getTamano() {
+        return tamano;
+    }
+
+    public void setTamano(Integer tamano) {
+        this.tamano = tamano;
+    }
+
+    public Integer getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Integer direccion) {
+        this.direccion = direccion;
     }
 
 }

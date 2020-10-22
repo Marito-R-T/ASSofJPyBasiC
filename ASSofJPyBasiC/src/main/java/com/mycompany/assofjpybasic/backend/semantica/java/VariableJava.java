@@ -5,9 +5,7 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +16,7 @@ import java.util.Objects;
 public class VariableJava extends OperacionJava {
 
     private final String id;
+    private Integer direccion;
     private Integer tipo;
     private final Integer ambito;
 
@@ -100,13 +99,12 @@ public class VariableJava extends OperacionJava {
         }
     }
 
-    public static List<Triplete> obtenerTripletes(List<VariableJava> var, Integer tipo) {
-        List<Triplete> tri = new ArrayList<>();
-        for (VariableJava variableJava : var) {
-            ((AsignarValor) variableJava.getTriplete()).setTipo(OperacionJava.obtenerTipo(tipo));
-            tri.addAll(variableJava.mostrarTripletes());
-        }
-        return tri;
+    public Integer getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Integer direccion) {
+        this.direccion = direccion;
     }
 
 }

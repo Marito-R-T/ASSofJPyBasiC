@@ -29,7 +29,7 @@ import java.util.Objects;
 public class ProgramaSemantica {
 
     public static Integer AMBITO = 0;
-    private final List<VariablePrograma> variables = new ArrayList<>();
+    private final TablaVariables variables = new TablaVariables();
     private List<MetodoVisual> metodosVisual = new ArrayList<>();
     private List<MetodoPython> metodosPython = new ArrayList<>();
     private List<TablaJava> clasesJava = new ArrayList<>();

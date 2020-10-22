@@ -984,8 +984,11 @@ ret = e1;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		List<VariableJava> e3 = (List<VariableJava>)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		tabla.getVariables().add(0, new VariableJava(e2, e1, TablaJava.AMBITO+1, null));
-                e3.add(0, new VariableJava(e2, e1, TablaJava.AMBITO + 1, null)); RESULT = e3;
+		
+                VariableJava var = new VariableJava(e2, e1, TablaJava.AMBITO+1, null);
+                var.setDireccion(tabla.getVariables().size());
+                tabla.getVariables().add(var);
+                e3.add(var); RESULT = e3;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("LIST_PAR",8, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1012,8 +1015,11 @@ ret = e1;
 		int e3left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		List<VariableJava> e3 = (List<VariableJava>)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		tabla.getVariables().add(0, new VariableJava(e2, e1, TablaJava.AMBITO+1, null));
-                e3.add(0, new VariableJava(e2, e1, TablaJava.AMBITO + 1, null)); RESULT = e3;
+		
+                VariableJava var = new VariableJava(e2, e1, TablaJava.AMBITO+1, null);
+                var.setDireccion(tabla.getVariables().size());
+                tabla.getVariables().add(var);
+                e3.add(var); RESULT = e3;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("LIST_PARR",9, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1159,7 +1165,7 @@ variables = new ArrayList<>();
                         if(!tabla.addListVar(variables)){
                                 reportarSem("Unas variables de las registradas ya existen");}
                                 variables = new ArrayList<>();
-                        RESULT = new ListaTripletes(VariableJava.obtenerTripletes(e2, e1));
+                        RESULT = new ListaTripletes(tabla.obtenerTripletes(e2, e1));
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("DEF_VAR",32, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1367,9 +1373,9 @@ TablaJava.AMBITO += 1;
                         int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
                         if(num == -1){
-                        reportarSem("No existe variable con id: " + e1);
-                                }
-                        RESULT = new ListaTripletes();
+                                reportarSem("No existe variable con id: " + e1);
+                        }
+                        RESULT = new ListaTripletes(tri);
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("INICIO",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1398,12 +1404,16 @@ TablaJava.AMBITO += 1; variables = new ArrayList<>();
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		VariableJava e2 = (VariableJava)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		ListaTripletes tri = new ListaTripletes(); VariableJava.agregarTipo(variables, e1);
+		ListaTripletes tri = new ListaTripletes();
+                VariableJava.agregarTipo(variables, e1);
                 if(!tabla.addListVar(variables)){
                         reportarSem("Ya existe variable con id: " + e2.getId());
-                        } TablaJava.AMBITO -= 1;
+                }else { TablaJava.AMBITO -= 1;
                 ((AsignarValor) e2.getTriplete()).setTipo(OperacionJava.obtenerTipo(e1));
-                tri.addAll(e2.mostrarTripletes()); RESULT = tri;
+                tri.addAll(e2.getTripletes());
+                SumOperator sum = tabla.devolverSum(e2.getId(), false);
+                tri.add(sum);
+                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete().getOperando2(), null));} RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("INICIO",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1676,15 +1686,18 @@ cas++;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		OperacionJava e2 = (OperacionJava)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
 		ListaTripletes tri = new ListaTripletes();
-                        int num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null)); 
+                                int num = -1; if(!e0){num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
+                        else {num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         if(num==-1){
-                        reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
+                                reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else if (num<e2.getTipo()) {
-                        reportarSem("Variable con tipo: "+ OperacionJava.obtenerTipo(num) 
-                        + " solo acepta tipo " + OperacionJava.obtenerTipo(e2.getTipo()));
-                        }
-                        else{tri.addAll(e2.mostrarTripletes());
-                        tri.add(new AsignarValor(new TerminalOperator(e1), e2.getTriplete(), null));}
+                                reportarSem("Variable con tipo: "+ OperacionJava.obtenerTipo(num) 
+                                + " solo acepta tipo " + OperacionJava.obtenerTipo(e2.getTipo()));
+                        } else {
+                                tri.addAll(e2.mostrarTripletes());
+                                SumOperator sum = tabla.devolverSum(e1, e0);
+                                tri.add(sum);
+                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete(), null));}
                         RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("AS_VAR_LINE",42, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
@@ -1730,8 +1743,13 @@ cas++;
                         if(num == -1){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
-                                SumOperator sum = new SumOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
-                                tri.add(sum); tri.add(new AsignarValor(new TerminalOperator(e1), sum, null));}
+                                SumOperator ss1 = tabla.devolverSum(e1, e0);
+                                tri.add(ss1);
+                                SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
+                                tri.add(sum);
+                                SumOperator ss2 = tabla.devolverSum(e1, e0);
+                                tri.add(ss2);
+                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));}
                                 RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("OP_VAR",41, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
@@ -1753,8 +1771,13 @@ cas++;
                         if(num == -1){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
-                                RestOperator rest = new RestOperator(null, new TerminalOperator(e1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
-                                tri.add(rest); tri.add(new AsignarValor(new TerminalOperator(e1), rest, null));}
+                                SumOperator ss1 = tabla.devolverSum(e1, e0);
+                                tri.add(ss1);
+                                RestOperator rest = new RestOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
+                                tri.add(rest); 
+                                SumOperator ss2 = tabla.devolverSum(e1, e0);
+                                tri.add(ss2);
+                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), rest, null));}
                                 RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("OP_VAR",41, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
@@ -1930,13 +1953,16 @@ cas++;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
 		int num;
                         if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, 
-                        new TerminalOperator(e1)));}
+                                new TerminalOperator(e1)));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO,
-                        new TerminalOperator(e1)));}
+                                new TerminalOperator(e1)));}
                         if(num == -1){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
-                                RESULT = new OperacionJava(num, new TerminalOperator(e1));}
+                                SumOperator sum = tabla.devolverSum(e1, e0);
+                                OperacionJava op = new OperacionJava(num, new TerminalOperator(tabla.devolverDireccion(sum.getId())));
+                                op.getTripletes().add(sum);
+                                RESULT = op;}
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("ATOM",13, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -2289,7 +2315,10 @@ cas++;
                         if(num == -1){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
-                                RESULT = new OperacionJava(num, new TerminalOperator(e1));}
+                                SumOperator sum = tabla.devolverSum(e1, e0);
+                                OperacionJava op = new OperacionJava(num, new TerminalOperator(tabla.devolverDireccion(sum.getId())));
+                                op.getTripletes().add(sum);
+                                RESULT = op;}
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("EXPR",14, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
