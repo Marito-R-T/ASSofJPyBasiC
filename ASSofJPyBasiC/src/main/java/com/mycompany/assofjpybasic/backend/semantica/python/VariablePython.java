@@ -8,6 +8,7 @@ package com.mycompany.assofjpybasic.backend.semantica.python;
 import java.util.List;
 
 /**
+ * Clase que representa una Variable en Python
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

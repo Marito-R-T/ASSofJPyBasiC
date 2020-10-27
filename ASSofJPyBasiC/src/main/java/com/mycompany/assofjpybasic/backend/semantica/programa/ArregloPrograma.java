@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa un arreglo en el programa
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -194,6 +195,15 @@ public class ArregloPrograma extends VariablePrograma {
         return this.getTripletes().get(this.getTripletes().size() - 1);
     }
 
+    /**
+     * Metodo recursivo para obtener la suma los tripletes de un arreglo ya
+     * iniciado
+     *
+     * @param trip Lista de tripletes a obtener sus sumas
+     * @param posi Posicion donde inicialmente queremos la suma
+     * @param posf Posicion donde finaliza la suma requerida
+     * @return
+     */
     public final Triplete obtenerS(List<Triplete> trip, int posi, int posf) {
         if (posi == posf) {
             return obtener(trip, 0, posf);
@@ -203,6 +213,15 @@ public class ArregloPrograma extends VariablePrograma {
         return sum;
     }
 
+    /**
+     * Metodo recursivo para obtener las multiplicaciones necesaria para un
+     * arreglo ya iniciado
+     *
+     * @param trip Lista de tripletes para obtener su multiplicacion
+     * @param posi Posicion inicial de la lista que queremos la suma
+     * @param posf Posicion final de la lista para la que falta para la suma
+     * @return
+     */
     public final Triplete obtener(List<Triplete> trip, int posi, int posf) {
         if (posi == posf) {
             return this.finales.get(posf);

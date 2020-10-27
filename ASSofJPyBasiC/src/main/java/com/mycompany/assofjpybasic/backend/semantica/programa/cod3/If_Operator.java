@@ -17,6 +17,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
 /**
+ * Clase que representa un if de bajo nivel como triplete
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -26,6 +27,13 @@ public class If_Operator extends Triplete {
     private Etiqueta et;
     private Triplete op;
 
+    /**
+     * Constructor que contiene el triplete de condicional y la etiqueta de a
+     * donde se dirigira si es cierta la condicional
+     *
+     * @param operando1 Triplete condicional
+     * @param operando2 etiqueta de donde se redirigira este if si es verdadero
+     */
     public If_Operator(Triplete operando1, Etiqueta operando2) {
         super(null, operando1, operando2);
         this.et = operando2;

@@ -9,6 +9,7 @@ import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 
 /**
+ * Clase java como variable en el programa principal
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

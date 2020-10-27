@@ -12,6 +12,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 
 /**
+ * Panel Grafico donde se puede ver el codigo 3 direcciones, optimizado y
+ * assembler del codigo principal que guarde el usuario
  *
  * @author mari2bar
  */

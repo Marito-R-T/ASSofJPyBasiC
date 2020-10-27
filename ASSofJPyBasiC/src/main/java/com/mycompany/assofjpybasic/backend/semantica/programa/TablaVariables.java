@@ -16,9 +16,17 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
+import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
+import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Clase que representa la tabla de simbolos
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -42,6 +50,67 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
         var.setDireccion(tamano);
         tamano += var.getTamano();
         return super.add(var);
+    }
+
+    public Integer obtenerDireccion(String id) {
+        for (VariablePrograma variable : this) {
+            if (variable.getId().equals(id)) {
+                return variable.getDireccion();
+            }
+        }
+        return 0;
+    }
+
+    public String devolverDireccion(String id) {
+        return "stack[" + id + "]";
+    }
+
+    public SumOperator devolverSum(String id) {
+        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+    }
+
+    /**
+     * Metodo para obtener Tripletes de asignacion de variables
+     *
+     * @param var Lista de variables de java
+     * @param tipo tipo de la variable a asignar
+     * @return Lista de tripletes final
+     */
+    public List<Triplete> obtenerTripletes(List<VariablePrograma> var, Integer tipo) {
+        List<Triplete> tri = new ArrayList<>();
+        for (VariablePrograma variableJava : var) {
+            if (variableJava.getTriplete() instanceof AsignarValor) {
+                ((AsignarValor) variableJava.getTriplete()).setTipo(OperacionJava.obtenerTipo(tipo));
+                tri.addAll(variableJava.getTripletes());
+                if (variableJava.getTriplete().getOperando2() != null) {
+                    SumOperator sum = this.devolverSum(variableJava.getId());
+                    tri.add(sum);
+                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                }
+            }
+        }
+        return tri;
+    }
+
+    /**
+     * Metodo para obtener Tripletes de asignacion de variables
+     *
+     * @param var Lista de variables de java
+     * @param tipo tipo de la variable a asignar
+     * @return Lista de tripletes final
+     */
+    public List<Triplete> obtenerTriplete(VariablePrograma var, Integer tipo) {
+        List<Triplete> tri = new ArrayList<>();
+        if (var.getTriplete() instanceof AsignarValor) {
+            ((AsignarValor) var.getTriplete()).setTipo(OperacionJava.obtenerTipo(tipo));
+            tri.addAll(var.getTripletes());
+            if (var.getTriplete().getOperando2() != null) {
+                SumOperator sum = this.devolverSum(var.getId());
+                tri.add(sum);
+                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), var.getTriplete().getOperando2(), null));
+            }
+        }
+        return tri;
     }
 
 }

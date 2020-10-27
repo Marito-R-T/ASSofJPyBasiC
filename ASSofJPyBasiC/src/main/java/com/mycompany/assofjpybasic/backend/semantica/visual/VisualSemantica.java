@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa el codigo contenido en la seccion de Visual Basic
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -189,6 +190,13 @@ public class VisualSemantica {
         return metodos;
     }
 
+    /**
+     * Metodo que devuelve una lista de tripletes de las variables de visual
+     *
+     * @param va Lista de variables para obtener sus tripletes
+     * @return Lista de tripletes de la asignacion o definicion de valor a una
+     * variable
+     */
     public List<Triplete> devolverTrip(List<VariableVisual> va) {
         List<Triplete> tri = new ArrayList<>();
         va.forEach((variableVisual) -> {
@@ -204,6 +212,9 @@ public class VisualSemantica {
         return tri;
     }
 
+    /**
+     * Metodo para mostrar los metodos como codigo 3 direcciones
+     */
     public void mostrarMetodos() {
         this.metodos.forEach((metodo) -> {
             System.out.println(metodo.getId() + " METODO \n");

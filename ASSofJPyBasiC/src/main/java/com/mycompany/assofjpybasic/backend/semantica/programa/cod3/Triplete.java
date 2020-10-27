@@ -19,6 +19,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 
 /**
+ * Clase que representa un triplete
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -56,6 +57,13 @@ public abstract class Triplete {
         return operando2;
     }
 
+    /**
+     * Cambia el id del operando que no sea nulo
+     *
+     * @param id del operando a buscar
+     * @param cambio El id nuevo del operando
+     * @return true
+     */
     public boolean cambiarId(String id, String cambio) {
         if (this.operando1 != null && operando2.getId() != null && operando1.getId().equals(id)) {
             operando1.setId(cambio);

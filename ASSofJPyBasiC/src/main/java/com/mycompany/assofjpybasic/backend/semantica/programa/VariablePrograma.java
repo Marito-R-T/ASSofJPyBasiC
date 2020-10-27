@@ -8,6 +8,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 
 /**
+ * Clase que representa a las Variables del programa C
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -15,8 +16,8 @@ public class VariablePrograma extends OperacionPrograma {
 
     protected final String id;
     protected final Integer ambito;
-    private Integer tamano = 0;
-    private Integer direccion = 0;
+    private Integer tamano = 1;
+    private Integer direccion;
     protected Integer tipo;
     protected String tip;
     public final static Integer CHAR = 1, INT = 2, FLOAT = 3, CLASS = 4;

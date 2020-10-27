@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa una lista de tripletes y ayuda a obtener si ya tiene
+ * return o no
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

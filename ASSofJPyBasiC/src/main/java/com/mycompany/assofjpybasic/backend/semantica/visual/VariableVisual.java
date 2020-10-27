@@ -9,6 +9,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.List;
 
 /**
+ * Clase que representa una Variable en Visual Basic
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

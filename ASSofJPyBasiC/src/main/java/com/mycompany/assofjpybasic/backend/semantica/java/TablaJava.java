@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Clase que representa una clase en java
  *
  * @author mari2bar
  */
@@ -235,6 +236,13 @@ public class TablaJava {
         }
     }
 
+    /**
+     * Metodo para obtener Tripletes de asignacion de variables
+     *
+     * @param var Lista de variables de java
+     * @param tipo tipo de la variable a asignar
+     * @return Lista de tripletes final
+     */
     public List<Triplete> obtenerTripletes(List<VariableJava> var, Integer tipo) {
         List<Triplete> tri = new ArrayList<>();
         for (VariableJava variableJava : var) {
@@ -266,6 +274,12 @@ public class TablaJava {
         }
     }
 
+    /**
+     * Obtener la direccion en la tabla de simbolos
+     *
+     * @param id Id de la variable
+     * @return posicion de la variable
+     */
     public Integer obtenerDireccion(String id) {
         for (int i = this.variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getId().equals(id)) {
@@ -275,6 +289,13 @@ public class TablaJava {
         return 0;
     }
 
+    /**
+     * Metodo para obtener la direccion de una variable global en la tabla de
+     * simbolos
+     *
+     * @param id Id de la variable global
+     * @return La posicion en memoria de la variable
+     */
     public Integer obtenerDireccionG(String id) {
         for (VariableJava variable : this.variables) {
             if (variable.getId().equals(id) && variable.getAmbito() == 1) {

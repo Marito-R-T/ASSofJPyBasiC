@@ -41,6 +41,9 @@ public class JavaSemantica {
         }
     }
 
+    /**
+     * Mostrar codigo 3 direcciones de las clases de java
+     */
     public void mostrarClases() {
         for (TablaJava tablaJava : tabla) {
             System.out.println("");

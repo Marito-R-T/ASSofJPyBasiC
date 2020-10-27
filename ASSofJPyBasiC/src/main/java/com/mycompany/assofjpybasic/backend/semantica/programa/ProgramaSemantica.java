@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Clase que contiene toda las referencias necesarias del programa de un codigo.
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -62,6 +63,7 @@ public class ProgramaSemantica {
                 } else {
                     return false;
                 }
+                variableVisual.setDireccion(this.variables.size());
                 variables.add(variableVisual);
             } else {
                 return false;
@@ -78,6 +80,7 @@ public class ProgramaSemantica {
      */
     public boolean addVar(VariablePrograma var) {
         if (this.existeVar(var) == null) {
+            var.setDireccion(this.variables.size());
             variables.add(var);
             return true;
         } else {
@@ -377,6 +380,10 @@ public class ProgramaSemantica {
 
     public List<String> getImports() {
         return imports;
+    }
+
+    public TablaVariables getVariables() {
+        return variables;
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa una operacion en Visual Basic
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

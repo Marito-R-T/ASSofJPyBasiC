@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Clase que representa una variable en Java
  *
  * @author mari2bar
  */

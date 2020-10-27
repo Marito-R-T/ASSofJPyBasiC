@@ -17,6 +17,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
 /**
+ * Clase que representa la suma como un triplete especial
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -25,6 +26,14 @@ public class SumOperator extends Triplete {
     private final String OPERADOR = "+";
     private final String tipo;
 
+    /**
+     * Constructor de la suma
+     *
+     * @param id Id de la suma en cuestión
+     * @param operando1 Triplete de referencia del primer operando de la suma
+     * @param operando2 Triplete de referencia del segundo operando de la suma
+     * @param tipo Tipo de la suma a realizar
+     */
     public SumOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
         this.id = "t" + Triplete.VARNUM;

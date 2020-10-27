@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa un Objeto Java en el lenguaje C
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

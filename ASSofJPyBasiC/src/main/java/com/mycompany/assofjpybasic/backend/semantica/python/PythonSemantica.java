@@ -9,12 +9,12 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
-import com.mycompany.assofjpybasic.backend.semantica.visual.VariableVisual;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
+ * Clase que representa el codigo pytho, clases y variables
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
@@ -108,6 +108,12 @@ public class PythonSemantica {
         return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
+    /**
+     * Obtiene la direccion en el stack[id]
+     *
+     * @param id id de la variable a obtener su posicion en la tabla de simbolos
+     * @return la posicion en la tabla de simbolos del id
+     */
     public Integer obtenerDireccion(String id) {
         for (VariablePython variable : this.variables) {
             if (variable.getId().equals(id)) {

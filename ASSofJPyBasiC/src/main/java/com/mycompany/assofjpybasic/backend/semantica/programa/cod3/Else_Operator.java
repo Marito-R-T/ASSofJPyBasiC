@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que representa un If de nivel bajo, donde se pueden obtener ifs,
+ * whiles, y fors.
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */

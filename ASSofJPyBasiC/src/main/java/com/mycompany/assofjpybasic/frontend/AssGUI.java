@@ -15,6 +15,8 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 /**
+ * Ventana principal del proyecto donde se puede guardar y ver el panel de
+ * edicion
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
