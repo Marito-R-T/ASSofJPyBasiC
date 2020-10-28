@@ -71,6 +71,7 @@ non terminal MAIN;
 non terminal Integer TYPE;
 non terminal List<VariablePrograma> LIST_ASIG, ASIG_VAR;
 non terminal OperacionPrograma EXPR, ASIG, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, LLAMADA_METODO;
+non terminal OperacionPrograma OPERACION_AC, OPERACION_MC, OPERACION_UC, ATOMC;
 non terminal List<OperacionPrograma> CORCHETES, LIST_PARAM, LIST, PARAM;
 non terminal String IN_CLASS;
 non terminal Triplete COMPARACION;
@@ -105,8 +106,10 @@ IN_CLASS ::= por {:RESULT = "$$*$$";:}
         | id:e1 {:RESULT = e1;:}
 ;
 
-CONST ::= CONST constt TYPE:e1 id:e2 igual EXPR:e3 puntocoma 
-        {:if(!sem.addVar(new ConstantePrograma(e2,ProgramaSemantica.AMBITO, e1, e3.getTipo(), null))){
+CONST ::= CONST constt TYPE:e1 id:e2 igual OPERACION_AC:e3 puntocoma 
+        {: VariablePrograma var = new ConstantePrograma(e2,ProgramaSemantica.AMBITO, e1, e3.getTipo(), null);
+        var.setValor(e3.getValor());
+        if(!sem.addVar(var)){
                 reportarSem("Variable ya creda con el mismo nombre: <" + e1 + ">");
         } else {sem.getVar().addAll(e3.mostrarTripletes());
                 sem.getVar().add(new AsignarConstante(new TerminalOperator(e2), e3.getTriplete(), Triplete.tipos[e1-1]));}:}
@@ -144,8 +147,8 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
                 }else {var.add(arr);} RESULT = var;:}
 ;
 
-CORCHETES ::= CORCHETES:e1 cora EXPR:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
-        | cora EXPR:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>(); 
+CORCHETES ::= CORCHETES:e1 cora OPERACION_AC:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
+        | cora OPERACION_AC:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>(); 
                 if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
 ;
@@ -270,7 +273,17 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 if(var == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
-                var.getTipo(), e2, (ArregloPrograma) var, e3); RESULT = new ListaTripletes(arr.mostrarTripletes()); }:}
+                var.getTipo(), e2, (ArregloPrograma) var, e3);
+                ListaTripletes tri = new ListaTripletes();
+                tri.addAll(e3.mostrarTripletes());
+                tri.addAll(arr.getTripletes());
+                SumOperator sum = sem.getVariables().devolverSum(e1);
+                tri.add(sum);
+                SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
+                tri.add(sum2);
+                AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())), e3.getTriplete());
+                tri.add(asig);
+                RESULT = tri; }:}
 ;
 
 PRINTF ::= printf para comilla STRING:e1 comilla VARS:e2 parc puntocoma 
@@ -497,4 +510,53 @@ LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
 
 LIST ::= LIST_PARAM:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
         | OPERACION_A:e1 {:List<OperacionPrograma> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
+;
+
+OPERACION_AC ::= OPERACION_AC:e1 mas OPERACION_MC:e2 {:if(e1 != null && e2 != null){
+                OperacionPrograma op = new OperacionPrograma(e1, e2, new SumOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
+                op.setValor(e1.getValor() - e2.getValor()); RESULT = op;}:}
+        | OPERACION_AC:e1 menos OPERACION_MC:e2 {:if(e1 != null && e2 != null){
+                OperacionPrograma op = new OperacionPrograma(e1, e2, new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
+                op.setValor(e1.getValor() - e2.getValor()); RESULT = op;}:}
+        | OPERACION_MC:e1 {:RESULT = e1;:}
+        | error OPERACION_MC:e1 {:RESULT = e1;:}
+;
+
+OPERACION_MC ::= OPERACION_MC:e1 por OPERACION_UC:e2 {:if(e1 != null && e2 != null){
+                OperacionPrograma op = new OperacionPrograma(e1, e2, new PorOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
+                op.setValor(e1.getValor() * e2.getValor()); RESULT = op;}:}
+        | OPERACION_MC:e1 div OPERACION_UC:e2 {:if(e1 != null && e2 != null){
+                OperacionPrograma op = new OperacionPrograma(e1, e2, new DivOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
+                op.setValor(e1.getValor()/e2.getValor()); RESULT = op;}:}
+        | OPERACION_MC:e1 mod OPERACION_UC:e2 {:if(e1 != null && e2 != null){ 
+                OperacionPrograma op = new OperacionPrograma(e1, e2, new ModOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
+                op.setValor(e1.getValor() % e2.getValor()); RESULT = op;}:}
+        | OPERACION_UC:e1 {:RESULT = e1;:}
+;
+
+OPERACION_UC ::= menos OPERACION_UC:e1 {:if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.INT);}
+                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0"));
+                OperacionPrograma op = new OperacionPrograma(cero, e1, new RestOperator(null, cero.getTriplete(), e1.getTriplete(), Triplete.devolverTipo(cero, e1)));
+                op.setValor(e1.getValor()*-1); RESULT = op;:}
+        | mas OPERACION_UC:e1 {:RESULT = e1;:}
+        | ATOMC:e1 {:RESULT = e1;:}
+;
+
+// Falta resolver lo de los corchetes
+ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)); 
+                if(var == null || var.isConstant()){
+                        reportarSem("Variable no existente con el id: <" + e1 + ">");
+                } else{
+                        SumOperator sum = sem.getVariables().devolverSum(e1);
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        op.getTripletes().add(sum);
+                        op.setValor(var.getValor());
+                        RESULT = op;}:}
+        | entero:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
+                        RESULT = pro;:}
+        | decimal:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
+                        RESULT = pro;:}
+        | character:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor((float)e1.charAt(1));
+                        RESULT = pro;:}
+        | para OPERACION_AC:e1 parc {:RESULT = e1;:}
 ;

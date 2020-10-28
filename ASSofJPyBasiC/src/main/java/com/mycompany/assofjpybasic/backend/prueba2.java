@@ -27,8 +27,13 @@ public class prueba2 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String s = "\"c\"c";
-        System.out.println(s.substring(1, s.length() - 2));
+
+        Float a = Float.parseFloat("13.4");
+        int ab = Math.round(a);
+        System.out.println("" + ab);
+        float b = 3.25f;
+        float c = b % a;
+        System.out.println(c);
     }
 
 }

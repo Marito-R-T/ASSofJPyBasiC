@@ -7,6 +7,7 @@ package com.mycompany.assofjpybasic.frontend;
 
 import com.mycompany.assofjpybasic.backend.archivos.AperturaMLG;
 import com.mycompany.assofjpybasic.backend.archivos.GuardarArchivo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.frontend.analizador.ManejadorAnalisis;
 import com.mycompany.assofjpybasic.frontend.tabulador.TabbedPanel;
 import java.io.File;
@@ -282,6 +283,8 @@ public class AssGUI extends javax.swing.JFrame {
         if (s != null) {
             tabbed.getTabedGeneral().setSelectedIndex(1);
         }
+        Triplete.VARNUM = 0;
+        Triplete.ETNUM = 0;
     }//GEN-LAST:event_itemGenerarCod3ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

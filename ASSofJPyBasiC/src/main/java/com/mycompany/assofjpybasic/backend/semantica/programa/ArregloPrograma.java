@@ -38,6 +38,7 @@ public class ArregloPrograma extends VariablePrograma {
     public ArregloPrograma(String id, Integer ambito, Integer tipo, List<OperacionPrograma> tam, Triplete tri) {
         super(id, ambito, tipo, tri);
         this.tam = tam;
+        this.obtenerTam(tam);
         if (tri instanceof DefinirArreglo) {
             this.obtenerTripletes(tam);
         }
@@ -83,6 +84,19 @@ public class ArregloPrograma extends VariablePrograma {
     }
 
     /**
+     * Metodo para obtener tamaño del arreglo
+     *
+     * @param tam Lista de operaciones que contiene el valor de las casillas
+     */
+    public final void obtenerTam(List<OperacionPrograma> tam) {
+        int tamano = 1;
+        for (OperacionPrograma operacionPrograma : tam) {
+            tamano *= Math.round(operacionPrograma.getValor());
+        }
+        super.setTamano(tamano);
+    }
+
+    /**
      * Metodo para obtener todos los tripletes de las operaciones dentro de los
      * parentesis
      *
@@ -91,9 +105,9 @@ public class ArregloPrograma extends VariablePrograma {
     public final void obtenerTripletes(List<OperacionPrograma> tam) {
         OperacionPrograma anterior = null;
         for (OperacionPrograma operacionPrograma : tam) {
-            super.getTripletes().addAll(operacionPrograma.getTripletes());
-            if (!(operacionPrograma.getTriplete() instanceof TerminalOperator)) {
-                super.getTripletes().add(operacionPrograma.getTriplete());
+            //super.getTripletes().addAll(operacionPrograma.getTripletes());
+            this.finales.add(new TerminalOperator(Math.round(operacionPrograma.getValor()) + ""));
+            /*if (!(operacionPrograma.getTriplete() instanceof TerminalOperator)) {
                 this.finales.add(operacionPrograma.getTriplete());
             } else {
                 Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), null);
@@ -101,16 +115,16 @@ public class ArregloPrograma extends VariablePrograma {
                 super.getTripletes().add(tri);
                 this.finales.add(tri);
             }
-            if (anterior != null) {
+            /*if (anterior != null) {
                 super.getTripletes().add(new PorOperator(null, anterior.getTriplete(),
                         operacionPrograma.getTriplete(),
                         Triplete.devolverTipo(anterior, operacionPrograma)));
             }
-            anterior = operacionPrograma;
+            anterior = operacionPrograma;*/
         }
-        if (super.getTripletes() != null && !super.getTripletes().isEmpty()) {
+        /*if (super.getTripletes() != null && !super.getTripletes().isEmpty()) {
             ((DefinirArreglo) super.getTriplete()).setTriplete(super.getTripletes().get(super.getTripletes().size() - 1));
-        }
+            }*/
     }
 
     /**

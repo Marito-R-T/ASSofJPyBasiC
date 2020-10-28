@@ -37,6 +37,7 @@ public class ConstantePrograma extends VariablePrograma {
      */
     public ConstantePrograma(String id, Integer ambito, Integer tipo, Integer expr, Triplete tri) {
         super(id, ambito, tipo, tri);
+        super.setConstant(true);
         inicializado = expr != null;
     }
 

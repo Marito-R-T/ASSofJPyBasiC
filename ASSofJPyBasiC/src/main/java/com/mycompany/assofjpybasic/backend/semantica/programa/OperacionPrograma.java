@@ -20,6 +20,7 @@ public class OperacionPrograma {
     private Integer tipo;
     private List<Triplete> tripletes = new ArrayList<>();
     protected Triplete triplete;
+    private Float valor;
 
     /**
      * Constructor con el tipo de operacion
@@ -147,6 +148,14 @@ public class OperacionPrograma {
         });
         System.out.println(triplete.devolverString());*/
         return trr;
+    }
+
+    public Float getValor() {
+        return valor;
+    }
+
+    public void setValor(Float valor) {
+        this.valor = valor;
     }
 
 }

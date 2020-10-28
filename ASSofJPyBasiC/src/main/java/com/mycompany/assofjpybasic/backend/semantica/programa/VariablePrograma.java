@@ -20,6 +20,8 @@ public class VariablePrograma extends OperacionPrograma {
     private Integer direccion;
     protected Integer tipo;
     protected String tip;
+    private boolean constant = false;
+    private Float valor;
     public final static Integer CHAR = 1, INT = 2, FLOAT = 3, CLASS = 4;
 
     /**
@@ -118,6 +120,22 @@ public class VariablePrograma extends OperacionPrograma {
 
     public void setDireccion(Integer direccion) {
         this.direccion = direccion;
+    }
+
+    public boolean isConstant() {
+        return constant;
+    }
+
+    public void setConstant(boolean constant) {
+        this.constant = constant;
+    }
+
+    public Float getValor() {
+        return valor;
+    }
+
+    public void setValor(Float valor) {
+        this.valor = valor;
     }
 
 }

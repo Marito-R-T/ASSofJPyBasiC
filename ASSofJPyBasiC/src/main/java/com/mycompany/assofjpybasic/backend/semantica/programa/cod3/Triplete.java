@@ -28,7 +28,7 @@ public abstract class Triplete {
     protected String id;
     protected final Triplete operando1;
     protected final Triplete operando2;
-    protected static int VARNUM = 0, ETNUM = 0;
+    public static int VARNUM = 0, ETNUM = 0;
     public static final String[] tipos = {"char", "int", "float", "void"};
 
     /**
