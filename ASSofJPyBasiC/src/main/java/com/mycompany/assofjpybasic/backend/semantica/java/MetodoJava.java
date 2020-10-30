@@ -6,6 +6,11 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +109,27 @@ public class MetodoJava {
     }
 
     /**
+     * Metodo para verificar su similitud con el actual
+     *
+     * @param id Id a comparar con este metodo
+     * @param params Parametros a comparar con este metodo
+     * @return True si es igual a este Metodo, False si no lo es
+     */
+    public boolean equals(List<OperacionJava> params, String id) {
+        if (id.equals(this.id) && params.size() == this.parametros.size()) {
+            for (int i = 0; i < params.size(); i++) {
+                System.out.println("");
+                if (!this.isMismoTipo(this.parametros.get(i).getTipo(), params.get(i).getTipo())) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Metodo para verificar que sea el mismo tipo de metodo -> char, int, float
      *
      * @param tipo1 Tipo del parametro de este metodo
@@ -158,6 +184,28 @@ public class MetodoJava {
 
     public Integer getTIPO() {
         return TIPO;
+    }
+
+    public List<Triplete> verMetodo(Integer pos, List<OperacionJava> params) {
+        if (pos != null) {
+            List<Triplete> tri = new ArrayList<>();
+            for (int i = 0; i < params.size(); i++) {
+                tri.addAll(params.get(i).mostrarTripletes());
+                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
+                tri.add(op1);
+                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
+            }
+            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            tri.add(op2);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new CallMetodo(id));
+            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            tri.add(op3);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            return tri;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
 }

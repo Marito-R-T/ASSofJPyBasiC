@@ -241,4 +241,21 @@ public class VisualSemantica {
         return 0;
     }
 
+    /**
+     * Metodo para verificar existencia del metodo de visual
+     *
+     * @param id id del metodo a buscar
+     * @param params Parametros del meotodo a buscar
+     * @return Retorna el metodo que es igual, o null si no hay ninguna
+     * coincidencia
+     */
+    public MetodoVisual existeMetodo(String id, List<OperacionVisual> params) {
+        for (MetodoVisual metodo : this.metodos) {
+            if (metodo.equals(params, id.toLowerCase())) {
+                return metodo;
+            }
+        }
+        return null;
+    }
+
 }

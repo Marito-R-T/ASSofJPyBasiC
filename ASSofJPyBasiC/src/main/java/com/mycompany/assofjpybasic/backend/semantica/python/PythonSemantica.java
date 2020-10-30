@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 public class PythonSemantica {
 
-    public static String INT = "INT", FLOAT = "FLOAT", CHAR = "CHAR", VAR = "VAR", VOID = "VOID";
+    public static String INT = "INT", FLOAT = "INT-FLOAT", CHAR = "CHAR", VAR = "VAR", VOID = "VOID";
     public static Integer AMBITO = 0;
     private final List<VariablePython> variables = new ArrayList<>();
     private final List<MetodoPython> metodos = new ArrayList<>();
@@ -208,6 +208,22 @@ public class PythonSemantica {
 
     public List<MetodoPython> getMetodos() {
         return metodos;
+    }
+
+    /**
+     * Existe metodo con el id y operaciones especificadas
+     *
+     * @param id id del metodo a llamar
+     * @param vars Lista de parametros que son del metodo que esta llamando
+     * @return Retorna el metodo que encontro
+     */
+    public MetodoPython existeMetodo(String id, List<OperacionPython> vars) {
+        for (MetodoPython metodo : this.metodos) {
+            if (metodo.equals(vars, id)) {
+                return metodo;
+            }
+        }
+        return null;
     }
 
 }

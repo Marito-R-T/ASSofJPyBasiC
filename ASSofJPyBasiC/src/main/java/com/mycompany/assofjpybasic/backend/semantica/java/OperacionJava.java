@@ -5,7 +5,6 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TemporalArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;

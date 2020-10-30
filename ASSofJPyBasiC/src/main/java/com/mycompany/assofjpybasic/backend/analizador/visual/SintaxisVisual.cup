@@ -58,13 +58,13 @@ non terminal ESP;
 non terminal THEN, CA, PUBLIC;
 non terminal List<VariableVisual> LISTPARAMM, LISTPARAM, LISTVAR;
 non terminal String TYPE, TYPEE;
-non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, DEF, INPUT, STEP;
+non terminal OperacionVisual EXPR, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, DEF, INPUT, STEP, LLAMADA_METODO;
 non terminal ListaTripletes STATEMENTS, STATEMENT, CONSOLEWRITE, STRING, CASEELSE, STATEMENTSF, ASIGVAR;
 non terminal ListaTripletes ELSE, IF_ELSE, SELECT, STATEMENTLINE, WHILE, DO_WHILE, FOR, DEFVAR;
 non terminal CondicionPrograma CONDICION, NOT, AND;
 non terminal Triplete COMPARACION;
 non terminal String ID;
-non terminal List<OperacionVisual> LIST_CASE;
+non terminal List<OperacionVisual> LIST_CASE, LIST, LIST_PARAM;
 non terminal CaseVisual CASES;
 non terminal Else_Operator ELSE_IF;
 
@@ -115,7 +115,7 @@ FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:Vi
                                         actual.getTripletes().addAll(e4);:}
 ;
 
-DEFVAR ::= dimm LISTVAR:e1 espacio {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
+DEFVAR ::= dimm LISTVAR:e1 {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
                                         else{reportarSem("Error con el tipado de variables");} 
                                         RESULT = new ListaTripletes(sem.devolverTrip(e1));:}
 ;
@@ -158,7 +158,7 @@ LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual
                         } vars.add(va); RESULT = vars;:}
 ;
 
-ASIGVAR ::= id:e1 igual EXPR:e2 espacio {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
+ASIGVAR ::= id:e1 igual EXPR:e2 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
                                 ListaTripletes trip = new ListaTripletes();
                                 if(var==null || !var.getTipo().contains(e2.getTipo())){
                                 reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);}
@@ -203,6 +203,7 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionVisual(new Operacio
                         e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));:}
         | mas OPERACION_U:e1 {:RESULT = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
+        | LLAMADA_METODO:e1 {:RESULT = e1;:}
 ;
 
 ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null)); 
@@ -247,7 +248,7 @@ STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}
         | FOR:e1 {:RESULT = e1;:}
         | WHILE:e1 {:RESULT = e1;:}
         | DO_WHILE:e1 {:RESULT = e1;:}
-        | STATEMENTLINE:e1 {:RESULT = e1;:}
+        | STATEMENTLINE:e1 espacio {:RESULT = e1;:}
         | error {:RESULT = new ListaTripletes();:}
 ;
 
@@ -281,6 +282,7 @@ STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
         | DEFVAR:e1 {:RESULT = e1;:}
         | ASIGVAR:e1 {:RESULT = e1;:}
+        | LLAMADA_METODO:e1 {:RESULT = new ListaTripletes(e1.getTripletes());:}
 ;
 
 SELECT ::= selectt CA EXPR:e1 espacio CASES:e2 CASEELSE:e3 endd selectt espacio
@@ -333,8 +335,8 @@ DO_WHILE ::= doo whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:}
         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.DOWHILE(e1, e2);:}
 ;
 
-CONSOLEWRITE ::= write para STRING:e1 parc espacio {:RESULT = e1;:}
-        | writeln para STRING:e1 parc espacio {:e1.add(new Printf("\n")); RESULT = e1;:}
+CONSOLEWRITE ::= write para STRING:e1 parc {:RESULT = e1;:}
+        | writeln para STRING:e1 parc {:e1.add(new Printf("\n")); RESULT = e1;:}
 ;
 
 INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.CHAR,
@@ -386,4 +388,26 @@ STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}
+;
+
+LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoVisual met = sem.existeMetodo(e1, e2);
+                        if(met == null){
+                                reportarSem("Metodo de Visual no existente con id: <" + e1 + ">");
+                        }else {
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().size()),"int");
+                                tri.add(s);
+                                OperacionVisual op = new OperacionVisual(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
+                        }:}
+;
+
+LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
+        | {:RESULT = new ArrayList<>();:}
+;
+
+LIST ::= LIST_PARAM:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
+        | OPERACION_A:e1 {:List<OperacionVisual> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
 ;

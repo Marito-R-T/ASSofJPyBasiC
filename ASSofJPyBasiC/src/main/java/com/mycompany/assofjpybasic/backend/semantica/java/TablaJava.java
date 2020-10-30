@@ -50,6 +50,9 @@ public class TablaJava {
         if (!variables.stream().noneMatch((variable) -> (variable.getId().equals(var.getId())))) {
             return false;
         }
+        if (TablaJava.AMBITO == 1) {
+            var_definidas.add(var);
+        }
         var.setDireccion(variables.size());
         variables.add(var);
         return true;
@@ -95,7 +98,6 @@ public class TablaJava {
     public void eliminarAmbito(Integer ambito) {
         List<VariableJava> eliminar = new ArrayList<>();
         variables.stream().filter((variable) -> (Objects.equals(variable.getAmbito(), ambito))).forEachOrdered((variable) -> {
-            var_definidas.add(variable);
             eliminar.add(variable);
         });
         variables.removeAll(eliminar);
@@ -303,6 +305,15 @@ public class TablaJava {
             }
         }
         return 0;
+    }
+
+    public MetodoJava existeMetodo(List<OperacionJava> params, String id) {
+        for (MetodoJava metodo : this.metodos) {
+            if (metodo.equals(params, id)) {
+                return metodo;
+            }
+        }
+        return null;
     }
 
 }

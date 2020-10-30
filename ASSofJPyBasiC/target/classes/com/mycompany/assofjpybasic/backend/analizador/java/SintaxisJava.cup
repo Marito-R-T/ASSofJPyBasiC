@@ -58,7 +58,7 @@ non terminal JAVA, CLASSES, CLASS, METODO, CONSTRUCTOR;
 non terminal Integer TYPE_V, TYPE;
 non terminal Boolean THIS;
 non terminal List<VariableJava> LIST_PAR, LIST_PARR;
-non terminal OperacionJava OPERACION_A, OPERACION_M, OPERACION_U, ATOM, EXPR, INPUT;
+non terminal OperacionJava OPERACION_A, OPERACION_M, OPERACION_U, ATOM, EXPR, INPUT, LLAMADA_METODO;
 non terminal Else_Operator ELSEIF;
 non terminal CondicionPrograma NOT, AND, CONDICION;
 non terminal Triplete COMPARACION;
@@ -67,6 +67,7 @@ non terminal ListaTripletes STATEMENTS_CLASS, BLOQUE, STATEMENTS_METODO, STATEME
 non terminal ListaTripletes COMP_STATE, SWITCH, DEFAULT, WRITE, STRING, INICIO, STEP, OP_VAR, AS_VAR_LINE;
 non terminal CasePrograma CASES;
 non terminal VariableJava AS_VAR;
+non terminal List<OperacionJava> LIST, LIST_PARAM, PP;
 non terminal List<VariableJava> LIST_VAR;
 
 start with JAVA;
@@ -272,6 +273,7 @@ STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
                 ,OperacionJava.obtenerTipo(e1)); 
                 ListaTripletes tri = new ListaTripletes(); tri.add(vl); 
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
+        | THIS LLAMADA_METODO:e1 {:RESULT = new ListaTripletes(e1.getTripletes());:}
 ;
 
 AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {:ListaTripletes tri = new ListaTripletes();
@@ -352,7 +354,7 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionJava(new OperacionJ
         | ATOM:e1 {:RESULT = e1;:}
 ;
 
-ATOM ::= THIS:e0 id:e1 {:int num;
+ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){int num;
                         if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, 
                                 new TerminalOperator(e1)));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO,
@@ -363,12 +365,28 @@ ATOM ::= THIS:e0 id:e1 {:int num;
                                 SumOperator sum = tabla.devolverSum(e1, e0);
                                 OperacionJava op = new OperacionJava(num, new TerminalOperator(tabla.devolverDireccion(sum.getId())));
                                 op.getTripletes().add(sum);
-                                RESULT = op;}:}
+                                RESULT = op;}}
+                        else { MetodoJava met = tabla.existeMetodo(e2, e1);
+                        if(met == null){
+                                reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
+                        }else{
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+tabla.getVariables().size()),"int");
+                                tri.add(s);
+                                OperacionJava op = new OperacionJava(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
+                        }}:}
         | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
         | INPUT:e1 {:RESULT = e1;:}
+;
+
+PP ::= para LIST_PARAM:e1 parc {:RESULT = e1;:}
+        | {:RESULT = null;:}
 ;
 
 THIS ::= thiss punto {:RESULT = true;:}
@@ -439,4 +457,26 @@ INPUT ::= charinput para string:e1 parc {:OperacionJava op = new OperacionJava(T
                                 new Input("%f"));
                                 op.getTripletes().add(new Printf(e1));
                                 RESULT = op;:}
+;
+
+LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoJava met = tabla.existeMetodo(e2, e1);
+                        if(met == null){
+                                reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
+                        }else{
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+tabla.getVariables().size()),"int");
+                                tri.add(s);
+                                OperacionJava op = new OperacionJava(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
+                        }:}
+;
+
+LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
+        | {:RESULT = new ArrayList<>();:}
+;
+
+LIST ::= LIST_PARAM:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
+        | OPERACION_A:e1 {:List<OperacionJava> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
 ;

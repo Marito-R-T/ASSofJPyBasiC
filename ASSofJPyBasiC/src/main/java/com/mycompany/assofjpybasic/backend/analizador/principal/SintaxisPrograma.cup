@@ -148,7 +148,7 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
 ;
 
 CORCHETES ::= CORCHETES:e1 cora OPERACION_AC:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
-        | cora OPERACION_AC:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>(); 
+        | cora OPERACION_AC:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>();
                 if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
 ;
@@ -508,7 +508,7 @@ LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
         | {:RESULT = new ArrayList<>();:}
 ;
 
-LIST ::= LIST_PARAM:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
+LIST ::= LIST:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
         | OPERACION_A:e1 {:List<OperacionPrograma> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
 ;
 

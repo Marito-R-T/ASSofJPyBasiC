@@ -55,8 +55,8 @@ non terminal CondicionPrograma NOT, AND, CONDICION;
 non terminal Triplete COMPARACION;
 non terminal DEF;
 non terminal List<VariablePython> LISTVAR, PAR_LIST;
-non terminal List<OperacionPython> LISTDEF, RANGE;
-non terminal OperacionPython INPUT, OPERACION_A, D, OPERACION_M, OPERACION_U, ATOM;
+non terminal List<OperacionPython> LISTDEF, RANGE, LIST, LIST_PARAM;
+non terminal OperacionPython INPUT, OPERACION_A, D, OPERACION_M, OPERACION_U, ATOM, LLAMADA_METODO;
 non terminal ListaTripletes SUITE, STATEMENTS, STATEMENTLINE, STATEMENT, STMT_LIST, IF, FOR, WHILE, ELSE;
 non terminal ListaTripletes STRING, WRITE, AS_VAR;
 non terminal Else_Operator ELSEIF;
@@ -137,6 +137,7 @@ STATEMENTLINE ::= AS_VAR:e1 {:RESULT = e1;:}
                 ,OperacionPython.obtenerTipo(e1));
                 ListaTripletes tri = new ListaTripletes(); tri.add(vl);
                 tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
+        | LLAMADA_METODO:e1 {:RESULT = new ListaTripletes(e1.getTripletes());:}
 ;
 
 AS_VAR ::= LISTVAR:e1 coma igual LISTDEF:e2 coma {:if(!sem.addVar(e1, e2)){
@@ -266,6 +267,7 @@ ATOM ::= id:e1 {:VariablePython tipo = sem.existeVar(new VariablePython(e1, Pyth
         | entero:e1 {:RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
+        | LLAMADA_METODO:e1 {:RESULT = e1;:}
 ;
 
 CONDICION ::= CONDICION:e1 orr AND:e2 {:RESULT = IfPrograma.OR(e1, e2);:}
@@ -302,4 +304,27 @@ STRING ::= STRING:e1 coma D:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}
+;
+
+LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = sem.existeMetodo(e1, e2);
+                        if(met == null){
+                                System.out.println("error terminal python");
+                                reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
+                        }else{
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().size()),"int");
+                                tri.add(s);
+                                OperacionPython op = new OperacionPython(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
+                        }:}
+;
+
+LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
+        | {:RESULT = new ArrayList<>();:}
+;
+
+LIST ::= LIST_PARAM:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
+        | OPERACION_A:e1 {:List<OperacionPython> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
 ;
