@@ -16,6 +16,7 @@ public class VariablePrograma extends OperacionPrograma {
 
     protected final String id;
     protected final Integer ambito;
+    private Integer heap;
     private Integer tamano = 1;
     private Integer direccion;
     protected Integer tipo;
@@ -130,12 +131,22 @@ public class VariablePrograma extends OperacionPrograma {
         this.constant = constant;
     }
 
+    @Override
     public Float getValor() {
         return valor;
     }
 
+    @Override
     public void setValor(Float valor) {
         this.valor = valor;
+    }
+
+    public Integer getHeap() {
+        return heap;
+    }
+
+    public void setHeap(Integer heap) {
+        this.heap = heap;
     }
 
 }

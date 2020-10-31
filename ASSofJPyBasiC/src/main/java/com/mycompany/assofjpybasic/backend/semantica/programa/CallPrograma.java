@@ -20,6 +20,9 @@ import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
@@ -35,23 +38,29 @@ import java.util.List;
  */
 public class CallPrograma extends OperacionPrograma {
 
-    public CallPrograma(List<OperacionPrograma> operaciones, Triplete triplete, Integer tipo) {
+    public CallPrograma(List<OperacionPrograma> operaciones, Triplete triplete, Integer tipo, Integer size) {
         super(tipo, triplete);
-        this.hacerTripletes(operaciones);
+        this.hacerTripletes(operaciones, size);
     }
 
     /**
      * Metodo para agregar los tripletes de los parametros
      *
      * @param operaciones Parametros a ingresar
+     * @param size tamaño de p al inicio
      */
-    public final void hacerTripletes(List<OperacionPrograma> operaciones) {
-        operaciones.forEach((operacione) -> {
+    public final void hacerTripletes(List<OperacionPrograma> operaciones, Integer size) {
+        int i = 2;
+        for (OperacionPrograma operacione : operaciones) {
             this.getTripletes().addAll(operacione.getTripletes());
-        });
-        operaciones.forEach((operacion) -> {
-            this.getTripletes().add(new AsignarTemporal(null, operacion.getTriplete(), Triplete.tipos[operacion.getTipo() - 1]));
-        });
+            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + (i + size)), "int");
+            this.getTripletes().add(sum);
+            this.getTripletes().add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), operacione.triplete));
+            i++;
+        }
+        SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + size), "int");
+        this.getTripletes().add(sum);
+        this.getTripletes().add(new AsignarValor(null, new TerminalOperator("p"), sum));
     }
 
     public static String regresarJava(MetodoJava java, String id) {
@@ -61,7 +70,7 @@ public class CallPrograma extends OperacionPrograma {
             i++;
             s += "_" + OperacionJava.obtenerTipo(parametro.getTipo());
         }
-        return "call " + s + " " + i;
+        return s;
     }
 
     public static String regresarPy(MetodoPython java) {
@@ -103,7 +112,7 @@ public class CallPrograma extends OperacionPrograma {
                 return 2;
             case "CHAR":
                 return 1;
-            case "FLOAT":
+            case "INT-FLOAT":
                 return 3;
             default:
                 return 4;

@@ -33,6 +33,7 @@ public class ProgramaSemantica {
     private final TablaVariables variables = new TablaVariables();
     private List<MetodoVisual> metodosVisual = new ArrayList<>();
     private List<MetodoPython> metodosPython = new ArrayList<>();
+    private Integer heap = 0;
     private List<TablaJava> clasesJava = new ArrayList<>();
     private List<TablaJava> clasesImportadas = new ArrayList<>();
     private List<Triplete> tripletes = new ArrayList<>();
@@ -110,13 +111,13 @@ public class ProgramaSemantica {
      * @param var Variable a verificar su existencia
      * @return retorna el tipo de variable que es, si no lo encuentra regresa ""
      */
-    public String existeObjeto(String var) {
+    public VariablePrograma existeObjeto(String var) {
         for (VariablePrograma variable : variables) {
             if (variable.getId().equals(var)) {
-                return variable.getTip();
+                return variable;
             }
         }
-        return "";
+        return null;
     }
 
     /**
@@ -308,6 +309,15 @@ public class ProgramaSemantica {
         return null;
     }
 
+    public TablaJava existeClase(String id) {
+        for (TablaJava clasesImportada : this.clasesImportadas) {
+            if (clasesImportada.getId().equals(id)) {
+                return clasesImportada;
+            }
+        }
+        return null;
+    }
+
     public String mostrarCodigo() {
         String s = "";
         s = this.imports.stream().map(aImport -> aImport + "\n").reduce(s, String::concat);
@@ -384,6 +394,14 @@ public class ProgramaSemantica {
 
     public TablaVariables getVariables() {
         return variables;
+    }
+
+    public Integer getHeap() {
+        return heap;
+    }
+
+    public void setHeap(Integer heap) {
+        this.heap = heap;
     }
 
 }

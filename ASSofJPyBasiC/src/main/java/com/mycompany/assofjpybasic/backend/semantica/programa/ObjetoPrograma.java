@@ -17,8 +17,11 @@
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
+import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import java.util.ArrayList;
@@ -50,24 +53,38 @@ public class ObjetoPrograma {
     public static List<Triplete> triplete(String id, List<ObjetoPrograma> lista, ProgramaSemantica sem, Integer ambito) {
         List<Triplete> tri = new ArrayList<>();
         for (ObjetoPrograma objetoPrograma : lista) {
-            CallPrograma pro = objetoPrograma.getCall(id, sem);
-            if (pro != null && sem.addVar(new VariablePrograma(objetoPrograma.id, ambito, id, pro.getTriplete()))) {
-                AsignarValor val = new AsignarValor(new TerminalOperator(objetoPrograma.getId()), pro.getTriplete(), id);
+            Integer integ = sem.getVariables().getTamano();
+            TablaJava met = objetoPrograma.obtenerMetodo(id, sem);
+            CallPrograma pro = objetoPrograma.getCall(id, sem, integ);
+            VariablePrograma var = new VariablePrograma(objetoPrograma.id, ambito, id, pro.getTriplete());
+            var.setHeap(sem.getHeap());
+            sem.setHeap(sem.getHeap() + met.getVar_definidas().size());
+            if (pro != null && sem.addVar(var)) {
+                SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + integ), "int");
+                tri.add(sum);
+                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + var.getHeap())));
                 tri.addAll(pro.mostrarTripletes());
-                tri.add(val);
+                tri.add(pro.getTriplete());
+                RestOperator rest = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator("" + integ), "int");
+                tri.add(rest);
+                tri.add(new AsignarValor(null, new TerminalOperator("p"), new TerminalOperator(rest.getId())));
             }
         }
         return tri;
     }
 
-    public CallPrograma getCall(String id, ProgramaSemantica sem) {
+    public CallPrograma getCall(String id, ProgramaSemantica sem, Integer size) {
         MetodoJava met = sem.existeConstructorJV(id, id, op);
         if (met != null) {
             return new CallPrograma(op, new CallMetodo(CallPrograma.regresarJava(met, id)),
-                    CallPrograma.regresarTipo(met));
+                    CallPrograma.regresarTipo(met), size);
         } else {
             return null;
         }
+    }
+
+    public TablaJava obtenerMetodo(String id, ProgramaSemantica sem) {
+        return sem.existeClase(id);
     }
 
 }

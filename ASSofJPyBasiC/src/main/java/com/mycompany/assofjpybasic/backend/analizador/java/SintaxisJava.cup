@@ -212,9 +212,9 @@ FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc BLOQUE
 ;
 
 INICIO ::= THIS:e0 id:e1 {:List<Triplete> tri = new ArrayList<>();
-                        int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
+                        VariableJava num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){
+                        if(num == null){
                                 reportarSem("No existe variable con id: " + e1);
                         }
                         RESULT = new ListaTripletes(tri);:}
@@ -277,19 +277,26 @@ STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
 ;
 
 AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {:ListaTripletes tri = new ListaTripletes();
-                                int num = -1; if(!e0){num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
+                                VariableJava num = null; if(!e0){num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num==-1){
+                        if(num==null){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
-                        } else if (num<e2.getTipo()) {
-                                reportarSem("Variable con tipo: "+ OperacionJava.obtenerTipo(num) 
+                        } else if (num.getTipo()<e2.getTipo()) {
+                                reportarSem("Variable con tipo: "+ OperacionJava.obtenerTipo(num.getTipo()) 
                                 + " solo acepta tipo " + OperacionJava.obtenerTipo(e2.getTipo()));
                         } else {
-                                tri.addAll(e2.mostrarTripletes());
-                                SumOperator sum = tabla.devolverSum(e1, e0);
-                                tri.add(sum);
-                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete(), null));}
-                        RESULT = tri;:}
+                                if(tabla.getVar_definidas().contains(num)){
+                                        tri.addAll(e2.mostrarTripletes());
+                                        SumOperator sum = tabla.devolverSum(e1, true);
+                                        tri.add(sum);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(sum.getId())), e2.getTriplete(), null));
+                                } else {
+                                        tri.addAll(e2.mostrarTripletes());
+                                        SumOperator sum = tabla.devolverSum(e1, false);
+                                        tri.add(sum);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete(), null));
+                                }
+                        }RESULT = tri;:}
 ;
 
 WRITE ::= println para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
@@ -297,33 +304,55 @@ WRITE ::= println para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:
 ;
 
 OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
-                        int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
+                        VariableJava num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){
+                        if(num == null){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
-                                SumOperator ss1 = tabla.devolverSum(e1, e0);
-                                tri.add(ss1);
-                                SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
-                                tri.add(sum);
-                                SumOperator ss2 = tabla.devolverSum(e1, e0);
-                                tri.add(ss2);
-                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));}
-                                RESULT = tri;:}
+                                if(tabla.getVar_definidas().contains(num)){
+                                        SumOperator ss1 = tabla.devolverSum(e1, true);
+                                        tri.add(ss1);
+                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccionH(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        tri.add(sum);
+                                        SumOperator ss2 = tabla.devolverSum(e1, true);
+                                        tri.add(ss2);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(ss2.getId())), sum, null));
+                                        RESULT = tri;
+                                } else {
+                                        SumOperator ss1 = tabla.devolverSum(e1, false);
+                                        tri.add(ss1);
+                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        tri.add(sum);
+                                        SumOperator ss2 = tabla.devolverSum(e1, false);
+                                        tri.add(ss2);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));
+                                        RESULT = tri;
+                                }}:}
         | THIS:e0 id:e1 menosmenos {:ListaTripletes tri = new ListaTripletes();
-                        int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
+                        VariableJava num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){
+                        if(num == null){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
-                                SumOperator ss1 = tabla.devolverSum(e1, e0);
-                                tri.add(ss1);
-                                RestOperator rest = new RestOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num));
-                                tri.add(rest); 
-                                SumOperator ss2 = tabla.devolverSum(e1, e0);
-                                tri.add(ss2);
-                                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), rest, null));}
-                                RESULT = tri;:}
+                                if(tabla.getVar_definidas().contains(num)){
+                                        SumOperator ss1 = tabla.devolverSum(e1, true);
+                                        tri.add(ss1);
+                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccionH(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        tri.add(sum);
+                                        SumOperator ss2 = tabla.devolverSum(e1, true);
+                                        tri.add(ss2);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(ss2.getId())), sum, null));
+                                        RESULT = tri;
+                                } else {
+                                        SumOperator ss1 = tabla.devolverSum(e1, false);
+                                        tri.add(ss1);
+                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        tri.add(sum);
+                                        SumOperator ss2 = tabla.devolverSum(e1, false);
+                                        tri.add(ss2);
+                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));
+                                        RESULT = tri;
+                                }}:}
 ;
 
 OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1!=null&&e2!=null){
@@ -354,18 +383,25 @@ OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionJava(new OperacionJ
         | ATOM:e1 {:RESULT = e1;:}
 ;
 
-ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){int num;
+ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){VariableJava num;
                         if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, 
                                 new TerminalOperator(e1)));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO,
                                 new TerminalOperator(e1)));}
-                        if(num == -1){
+                        if(num == null){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
-                                SumOperator sum = tabla.devolverSum(e1, e0);
-                                OperacionJava op = new OperacionJava(num, new TerminalOperator(tabla.devolverDireccion(sum.getId())));
-                                op.getTripletes().add(sum);
-                                RESULT = op;}}
+                                if(tabla.getVar_definidas().contains(num)){
+                                        SumOperator sum = tabla.devolverSum(e1, true);
+                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        op.getTripletes().add(sum);
+                                        RESULT = op;
+                                } else {
+                                        SumOperator sum = tabla.devolverSum(e1, false);
+                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccion(sum.getId())));
+                                        op.getTripletes().add(sum);
+                                        RESULT = op;
+                                }}}
                         else { MetodoJava met = tabla.existeMetodo(e2, e1);
                         if(met == null){
                                 reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
@@ -430,15 +466,23 @@ STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Prin
 ;
 
 EXPR ::= INPUT:e1 {:RESULT = e1;:}
-        | THIS:e0 id:e1 {:int num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
+        | THIS:e0 id:e1 {:VariableJava num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
                         else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == -1){
+                        if(num == null){
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
-                                SumOperator sum = tabla.devolverSum(e1, e0);
-                                OperacionJava op = new OperacionJava(num, new TerminalOperator(tabla.devolverDireccion(sum.getId())));
-                                op.getTripletes().add(sum);
-                                RESULT = op;}:}
+                                if(tabla.getVar_definidas().contains(num)){
+                                        SumOperator sum = tabla.devolverSum(e1, true);
+                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        op.getTripletes().add(sum);
+                                        RESULT = op;
+                                } else {
+                                        SumOperator sum = tabla.devolverSum(e1, false);
+                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        op.getTripletes().add(sum);
+                                        RESULT = op;
+                                }
+                        }:}
         | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
         | decimal:e1 {:RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}

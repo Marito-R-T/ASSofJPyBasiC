@@ -198,4 +198,26 @@ public class MetodoPython {
         }
     }
 
+    public List<Triplete> verMetodo(List<OperacionPrograma> params, Integer pos) {
+        if (pos != null) {
+            List<Triplete> tri = new ArrayList<>();
+            for (int i = 0; i < params.size(); i++) {
+                tri.addAll(params.get(i).mostrarTripletes());
+                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
+                tri.add(op1);
+                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).getTriplete()));
+            }
+            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            tri.add(op2);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new CallMetodo(id));
+            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            tri.add(op3);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            return tri;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 }

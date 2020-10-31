@@ -109,13 +109,13 @@ public class TablaJava {
      * @param var Variable a verificar su existencia
      * @return retorna el tipo de variable que es, si no lo encuentra regresa -1
      */
-    public int existeVar(VariableJava var) {
+    public VariableJava existeVar(VariableJava var) {
         for (int i = this.variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getId().equals(var.getId())) {
-                return variables.get(i).getTipo();
+                return variables.get(i);
             }
         }
-        return -1;
+        return null;
     }
 
     /**
@@ -124,13 +124,13 @@ public class TablaJava {
      * @param var Variable a verificar su existencia en la clase
      * @return Retorna el tipo de variable que es la variable
      */
-    public int existeVarGlobal(VariableJava var) {
+    public VariableJava existeVarGlobal(VariableJava var) {
         for (VariableJava variable : variables) {
             if (variable.getId().equals(var.getId()) && variable.getAmbito() == 1) {
-                return variable.getTipo();
+                return variable;
             }
         }
-        return -1;
+        return null;
     }
 
     /**
@@ -264,13 +264,17 @@ public class TablaJava {
         return "stack[" + id + "]";
     }
 
+    public String devolverDireccionH(String id) {
+        return "heap[" + id + "]";
+    }
+
     public SumOperator devolverSum(String id) {
         return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
     public SumOperator devolverSum(String id, boolean global) {
         if (global) {
-            return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
+            return new SumOperator(null, new TerminalOperator("stack[p]"), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
         } else {
             return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
         }
@@ -285,7 +289,7 @@ public class TablaJava {
     public Integer obtenerDireccion(String id) {
         for (int i = this.variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getId().equals(id)) {
-                return variables.get(i).getDireccion() + 1;
+                return variables.get(i).getDireccion() + 2 - this.var_definidas.size();
             }
         }
         return 0;
@@ -299,9 +303,10 @@ public class TablaJava {
      * @return La posicion en memoria de la variable
      */
     public Integer obtenerDireccionG(String id) {
-        for (VariableJava variable : this.variables) {
+        int i = 0;
+        for (VariableJava variable : this.var_definidas) {
             if (variable.getId().equals(id) && variable.getAmbito() == 1) {
-                return variable.getDireccion() + 1;
+                return i;
             }
         }
         return 0;

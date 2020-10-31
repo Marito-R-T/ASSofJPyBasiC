@@ -6,6 +6,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
@@ -189,17 +190,70 @@ public class MetodoJava {
     public List<Triplete> verMetodo(Integer pos, List<OperacionJava> params) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
+            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos + 2), "int");
+            tri.add(sum);
+            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("stack[p]")));
+            for (int i = 0; i < params.size(); i++) {
+                tri.addAll(params.get(i).mostrarTripletes());
+                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 3) + ""), "int");
+                tri.add(op1);
+                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
+            }
+            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
+            tri.add(op2);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new CallMetodo(id));
+            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
+            tri.add(op3);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            return tri;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Triplete> verMetodo(Integer pos, List<OperacionJava> params, VariablePrograma pro) {
+        if (pos != null) {
+            List<Triplete> tri = new ArrayList<>();
+            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos), "int");
+            tri.add(sum);
+            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + pro.getHeap())));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
                 SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
                 tri.add(op1);
                 tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
             tri.add(new CallMetodo(id));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
+            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            tri.add(op3);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            return tri;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Triplete> verMetodo(Integer pos, VariablePrograma pro, List<OperacionPrograma> params) {
+        if (pos != null) {
+            List<Triplete> tri = new ArrayList<>();
+            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos), "int");
+            tri.add(sum);
+            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + pro.getHeap())));
+            for (int i = 0; i < params.size(); i++) {
+                tri.addAll(params.get(i).mostrarTripletes());
+                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
+                tri.add(op1);
+                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).getTriplete()));
+            }
+            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            tri.add(op2);
+            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new CallMetodo(id));
+            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
             return tri;

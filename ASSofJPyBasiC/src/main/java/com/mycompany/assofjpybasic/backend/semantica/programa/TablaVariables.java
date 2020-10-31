@@ -17,7 +17,6 @@
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
-import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
@@ -111,6 +110,10 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
             }
         }
         return tri;
+    }
+
+    public int getTamano() {
+        return tamano;
     }
 
 }

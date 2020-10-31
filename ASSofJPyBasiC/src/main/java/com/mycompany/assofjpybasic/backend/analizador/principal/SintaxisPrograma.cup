@@ -457,30 +457,42 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         if(met == null){
                                 reportarSem("Metodo de Python no existente con id: <" + e1 + ">");
                         } else {
-                                RESULT = new CallPrograma(e2,
-                                new CallMetodo(CallPrograma.regresarPy(met)),
-                                CallPrograma.regresarTipo(met));
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                tri.add(s);
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
                         }:}
                 | vbb punto id:e1 para LIST_PARAM:e2 parc {:MetodoVisual met = sem.existeMetodoVB(e1, e2);
                         if(met == null){
                                 reportarSem("Metodo de Visua Basic no existente con id: <" + e1 + ">");
                         } else {
-                                RESULT = new CallPrograma(e2,
-                                new CallMetodo(CallPrograma.regresarVB(met)),
-                                CallPrograma.regresarTipo(met));
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                tri.add(s);
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;
                         }:}
                 | javaa punto id:e1 punto id:e2 para LIST_PARAM:e3 parc {:
-                        String objeto = sem.existeObjeto(e1);
+                        VariablePrograma objeto = sem.existeObjeto(e1);
                         if(objeto == null){
                                 reportarSem("Variable que almacena un objeto de Java no existente con id: <" + e1 + ">");
                         } else {
-                                MetodoJava met = sem.existeMetodoJV(objeto, e2, e3);
+                                MetodoJava met = sem.existeMetodoJV(objeto.getTip(), e2, e3);
                                 if(met == null) {
                                         reportarSem("Metodo de Java no existente con id: <" + e2 + ">");
                                 } else {
-                                RESULT = new CallPrograma(e3,
-                                new CallMetodo(CallPrograma.regresarJava(met, objeto)),
-                                CallPrograma.regresarTipo(met));}
+                                List<Triplete> tri = new ArrayList<>();
+                                tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3));
+                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                tri.add(s);
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                op.getTripletes().addAll(tri);
+                                RESULT = op;}
                         }:}
 ;
 
@@ -490,7 +502,8 @@ EXPR ::= LLAMADA_METODO:e1 {:RESULT = new OperacionPrograma(new AsignarTemporal(
         | getch {:RESULT = new OperacionPrograma(VariablePrograma.INT, new GetchOperator());:}
 ;
 
-CLASS ::= javaa punto id:e1 LIST_CLASS:e2 puntocoma {:RESULT = new ListaTripletes(ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO));:}
+CLASS ::= javaa punto id:e1 LIST_CLASS:e2 puntocoma {:
+        RESULT = new ListaTripletes(ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO));:}
 ;
 
 LIST_CLASS ::= LIST_CLASS:e1 coma id:e2 PARAM:e3 {:ObjetoPrograma ob = new ObjetoPrograma(e2, e3);
