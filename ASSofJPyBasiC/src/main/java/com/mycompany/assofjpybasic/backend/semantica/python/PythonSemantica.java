@@ -177,6 +177,7 @@ public class PythonSemantica {
     public VariablePython existeVar(VariablePython var) {
         for (VariablePython variable : variables) {
             if (variable.getId().equals(var.getId())) {
+                System.out.println("variable python con nombre " + var.getId());
                 return variable;
             }
         }

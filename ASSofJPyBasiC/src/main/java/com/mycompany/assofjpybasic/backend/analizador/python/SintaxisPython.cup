@@ -164,7 +164,7 @@ D ::= character:e1 {:RESULT = new OperacionPython(PythonSemantica.CHAR, new Term
     | INPUT:e1 {:RESULT = e1;:}
 ;
 
-WRITE ::= print para STRING:e1 parc {:e1.add(new Printf("\n")); RESULT = e1;:}
+WRITE ::= print para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
 ;
 
 INPUT ::= intinput para string:e1 parc {:OperacionPython op = new OperacionPython(PythonSemantica.INT,

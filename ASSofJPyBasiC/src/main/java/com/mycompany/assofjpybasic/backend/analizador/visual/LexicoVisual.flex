@@ -41,6 +41,7 @@ cero= "0"
 <YYINITIAL> ("end") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.endd, yycolumn, yyline, yytext());}
 <YYINITIAL> ("public") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.publicc, yycolumn, yyline, yytext());}
 <YYINITIAL> ("return") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.returnn, yycolumn, yyline, yytext());}
+<YYINITIAL> ("byval") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.byval, yycolumn, yyline, yytext());}
     /*Palabras para declaracion*/
 <YYINITIAL> ("dim") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.dimm, yycolumn, yyline, yytext());}
 <YYINITIAL> ("as") {System.out.print(yytext()); return new Symbol(SintaxisVisualSym.ass, yycolumn, yyline, yytext());}

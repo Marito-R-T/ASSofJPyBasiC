@@ -234,7 +234,7 @@ public class TablaJava {
 
     public void verificarConstructores() {
         if (constructores.isEmpty()) {
-            constructores.add(new MetodoJava(this.id, 5, new ArrayList<>()));
+            constructores.add(new MetodoJava(this.id, 5, new ArrayList<>(), this.id));
         }
     }
 

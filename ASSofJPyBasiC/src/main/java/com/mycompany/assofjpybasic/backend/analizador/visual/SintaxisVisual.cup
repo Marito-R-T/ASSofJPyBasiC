@@ -50,11 +50,11 @@ terminal String orr, integerr, decimall, charr, iff, elseiff, elsee, thenn, sele
 terminal String casee, forr, to, stepp, nextt, whilee, doo, loopp, igual, noigual, menor;
 terminal String menorig, mayor, mayorig, mas, menos, por, div, mod, para, parc, coma;
 terminal String id, decimal, entero, character, y, string;
-terminal String write, writeln, charinput, floatinput, intinput;
+terminal String write, writeln, charinput, floatinput, intinput, byval;
 terminal String returnn;
 
 non terminal VISUAL, STATESM, STATEM, SUB, FUNCTION;
-non terminal ESP;
+non terminal ESP, BYVAL;
 non terminal THEN, CA, PUBLIC;
 non terminal List<VariableVisual> LISTPARAMM, LISTPARAM, LISTVAR;
 non terminal String TYPE, TYPEE;
@@ -124,11 +124,15 @@ LISTPARAMM ::= LISTPARAM:e1 {:RESULT = e1;:}
             | {:RESULT = new ArrayList<>();:}
 ;
 
-LISTPARAM ::= LISTPARAM:e1 coma id:e2 TYPE:e3 {:e1.add(new VariableVisual(e2, (VisualSemantica.AMBITO + 1), e3, new TerminalOperator(e2)));
+LISTPARAM ::= LISTPARAM:e1 coma BYVAL id:e2 TYPE:e3 {:e1.add(new VariableVisual(e2, (VisualSemantica.AMBITO + 1), e3, new TerminalOperator(e2)));
                                         RESULT = e1;:}
-        | id:e1 TYPE:e2 {:List<VariableVisual> var = new ArrayList<>();
+        | BYVAL id:e1 TYPE:e2 {:List<VariableVisual> var = new ArrayList<>();
                         var.add(new VariableVisual(e1, (VisualSemantica.AMBITO + 1), e2, new TerminalOperator(e1)));
                         RESULT = var;:}
+;
+
+BYVAL ::= byval 
+        |
 ;
 
 LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual.verificarTipo(e3, e4); VariableVisual va;
@@ -308,12 +312,16 @@ LIST_CASE ::= LIST_CASE:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
         | OPERACION_A:e1 {:List<OperacionVisual> op = new ArrayList<>(); op.add(e1); RESULT =op;:}
 ;
 
-FOR ::= forr id:e1 TYPE:e2 igual OPERACION_A:e3 to OPERACION_A:e4 STEP:e5 espacio {:VisualSemantica.AMBITO += 1;:}
+FOR ::= forr id:e1 TYPE:e2 igual OPERACION_A:e3 to OPERACION_A:e4 STEP:e5 espacio {:VisualSemantica.AMBITO += 1;
+                VariableVisual vr = new VariableVisual(e1, VisualSemantica.AMBITO, null);
+                if(sem.addVar(vr)){
+                        
+                }:}
                 STATEMENTS:e6 nextt ID:e7 espacio 
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;
                 if(e7!=null && !e1.equals(e1)){
                         reportarSem("No coincide el id del for, con el next del mismo for, id1: " + e1 + "  id2: " + e7);}
-                else{RESULT = Else_Operator.FORV(e1, e2, e3, e4, e5, e6);}:}
+                else{RESULT = Else_Operator.FORV(sem.obtenerDireccion(e1), e2, e3, e4, e5, e6);}:}
 ;
 
 ID ::= id:e1 {:RESULT = e1;:}
@@ -336,7 +344,7 @@ DO_WHILE ::= doo whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:}
 ;
 
 CONSOLEWRITE ::= write para STRING:e1 parc {:RESULT = e1;:}
-        | writeln para STRING:e1 parc {:e1.add(new Printf("\n")); RESULT = e1;:}
+        | writeln para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
 ;
 
 INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.CHAR,

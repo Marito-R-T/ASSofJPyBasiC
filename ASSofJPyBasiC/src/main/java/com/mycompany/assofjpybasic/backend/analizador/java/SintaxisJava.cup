@@ -98,7 +98,7 @@ STATEMENT_CLASS ::= METODO
 ;
 
 CONSTRUCTOR ::= publicc id:e2 para LIST_PAR:e3 parc llavea {:
-                MetodoJava met = new MetodoJava(e2, 5, e3);
+                MetodoJava met = new MetodoJava(e2, 5, e3, tabla.getId());
                 actual = met;
                 if(!tabla.addConstructor(met)){
                         reportarSem("Constructor de la clase : "+ e2 +" ya existente con mismos parametros");
@@ -111,7 +111,7 @@ CONSTRUCTOR ::= publicc id:e2 para LIST_PAR:e3 parc llavea {:
 ;
 
 METODO ::= publicc TYPE_V:e1 id:e2 para LIST_PAR:e3 parc llavea {:ret = e1;
-                MetodoJava met = new MetodoJava(e2, e1, e3);
+                MetodoJava met = new MetodoJava(e2, e1, e3, tabla.getId());
                 actual = met;
                 if(!tabla.addMetodo(met)){
                         reportarSem("Metodo ya existente con id: <"+e2+"> con mismos parametros");
@@ -164,7 +164,9 @@ RETURN ::= returnn OPERACION_A:e1 puntocoma {:ListaTripletes tri = new ListaTrip
                                 reportarSem("Return de tipo " + OperacionJava.obtenerTipo(e1.getTipo())
                                 + " y se espera un tipo: " + OperacionJava.obtenerTipo(actual.getTIPO()));
                                 RESULT = tri;}
-                        else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); tri.add(new Return(e1.getTriplete()));
+                        else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); 
+                        SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("1"),"int"); tri.add(sum);
+                        tri.add(new Return(e1.getTriplete(), sum.getId()));
                         RESULT = tri;}:}
 ;
 

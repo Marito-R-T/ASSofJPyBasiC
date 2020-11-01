@@ -1008,7 +1008,7 @@ PythonSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).right;
 		ListaTripletes e1 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)).value;
-		e1.add(new Printf("\n")); RESULT = e1;
+		e1.add(new Printf("\\n")); RESULT = e1;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("WRITE",33, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;

@@ -39,7 +39,8 @@ public class OperacionPython {
      * @param trip Triplete de la operación
      */
     public OperacionPython(OperacionPython op1, OperacionPython op2, Triplete trip) {
-        if (op2.getTipo().contains("FLOAT") || op1.getTipo().contains("FLOAT")) {
+        if (op2.getTipo().contains("FLOAT") || op1.getTipo().contains("FLOAT")
+                || op2.getTipo().contains("VAR") || op1.getTipo().contains("VAR")) {
             this.tipo = PythonSemantica.FLOAT;
         } else {
             this.tipo = PythonSemantica.INT;

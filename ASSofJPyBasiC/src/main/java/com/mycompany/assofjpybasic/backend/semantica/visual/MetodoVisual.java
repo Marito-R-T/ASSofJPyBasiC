@@ -156,9 +156,18 @@ public class MetodoVisual {
         return tripletes;
     }
 
+    public String nombreMetodo() {
+        String params = "VB_";
+        params += this.id;
+        for (VariableVisual parametro : this.parametros) {
+            params += "_" + OperacionVisual.obtenerTipo(parametro.getTipo());
+        }
+        return params;
+    }
+
     public String mostrarMetodo() {
         String com = "//Metodo de VISUAL BASIC con id: " + this.id + "\n";
-        String params = "VB_";
+        String params = "void VB_";
         params += this.id;
         for (VariableVisual parametro : this.parametros) {
             params += "_" + OperacionVisual.obtenerTipo(parametro.getTipo());
@@ -184,7 +193,7 @@ public class MetodoVisual {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
@@ -206,7 +215,7 @@ public class MetodoVisual {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));

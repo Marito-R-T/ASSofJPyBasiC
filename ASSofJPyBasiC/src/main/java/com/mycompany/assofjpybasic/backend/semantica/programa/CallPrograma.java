@@ -19,7 +19,6 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
@@ -129,6 +128,19 @@ public class CallPrograma extends OperacionPrograma {
                 return 3;
             default:
                 return 4;
+        }
+    }
+
+    public static String regresarTipo(String tipo) {
+        switch (tipo) {
+            case "INT":
+                return "int";
+            case "CHAR":
+                return "char";
+            case "INT-FLOAT":
+                return "float";
+            default:
+                return null;
         }
     }
 

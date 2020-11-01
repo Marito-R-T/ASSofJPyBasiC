@@ -28,7 +28,7 @@ public class GoToOperator extends Triplete {
 
     @Override
     public String devolverString() {
-        return "goto " + super.getOperando1().getId();
+        return "goto " + super.getOperando1().getId() + ";";
     }
 
 }

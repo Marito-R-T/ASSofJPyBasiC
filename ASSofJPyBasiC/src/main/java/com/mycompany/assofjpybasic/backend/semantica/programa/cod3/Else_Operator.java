@@ -16,10 +16,12 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
+import com.mycompany.assofjpybasic.backend.semantica.programa.CallPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.CondicionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.OperacionVisual;
+import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
 import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.util.ArrayList;
 import java.util.List;
@@ -246,7 +248,7 @@ public class Else_Operator extends ListaTripletes {
     /**
      * Armar el For de Visual
      *
-     * @param id Nombre del Id
+     * @param direccion Nombre del Id
      * @param tipo Tipo del Id
      * @param inicio Operación de Inicio
      * @param fin Operacion del Fin
@@ -254,12 +256,14 @@ public class Else_Operator extends ListaTripletes {
      * @param tri Lista de tripletes dentro del For
      * @return Regresa los tripletes del for
      */
-    public static ListaTripletes FORV(String id, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, ListaTripletes tri) {
-        if (id != null && tipo != null && inicio != null && fin != null && step != null && tri != null) {
-            TerminalOperator term = new TerminalOperator(id);
+    public static ListaTripletes FORV(Integer direccion, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, ListaTripletes tri) {
+        if (direccion != null && tipo != null && inicio != null && fin != null && step != null && tri != null) {
+            SumOperator smm = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(direccion.toString()), "int");
+            TerminalOperator term = new TerminalOperator("stack[" + smm.id + "]");
             Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
             ListaTripletes nuevos = new ListaTripletes();
             nuevos.addAll(inicio.mostrarTripletes());
+            nuevos.add(smm);
             nuevos.add(new AsignarValor(term, inicio.getTriplete(), tipo));
             nuevos.add(et);
             nuevos.addAll(fin.mostrarTripletes());
@@ -269,7 +273,7 @@ public class Else_Operator extends ListaTripletes {
             nuevos.add(buena);
             nuevos.addAll(tri);
             nuevos.addAll(step.mostrarTripletes());
-            SumOperator sum = new SumOperator(null, term, step.getTriplete(), tipo);
+            SumOperator sum = new SumOperator(null, term, step.getTriplete(), CallPrograma.regresarTipo(tipo));
             nuevos.add(sum);
             nuevos.add(new AsignarValor(term, sum, null));
             nuevos.add(new GoToOperator(et));

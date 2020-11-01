@@ -54,16 +54,16 @@ public class AsignarValor extends Triplete {
     public String devolverString() {
         if (!(operando2 instanceof Input)) {
             if (operando2 != null && tipo != null) {
-                return this.tipo + " " + this.operando1.getId() + " = " + operando2.getId() + ";";
+                return this.operando1.getId() + " = " + operando2.getId() + ";";
             } else if (tipo != null && operando2 == null) {
-                return this.tipo + " " + this.operando1.getId() + ";";
+                return this.operando1.getId() + ";";
             } else if (operando2 != null && tipo == null) {
                 return this.operando1.getId() + " = " + this.operando2.getId() + ";";
             } else {
                 return this.operando1.getId() + ";";
             }
         } else {
-            return "scanf(\"" + operando2.id + "\",&" + operando1.getId() + ");";
+            return "scanf(\"%f\",&" + operando1.getId() + ");";
         }
     }
 

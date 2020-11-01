@@ -875,7 +875,7 @@ TablaJava sem = new TablaJava(e1); if(!java.agregarTabla(sem)){
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)).right;
 		List<VariableJava> e3 = (List<VariableJava>)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)).value;
 
-                MetodoJava met = new MetodoJava(e2, 5, e3);
+                MetodoJava met = new MetodoJava(e2, 5, e3, tabla.getId());
                 actual = met;
                 if(!tabla.addConstructor(met)){
                         reportarSem("Constructor de la clase : "+ e2 +" ya existente con mismos parametros");
@@ -922,7 +922,7 @@ TablaJava sem = new TablaJava(e1); if(!java.agregarTabla(sem)){
 		int e3right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)).right;
 		List<VariableJava> e3 = (List<VariableJava>)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)).value;
 ret = e1;
-                MetodoJava met = new MetodoJava(e2, e1, e3);
+                MetodoJava met = new MetodoJava(e2, e1, e3, tabla.getId());
                 actual = met;
                 if(!tabla.addMetodo(met)){
                         reportarSem("Metodo ya existente con id: <"+e2+"> con mismos parametros");
@@ -1130,7 +1130,9 @@ ret = e1;
                                 reportarSem("Return de tipo " + OperacionJava.obtenerTipo(e1.getTipo())
                                 + " y se espera un tipo: " + OperacionJava.obtenerTipo(actual.getTIPO()));
                                 RESULT = tri;}
-                        else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); tri.add(new Return(e1.getTriplete()));
+                        else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); 
+                        SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("1"),"int"); tri.add(sum);
+                        tri.add(new Return(e1.getTriplete(), sum.getId()));
                         RESULT = tri;}
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("RETURN",34, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }

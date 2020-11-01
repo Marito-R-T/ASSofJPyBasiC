@@ -25,11 +25,12 @@ public class SintaxisVisualSym {
   public static final int elsee = 17;
   public static final int casee = 20;
   public static final int nextt = 24;
+  public static final int byval = 53;
   public static final int andd = 10;
   public static final int intinput = 52;
   public static final int functionn = 4;
   public static final int loopp = 27;
-  public static final int returnn = 53;
+  public static final int returnn = 54;
   public static final int charinput = 50;
   public static final int menos = 35;
   public static final int menor = 30;
@@ -116,6 +117,7 @@ public class SintaxisVisualSym {
   "charinput",
   "floatinput",
   "intinput",
+  "byval",
   "returnn"
   };
 }

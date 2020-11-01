@@ -28,7 +28,7 @@ public class CallMetodo extends TerminalOperator {
 
     @Override
     public String devolverString() {
-        return id + "()";
+        return id + "();";
     }
 
 }

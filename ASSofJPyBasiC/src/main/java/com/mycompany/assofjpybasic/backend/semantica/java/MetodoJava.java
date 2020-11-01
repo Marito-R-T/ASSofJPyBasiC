@@ -27,6 +27,7 @@ public class MetodoJava {
     private final Integer TIPO;
     private final List<VariableJava> parametros;
     private final List<Triplete> tripletes = new ArrayList<>();
+    private final String clase;
 
     /**
      *
@@ -34,11 +35,13 @@ public class MetodoJava {
      * @param id Id del metodo
      * @param TIPO Tipo del metodo 1 - CHAR 2 - INT 3 - FLOAT 4 - VOID
      * @param parametros lista de parametros del metodo
+     * @param clase Id de la clase padre
      */
-    public MetodoJava(String id, Integer TIPO, List<VariableJava> parametros) {
+    public MetodoJava(String id, Integer TIPO, List<VariableJava> parametros, String clase) {
         this.id = id;
         this.TIPO = TIPO;
         this.parametros = parametros;
+        this.clase = clase;
     }
 
     /**
@@ -153,7 +156,7 @@ public class MetodoJava {
         } else {
             comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
         }
-        String params = "JV_" + id + "_" + this.id;
+        String params = "void JV_" + id + "_" + this.id;
         for (VariableJava parametro : this.parametros) {
             params += "_" + OperacionJava.obtenerTipo(parametro.getTipo());
         }
@@ -166,6 +169,15 @@ public class MetodoJava {
         return comentario + params + metodo;
     }
 
+    public String nombreMetodo() {
+        String params = "JV_+" + this.clase + "_";
+        params += this.id;
+        for (VariableJava parametro : this.parametros) {
+            params += "_" + OperacionJava.obtenerTipo(parametro.getTipo());
+        }
+        return params;
+    }
+
     public String mostrarMetodo(String id, List<Triplete> tri) {
         String comentario;
         if (id.equals(this.id)) {
@@ -173,7 +185,7 @@ public class MetodoJava {
         } else {
             comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
         }
-        String params = "JV_" + id + "_" + this.id;
+        String params = "void JV_" + id + "_" + this.id;
         params = this.parametros.stream().map((parametro) -> "_" + OperacionJava.obtenerTipo(parametro.getTipo())).reduce(params, String::concat);
         params += "()";
         String metodo = "{\n";
@@ -202,7 +214,7 @@ public class MetodoJava {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
@@ -227,7 +239,7 @@ public class MetodoJava {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
@@ -252,7 +264,7 @@ public class MetodoJava {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));

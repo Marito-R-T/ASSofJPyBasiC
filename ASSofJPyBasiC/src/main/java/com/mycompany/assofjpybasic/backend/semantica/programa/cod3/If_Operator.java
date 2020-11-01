@@ -42,9 +42,9 @@ public class If_Operator extends Triplete {
     @Override
     public String devolverString() {
         if (op == null) {
-            return "if" + this.operando1.devolverString() + " goto " + et.getId();
+            return "if" + this.operando1.devolverString() + " goto " + et.getId() + ";";
         } else {
-            return "if" + this.op.devolverString() + " goto " + et.getId();
+            return "if" + this.op.devolverString() + " goto " + et.getId() + ";";
         }
     }
 

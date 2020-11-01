@@ -152,9 +152,18 @@ public class MetodoPython {
         return nombre;
     }
 
+    public String nombreMetodo() {
+        String params = "PY_";
+        params += this.id;
+        for (VariablePython parametro : this.parametros) {
+            params += "_" + OperacionPython.obtenerTipo(parametro.getTipo());
+        }
+        return params;
+    }
+
     public String mostrarMetodo() {
         String com = "//Metodo de PYTHON con id: " + this.id + "\n";
-        String params = "PY_";
+        String params = "void PY_";
         params += this.id;
         for (VariablePython parametro : this.parametros) {
             params += "_" + OperacionPython.obtenerTipo(parametro.getTipo());
@@ -188,7 +197,7 @@ public class MetodoPython {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
@@ -210,7 +219,7 @@ public class MetodoPython {
             SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
             tri.add(op2);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
-            tri.add(new CallMetodo(id));
+            tri.add(new CallMetodo(this.nombreMetodo()));
             RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 1) + ""), "int");
             tri.add(op3);
             tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
