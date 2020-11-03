@@ -847,7 +847,7 @@ VisualSemantica.AMBITO += 1;
 		ListaTripletes e3 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-3)).value;
 		sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
-                                        actual.getTripletes().addAll(e3);
+                                        actual.getTripletes().addAll(e3); sem.setDireccion(0);
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("SUB",3, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-11)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -869,7 +869,8 @@ VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
                                         actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3,
                                         new AsignarValor(new TerminalOperator(e1), null, e3)));
-                                        sem.addVar(new VariableVisual(e1, VisualSemantica.AMBITO, e3, new TerminalOperator(e1)));
+                                        VariableVisual var = new VariableVisual(e1, VisualSemantica.AMBITO, e3, new TerminalOperator(e1)); var.setDireccion(-1);
+                                        sem.getVariables().add(var);
                                         if(!sem.addListVar(e2)){
                                                 reportarSem("Un parametro tiene el mismo nombre del de la función con id: <"+e1+">");
                                         } if(!sem.addMetodo(met)){
@@ -898,7 +899,7 @@ VisualSemantica.AMBITO += 1;
 		ListaTripletes e4 = (ListaTripletes)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-3)).value;
 		sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
-                                        actual.getTripletes().addAll(e4);
+                                        actual.getTripletes().addAll(e4); sem.setDireccion(0);
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("FUNCTION",4, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-12)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -2398,7 +2399,7 @@ VisualSemantica.AMBITO += 1;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		OperacionVisual e2 = (OperacionVisual)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete())); RESULT = e1;
+		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("STRING",27, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -2426,7 +2427,7 @@ VisualSemantica.AMBITO += 1;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		OperacionVisual e1 = (OperacionVisual)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
 		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
-                tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete()));
+                tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete(), Input.tipoVisualf(e1)));
                 RESULT = tri;
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("STRING",27, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }

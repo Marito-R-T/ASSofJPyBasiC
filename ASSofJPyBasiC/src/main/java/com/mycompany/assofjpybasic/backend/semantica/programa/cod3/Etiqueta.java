@@ -31,7 +31,7 @@ public class Etiqueta extends Triplete {
     @Override
     public String devolverString() {
         return this.id + ":\n"
-                + "printf(\"\");";
+                + "printf(\" \");";
     }
 
 }

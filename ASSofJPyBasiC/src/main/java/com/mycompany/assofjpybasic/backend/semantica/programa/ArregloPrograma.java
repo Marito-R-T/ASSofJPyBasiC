@@ -5,7 +5,6 @@
  */
 package com.mycompany.assofjpybasic.backend.semantica.programa;
 
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.DefinirArreglo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.PorOperator;
@@ -186,10 +185,10 @@ public class ArregloPrograma extends VariablePrograma {
         if (this.finales.size() > 1) {
             this.obtenerS(trip, 0, this.finales.size() - 1);
         } else {
-            this.getTripletes().add(this.finales.get(0));
         }
+        TerminalOperator ter = new TerminalOperator(this.getTripletes().get(this.getTripletes().size() - 1).getId());
         this.getTripletes().addAll(op.getTripletes());
-        return new AsignarArreglo(this.id, this.getTripletes().get(this.getTripletes().size() - 1), op.getTriplete());
+        return ter;
     }
 
     /**
@@ -204,7 +203,6 @@ public class ArregloPrograma extends VariablePrograma {
         if (this.finales.size() > 1) {
             this.obtenerS(trip, 0, this.finales.size() - 1);
         } else {
-            this.getTripletes().add(this.finales.get(0));
         }
         return this.getTripletes().get(this.getTripletes().size() - 1);
     }

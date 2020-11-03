@@ -18,7 +18,6 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +27,7 @@ import java.util.List;
 public class Printf extends Triplete {
 
     private final String tipo;
+    private final String cast;
     private String valor;
 
     /**
@@ -35,10 +35,12 @@ public class Printf extends Triplete {
      *
      * @param tipo Tipo al que pertenece la variable
      * @param operando2 Id al valor que se hace referencia
+     * @param cast Tipo de cast relacionado al tipo
      */
-    public Printf(String tipo, Triplete operando2) {
+    public Printf(String tipo, Triplete operando2, String cast) {
         super(null, null, operando2);
         this.tipo = tipo;
+        this.cast = cast;
     }
 
     /**
@@ -50,12 +52,13 @@ public class Printf extends Triplete {
         super(null, null, null);
         this.valor = texto;
         this.tipo = null;
+        this.cast = null;
     }
 
     @Override
     public String devolverString() {
         if (tipo != null) {
-            return "printf(\"%f\", " + this.operando2.getId() + ");";
+            return "printf(\"" + tipo + "\", (" + cast + ")" + this.operando2.getId() + ");";
         } else {
             return "printf(\"" + valor + "\");";
         }
@@ -75,7 +78,11 @@ public class Printf extends Triplete {
             if (string.equals("%d") || string.equals("%f") || string.equals("%c")) {
                 if (term < ope.size()) {
                     tri.addAll(ope.get(term).getTripletes());
-                    tri.add(new Printf(string, ope.get(term).getTriplete()));
+                    if (string.equals("%v")) {
+                        tri.add(new Printf("%f", ope.get(term).getTriplete(), "float"));
+                    } else {
+                        tri.add(new Printf(string, ope.get(term).getTriplete(), Triplete.devolverTipo(ope.get(term))));
+                    }
                 } else {
                     return null;
                 }

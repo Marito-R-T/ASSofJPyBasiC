@@ -72,7 +72,7 @@ non terminal Integer TYPE;
 non terminal List<VariablePrograma> LIST_ASIG, ASIG_VAR;
 non terminal OperacionPrograma EXPR, ASIG, OPERACION_A, OPERACION_M, OPERACION_U, ATOM, LLAMADA_METODO;
 non terminal OperacionPrograma OPERACION_AC, OPERACION_MC, OPERACION_UC, ATOMC;
-non terminal List<OperacionPrograma> CORCHETES, LIST_PARAM, LIST, PARAM;
+non terminal List<OperacionPrograma> CORCHETES, CORCHETESF, LIST_PARAM, LIST, PARAM;
 non terminal String IN_CLASS;
 non terminal Triplete COMPARACION;
 non terminal CondicionPrograma NOT, AND, CONDICION;
@@ -109,10 +109,15 @@ IN_CLASS ::= por {:RESULT = "$$*$$";:}
 CONST ::= CONST constt TYPE:e1 id:e2 igual OPERACION_AC:e3 puntocoma 
         {: VariablePrograma var = new ConstantePrograma(e2,ProgramaSemantica.AMBITO, e1, e3.getTipo(), null);
         var.setValor(e3.getValor());
+        System.out.println("constante con id: " + e2);
         if(!sem.addVar(var)){
                 reportarSem("Variable ya creda con el mismo nombre: <" + e1 + ">");
         } else {sem.getVar().addAll(e3.mostrarTripletes());
-                sem.getVar().add(new AsignarConstante(new TerminalOperator(e2), e3.getTriplete(), Triplete.tipos[e1-1]));}:}
+                SumOperator sum = sem.getVariables().devolverSum(e2);
+                sem.getVar().add(sum);
+                sem.getVar().add(new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())),
+                e3.getTriplete()));}
+        :}
         | CONST ASIG_VAR:e1 {:ListaTripletes tri = new ListaTripletes();
                         for(VariablePrograma var : e1){
                         /*tri.addAll(var.mostrarTripletes());*/
@@ -139,7 +144,7 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
                         if(var.getTriplete() instanceof AsignarValor)
                         ((AsignarValor)var.getTriplete()).setTipo(Triplete.tipos[e1-1]);
                 } RESULT = e2;}:}
-        | TYPE:e1 id:e2 CORCHETES:e4 puntocoma {: List<VariablePrograma> var = new ArrayList<>();
+        | TYPE:e1 id:e2 CORCHETESF:e4 puntocoma {: List<VariablePrograma> var = new ArrayList<>();
                 ArregloPrograma arr = new ArregloPrograma(e2, ProgramaSemantica.AMBITO, e1, e4, 
                 new DefinirArreglo(null, new TerminalOperator(e2), Triplete.tipos[e1-1]));
                 if(!sem.addVar(arr)){
@@ -147,8 +152,14 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
                 }else {var.add(arr);} RESULT = var;:}
 ;
 
-CORCHETES ::= CORCHETES:e1 cora OPERACION_AC:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
+CORCHETESF ::= CORCHETESF:e1 cora OPERACION_AC:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
         | cora OPERACION_AC:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>();
+                if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
+                RESULT = opr;:}
+;
+
+CORCHETES ::= CORCHETES:e1 cora OPERACION_A:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
+        | cora OPERACION_A:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>();
                 if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
 ;
@@ -211,9 +222,13 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                 if(var == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
-                var.getTipo(), e2, (ArregloPrograma) var); arr.mostrarTripletes();
-                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), new TemporalArreglo(null, e1, 
-                arr.getTriplete(),Triplete.tipos[var.getTipo()-1])); corch.getTripletes().addAll(0, arr.getTripletes()); 
+                var.getTipo(), e2, (ArregloPrograma) var);
+                SumOperator sum = sem.getVariables().devolverSum(e1);
+                SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
+                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())));
+                corch.getTripletes().addAll(0, arr.getTripletes());
+                corch.getTripletes().add(sum);
+                corch.getTripletes().add(sum2);
                 RESULT = corch;}
                 :}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
@@ -251,7 +266,7 @@ STATEMENTLINE ::= clrs puntocoma {:ListaTripletes tr = new ListaTripletes(); tr.
         | PRINTF:e1 {:RESULT = e1;:}
         | SCANF:e1 {:RESULT = e1;:}
         | LLAMADA_METODO:e1 puntocoma {:ListaTripletes tri = new ListaTripletes();
-                if(e1 != null) {tri.addAll(e1.mostrarTripletes());
+                if(e1 != null) {tri.addAll(e1.getTripletes());
                 tri.add(e1.getTriplete());}
                 RESULT = tri;:}
         | getch puntocoma {:ListaTripletes tr = new ListaTripletes(); tr.add(new GetchOperator()); RESULT = tr;:}
@@ -259,10 +274,11 @@ STATEMENTLINE ::= clrs puntocoma {:ListaTripletes tr = new ListaTripletes(); tr.
 ;
 
 DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
-                VariablePrograma var = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
-                if(var == null) {
+                VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null));
+                if(var == null || var.isConstant()) {
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else if (e2 == null) {
+                        reportarSem("no hay ninguna expresión en la definición de Variable");
                 }else { SumOperator sum = sem.getVariables().devolverSum(e1);
                         AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())), e2.getTriplete());
                         /*tri.addAll(e2.mostrarTripletes());*/
@@ -275,11 +291,12 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 } else {OperacionPrograma arr = new ArregloPrograma(var.getId(), ProgramaSemantica.AMBITO,
                 var.getTipo(), e2, (ArregloPrograma) var, e3);
                 ListaTripletes tri = new ListaTripletes();
-                tri.addAll(e3.mostrarTripletes());
+                /*if(e3.mostrarTripletes().size()>1) {
+                tri.addAll(e3.mostrarTripletes().subList(1, e3.mostrarTripletes().size() - 1));}*/
                 tri.addAll(arr.getTripletes());
                 SumOperator sum = sem.getVariables().devolverSum(e1);
                 tri.add(sum);
-                SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
+                SumOperator sum2 = new SumOperator(null, sum, arr.getTriplete(), "int");
                 tri.add(sum2);
                 AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())), e3.getTriplete());
                 tri.add(asig);
@@ -496,8 +513,8 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         }:}
 ;
 
-EXPR ::= LLAMADA_METODO:e1 {:RESULT = new OperacionPrograma(new AsignarTemporal(null, e1.getTriplete(),
-                Triplete.devolverTipo(e1)), e1);:}
+EXPR ::= LLAMADA_METODO:e1 {:if(!e1.getTipo().equals(Triplete.tipos[3])){RESULT = new OperacionPrograma(new AsignarTemporal(null, e1.getTriplete(),
+                Triplete.devolverTipo(e1)), e1);} else {reportarSem("Error, metodo void no regresa ningun dato");}:}
         | OPERACION_A:e1 {:RESULT = e1;:}
         | getch {:RESULT = new OperacionPrograma(VariablePrograma.INT, new GetchOperator());:}
 ;
@@ -557,7 +574,7 @@ OPERACION_UC ::= menos OPERACION_UC:e1 {:if(e1 != null && e1.getTipo()==1){e1.se
 
 // Falta resolver lo de los corchetes
 ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, ProgramaSemantica.AMBITO, null)); 
-                if(var == null || var.isConstant()){
+                if(var == null || !var.isConstant()){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);

@@ -23,6 +23,7 @@ public class VisualSemantica {
     public static Integer AMBITO = 0;
     private final List<VariableVisual> variables = new ArrayList<>();
     private final List<MetodoVisual> metodos = new ArrayList<>();
+    private int direccion = 0;
 
     /**
      * constructor para incializar AMBITO a 0 e Inicializar el primer ambito
@@ -41,7 +42,8 @@ public class VisualSemantica {
     public boolean addListVar(List<VariableVisual> var) {
         for (VariableVisual variableVisual : var) {
             if (this.existeVar(variableVisual) == null) {
-                variableVisual.setDireccion(this.variables.size());
+                variableVisual.setDireccion(direccion);
+                direccion++;
                 variables.add(variableVisual);
             } else {
                 return false;
@@ -51,14 +53,15 @@ public class VisualSemantica {
     }
 
     /**
-     * Metodo para agregar un listado de variables
+     * Metodo para agregar una variables
      *
      * @param var Variable a verificar su existencia
      * @return retorna el tipo de variable que es, si no lo encuentra regresa -1
      */
     public boolean addVar(VariableVisual var) {
         if (this.existeVar(var) == null) {
-            var.setDireccion(this.variables.size());
+            var.setDireccion(direccion);
+            direccion++;
             variables.add(var);
             return true;
         } else {
@@ -235,7 +238,7 @@ public class VisualSemantica {
     public Integer obtenerDireccion(String id) {
         for (VariableVisual variable : this.variables) {
             if (variable.getId().equals(id.toLowerCase())) {
-                return variable.getDireccion();
+                return variable.getDireccion() + 1;
             }
         }
         return 0;
@@ -256,6 +259,10 @@ public class VisualSemantica {
             }
         }
         return null;
+    }
+
+    public void setDireccion(int direccion) {
+        this.direccion = direccion;
     }
 
 }

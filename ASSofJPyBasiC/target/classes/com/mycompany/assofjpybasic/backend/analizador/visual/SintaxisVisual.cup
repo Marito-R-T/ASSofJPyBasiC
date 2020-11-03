@@ -98,21 +98,22 @@ SUB ::= PUBLIC subb id:e1 para LISTPARAMM:e2 parc espacio {:VisualSemantica.AMBI
                                                 reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");}:}
                                         STATEMENTS:e3 endd subb espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
-                                        actual.getTripletes().addAll(e3);:}
+                                        actual.getTripletes().addAll(e3); sem.setDireccion(0);:}
 ;
 
 FUNCTION ::= PUBLIC functionn id:e1 para LISTPARAMM:e2 parc TYPE:e3 espacio {:VisualSemantica.AMBITO += 1;
                                         MetodoVisual met = new MetodoVisual(e1, e2, e3);
                                         actual = met; met.setVisual(new VariableVisual(e1, VisualSemantica.AMBITO, e3,
                                         new AsignarValor(new TerminalOperator(e1), null, e3)));
-                                        sem.addVar(new VariableVisual(e1, VisualSemantica.AMBITO, e3, new TerminalOperator(e1)));
+                                        VariableVisual var = new VariableVisual(e1, VisualSemantica.AMBITO, e3, new TerminalOperator(e1)); var.setDireccion(-1);
+                                        sem.getVariables().add(var);
                                         if(!sem.addListVar(e2)){
                                                 reportarSem("Un parametro tiene el mismo nombre del de la función con id: <"+e1+">");
                                         } if(!sem.addMetodo(met)){
                                                 reportarSem("Metodo ya existente con id: <"+e1+"> con mismos parametros");}:}
                                         STATEMENTSF:e4 endd functionn espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO);
                                         VisualSemantica.AMBITO -= 1;
-                                        actual.getTripletes().addAll(e4);:}
+                                        actual.getTripletes().addAll(e4); sem.setDireccion(0);:}
 ;
 
 DEFVAR ::= dimm LISTVAR:e1 {:if(VisualSemantica.tienenTipos(e1)&&sem.addListVar(e1)){}
@@ -389,10 +390,10 @@ COMPARACION ::= OPERACION_A:e1 igual OPERACION_A:e2 {:RESULT = new IgualOperator
                 e1.getTripletes(), e2.getTripletes());:}
 ;
 
-STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete())); RESULT = e1;:}
+STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;:}
         | STRING:e1 y string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
         | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
-                tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete()));
+                tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete(), Input.tipoVisualf(e1)));
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}

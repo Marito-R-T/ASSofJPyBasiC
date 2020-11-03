@@ -47,7 +47,18 @@ public class Input extends TerminalOperator {
         } else if (op.getTipo().equals(PythonSemantica.INT)) {
             return "%d";
         }
-        return "%v";
+        return "%f";
+    }
+
+    public static String tipoPythonf(OperacionPython op) {
+        if (op.getTipo().equals(PythonSemantica.CHAR)) {
+            return "char";
+        } else if (op.getTipo().equals(PythonSemantica.FLOAT)) {
+            return "float";
+        } else if (op.getTipo().equals(PythonSemantica.INT)) {
+            return "int";
+        }
+        return "float";
     }
 
     public static String tipoVisual(OperacionVisual op) {
@@ -58,7 +69,18 @@ public class Input extends TerminalOperator {
         } else if (op.getTipo().equals(VisualSemantica.INT)) {
             return "%d";
         }
-        return "%v";
+        return "%f";
+    }
+
+    public static String tipoVisualf(OperacionVisual op) {
+        if (op.getTipo().equals(VisualSemantica.CHAR)) {
+            return "char";
+        } else if (op.getTipo().equals(VisualSemantica.FLOAT)) {
+            return "float";
+        } else if (op.getTipo().equals(VisualSemantica.INT)) {
+            return "int";
+        }
+        return "float";
     }
 
     public static String tipoJAVA(OperacionJava op) {
@@ -74,7 +96,23 @@ public class Input extends TerminalOperator {
                     break;
             }
         }
-        return "%v";
+        return "%f";
+    }
+
+    public static String tipoJAVAf(OperacionJava op) {
+        if (null != op.getTipo()) {
+            switch (op.getTipo()) {
+                case 1:
+                    return "char";
+                case 2:
+                    return "float";
+                case 3:
+                    return "int";
+                default:
+                    break;
+            }
+        }
+        return "float";
     }
 
 }

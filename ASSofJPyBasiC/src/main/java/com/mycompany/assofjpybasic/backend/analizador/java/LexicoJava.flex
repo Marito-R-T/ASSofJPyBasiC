@@ -99,10 +99,17 @@ cero= "0"
 <YYINITIAL> {letras}({letras}|{onenine}|{cero}|"_")* {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ({onenine}({onenine}|{cero})*)|{cero} {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.entero, yycolumn, yyline, yytext());}
 <YYINITIAL> (({onenine}({onenine}|{cero})*)|{cero})(".")({onenine}|{cero})*{onenine} {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.decimal, yycolumn, yyline, yytext());}
-<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.character, yycolumn, yyline, yytext());} // "char"c
-<YYINITIAL> ("\"")(.)*("\"") {System.out.print(yytext()); return new Symbol(SintaxisJavaSym.string, yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
+<YYINITIAL> ("'")(.)("'") {System.out.print(yytext()); int s = yytext().charAt(1);
+                return new Symbol(SintaxisJavaSym.character, yycolumn, yyline, s+"");} // "char"c
+<YYINITIAL> ("\"") {yybegin(STRING);}
 
 /* Espacios en blanco */
-{espacio}+ {System.out.print(yytext()); /*IGNORAR*/}
+<YYINITIAL> {espacio}+ {System.out.print(yytext()); /*IGNORAR*/}
 
 <YYINITIAL> (.) {System.out.print(yytext()); /*error*/}
+
+<STRING> {
+      \"                            {yybegin(YYINITIAL); String s = string.toString(); string.setLength(0);
+                                        return new Symbol(SintaxisJavaSym.string, yycolumn, yyline, s);}
+      [^]                           {string.append(yytext());}
+}

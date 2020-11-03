@@ -34,7 +34,7 @@ public class ModOperator extends Triplete {
 
     @Override
     public String devolverString() {
-        String d = this.tipo + " " + this.id + " = " + this.operando1.getId() + " % " + this.operando2.getId() + ";";
+        String d = this.tipo + " " + this.id + " = " + "fmod(" + this.operando1.getId() + " , " + this.operando2.getId() + ");";
         return d;
     }
 

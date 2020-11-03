@@ -133,6 +133,7 @@ public class PythonSemantica {
             variablePython.setTipo(PythonSemantica.VAR);
             return variablePython;
         }).forEachOrdered((variablePython) -> {
+            variablePython.setDireccion(this.variables.size());
             this.variables.add(variablePython);
         });
     }
@@ -177,7 +178,6 @@ public class PythonSemantica {
     public VariablePython existeVar(VariablePython var) {
         for (VariablePython variable : variables) {
             if (variable.getId().equals(var.getId())) {
-                System.out.println("variable python con nombre " + var.getId());
                 return variable;
             }
         }

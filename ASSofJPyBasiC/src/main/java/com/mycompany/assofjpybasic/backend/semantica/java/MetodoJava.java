@@ -170,7 +170,7 @@ public class MetodoJava {
     }
 
     public String nombreMetodo() {
-        String params = "JV_+" + this.clase + "_";
+        String params = "JV_" + this.clase + "_";
         params += this.id;
         for (VariableJava parametro : this.parametros) {
             params += "_" + OperacionJava.obtenerTipo(parametro.getTipo());

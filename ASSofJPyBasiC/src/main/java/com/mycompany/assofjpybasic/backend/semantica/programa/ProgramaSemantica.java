@@ -321,6 +321,9 @@ public class ProgramaSemantica {
     public String mostrarCodigo() {
         String s = "";
         s = this.imports.stream().map(aImport -> aImport + "\n").reduce(s, String::concat);
+        s += this.librerias(s);
+        s += this.principal();
+        s += this.getch();
         if (metodosPython != null) {
             s += this.Python();
         }
@@ -330,11 +333,62 @@ public class ProgramaSemantica {
         if (this.clasesImportadas != null) {
             s += this.importadas();
         }
-        s += "\n//Variables y constantes Globales \n";
-        s += this.var();
         s += "\n//Main de C \n";
         s += this.main();
         return s;
+    }
+
+    private String principal() {
+        return "int p = 0;\n"
+                + "int h = 0;\n"
+                + "float stack[10000];\n"
+                + "float heap[500];\n";
+    }
+
+    private String librerias(String text) {
+        String s = "";
+        if (!text.contains("#include <unistd.h>\n")) {
+            s += "#include <unistd.h>\n";
+        }
+        if (!text.contains("#include <termios.h>\n")) {
+            s += "#include <termios.h>\n";
+        }
+        if (!text.contains("#include <math.h>\n")) {
+            s += "#include <math.h>\n";
+        }
+        if (!text.contains("#include <stdio.h>\n")) {
+            s += "#include <stdio.h>\n";
+        }
+        if (!text.contains("#include <stdlib.h>\n")) {
+            s += "#include <stdlib.h>\n";
+        }
+        return s + "\n";
+    }
+
+    private String getch() {
+        return "char getch(){\n"
+                + "       /*#include <unistd.h>   //_getch*/\n"
+                + "       /*#include <termios.h>  //_getch*/\n"
+                + "       char buf=0;\n"
+                + "       struct termios old={0};\n"
+                + "       fflush(stdout);\n"
+                + "       if(tcgetattr(0, &old)<0)\n"
+                + "           perror(\"tcsetattr()\");\n"
+                + "       old.c_lflag&=~ICANON;\n"
+                + "       old.c_lflag&=~ECHO;\n"
+                + "       old.c_cc[VMIN]=1;\n"
+                + "       old.c_cc[VTIME]=0;\n"
+                + "       if(tcsetattr(0, TCSANOW, &old)<0)\n"
+                + "           perror(\"tcsetattr ICANON\");\n"
+                + "       if(read(0,&buf,1)<0)\n"
+                + "           perror(\"read()\");\n"
+                + "       old.c_lflag|=ICANON;\n"
+                + "       old.c_lflag|=ECHO;\n"
+                + "       if(tcsetattr(0, TCSADRAIN, &old)<0)\n"
+                + "           perror (\"tcsetattr ~ICANON\");\n"
+                + "       printf(\"%c\\n\",buf);\n"
+                + "       return buf;\n"
+                + "}";
     }
 
     public String Python() {
@@ -365,6 +419,11 @@ public class ProgramaSemantica {
 
     public String main() {
         String s = "int main() {\n";
+        s += "\n//Variables y constantes Globales \n";
+        for (Triplete triplete : this.var) {
+            s += triplete.devolverString() + "\n";
+        }
+        s += "\n//empieza el main \n";
         for (Triplete triplete : this.tripletes) {
             s += triplete.devolverString() + "\n";
         }

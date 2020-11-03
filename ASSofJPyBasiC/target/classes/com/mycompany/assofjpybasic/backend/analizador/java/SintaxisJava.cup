@@ -175,8 +175,8 @@ STATEMENT_METODO ::= COMP_STATE:e1 {:RESULT = e1;:}
         | error STATEMENT_METODO:e1 {:RESULT = e1;:}
 ;
 
-DEF_VAR ::= TYPE:e1 {:variables = new ArrayList<>();:} LIST_VAR:e2 {:VariableJava.agregarTipo(variables, e1);
-                        if(!tabla.addListVar(variables)){
+DEF_VAR ::= TYPE:e1 {:variables = new ArrayList<>();:} LIST_VAR:e2 {:VariableJava.agregarTipo(e2, e1);
+                        if(!tabla.addListVar(e2)){
                                 reportarSem("Unas variables de las registradas ya existen");}
                                 variables = new ArrayList<>();
                         RESULT = new ListaTripletes(tabla.obtenerTripletes(e2, e1));:}
@@ -458,12 +458,12 @@ COMPARACION ::= OPERACION_A:e1 igig OPERACION_A:e2 {:RESULT = new IgualOperator(
                 e1.getTripletes(), e2.getTripletes());:}
 ;
 
-STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete())); RESULT = e1;:}
-        | STRING:e1 mas string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
+STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete(), Input.tipoJAVAf(e2))); RESULT = e1;:}
+        | STRING:e1 mas string:e2 {:if(!e2.equals("")){e1.add(new Printf(e2));} RESULT = e1;:}
         | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
-                tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete()));
+                tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete(), Input.tipoJAVAf(e1)));
                 RESULT = tri;:}
-        | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
+        | string:e1 {:ListaTripletes tri = new ListaTripletes(); if(!e1.equals("")){tri.add(new Printf(e1));}
                 RESULT = tri;:}
 ;
 

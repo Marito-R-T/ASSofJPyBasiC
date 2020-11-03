@@ -28,7 +28,7 @@ public class Clrs extends Triplete {
 
     @Override
     public String devolverString() {
-        return "clrscr();";
+        return "system(\"clear\");";
     }
 
 }

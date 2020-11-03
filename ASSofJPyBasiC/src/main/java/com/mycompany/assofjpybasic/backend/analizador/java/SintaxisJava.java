@@ -1198,8 +1198,8 @@ variables = new ArrayList<>();
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		List<VariableJava> e2 = (List<VariableJava>)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		VariableJava.agregarTipo(variables, e1);
-                        if(!tabla.addListVar(variables)){
+		VariableJava.agregarTipo(e2, e1);
+                        if(!tabla.addListVar(e2)){
                                 reportarSem("Unas variables de las registradas ya existen");}
                                 variables = new ArrayList<>();
                         RESULT = new ListaTripletes(tabla.obtenerTripletes(e2, e1));
@@ -2362,7 +2362,7 @@ cas++;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		OperacionJava e2 = (OperacionJava)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete())); RESULT = e1;
+		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete(), Input.tipoJAVAf(e2))); RESULT = e1;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("STRING",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -2377,7 +2377,7 @@ cas++;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		String e2 = (String)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		e1.add(new Printf(e2)); RESULT = e1;
+		if(!e2.equals("")){e1.add(new Printf(e2));} RESULT = e1;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("STRING",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -2390,7 +2390,7 @@ cas++;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		OperacionJava e1 = (OperacionJava)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
 		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
-                tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete()));
+                tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete(), Input.tipoJAVAf(e1)));
                 RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("STRING",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
@@ -2403,7 +2403,7 @@ cas++;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
+		ListaTripletes tri = new ListaTripletes(); if(!e1.equals("")){tri.add(new Printf(e1));}
                 RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("STRING",39, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }

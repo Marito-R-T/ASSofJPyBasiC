@@ -11,6 +11,12 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.frontend.analizador.ManejadorAnalisis;
 import com.mycompany.assofjpybasic.frontend.tabulador.TabbedPanel;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
@@ -77,6 +83,7 @@ public class AssGUI extends javax.swing.JFrame {
         menuCodigo = new javax.swing.JMenu();
         itemGenerarCod3 = new javax.swing.JMenuItem();
         menuEjecutar = new javax.swing.JMenu();
+        itemEjecutar = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,6 +181,20 @@ public class AssGUI extends javax.swing.JFrame {
         jMenuBar1.add(menuCodigo);
 
         menuEjecutar.setText("Ejecutar");
+        menuEjecutar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEjecutarActionPerformed(evt);
+            }
+        });
+
+        itemEjecutar.setText("Ejecutar Archivo");
+        itemEjecutar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemEjecutarActionPerformed(evt);
+            }
+        });
+        menuEjecutar.add(itemEjecutar);
+
         jMenuBar1.add(menuEjecutar);
 
         setJMenuBar(jMenuBar1);
@@ -287,10 +308,61 @@ public class AssGUI extends javax.swing.JFrame {
         Triplete.ETNUM = 0;
     }//GEN-LAST:event_itemGenerarCod3ActionPerformed
 
+    private void menuEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEjecutarActionPerformed
+
+    }//GEN-LAST:event_menuEjecutarActionPerformed
+
+    private void itemEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEjecutarActionPerformed
+        // TODO add your handling code here:
+        TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
+        String s = tabbed.getPaneCodigoT().getText();
+        try {
+            File file = new File(this.getClass().getResource("/programa.c").toURI());
+            this.getClass().getResource("").getFile();
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            try {
+                fichero = new FileWriter(file);
+                pw = new PrintWriter(fichero);
+                pw.print(s);
+                pw.flush();
+                pw.close();
+
+            } catch (IOException e) {
+            } finally {
+                try {
+                    // Nuevamente aprovechamos el finally para
+                    // asegurarnos que se cierra el fichero.
+                    if (null != fichero) {
+                        fichero.close();
+                    }
+                } catch (IOException e2) {
+                }
+            }
+            Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.c", "-lm", "-o", "programa"}, null, file.getParentFile());
+            pr.waitFor();
+            int i = pr.exitValue();
+            System.out.println(i);
+            pr = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -e \"./programa\""}, null, file.getParentFile());
+            //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
+            pr.waitFor();
+            i = pr.exitValue();
+            System.out.println(i);
+            //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
+            //pb.start();
+            System.out.println("ya salio");
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        } catch (URISyntaxException | InterruptedException ex) {
+            Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_itemEjecutarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static final javax.swing.JEditorPane editorTerminal = new javax.swing.JEditorPane();
     private javax.swing.JMenuItem itemAbrir;
     private javax.swing.JMenuItem itemCerrar;
+    private javax.swing.JMenuItem itemEjecutar;
     private javax.swing.JMenuItem itemGenerarCod3;
     private javax.swing.JMenuItem itemGuardar;
     private javax.swing.JMenuItem itemGuardarComo;

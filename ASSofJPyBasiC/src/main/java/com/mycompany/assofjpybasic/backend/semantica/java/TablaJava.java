@@ -50,10 +50,10 @@ public class TablaJava {
         if (!variables.stream().noneMatch((variable) -> (variable.getId().equals(var.getId())))) {
             return false;
         }
+        var.setDireccion(variables.size());
         if (TablaJava.AMBITO == 1) {
             var_definidas.add(var);
         }
-        var.setDireccion(variables.size());
         variables.add(var);
         return true;
     }
@@ -252,9 +252,15 @@ public class TablaJava {
             System.out.println(variableJava.getId());
             tri.addAll(variableJava.getTripletes());
             if (variableJava.getTriplete().getOperando2() != null) {
-                SumOperator sum = this.devolverSum(variableJava.getId());
-                tri.add(sum);
-                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                if (this.var_definidas.contains(variableJava)) {
+                    SumOperator sum = this.devolverSum(variableJava.getId(), true);
+                    tri.add(sum);
+                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccionH(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                } else {
+                    SumOperator sum = this.devolverSum(variableJava.getId());
+                    tri.add(sum);
+                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                }
             }
         }
         return tri;
@@ -289,6 +295,7 @@ public class TablaJava {
     public Integer obtenerDireccion(String id) {
         for (int i = this.variables.size() - 1; i >= 0; i--) {
             if (variables.get(i).getId().equals(id)) {
+                System.out.println(variables.get(i).getDireccion());
                 return variables.get(i).getDireccion() + 2 - this.var_definidas.size();
             }
         }
@@ -308,6 +315,7 @@ public class TablaJava {
             if (variable.getId().equals(id) && variable.getAmbito() == 1) {
                 return i;
             }
+            i++;
         }
         return 0;
     }
