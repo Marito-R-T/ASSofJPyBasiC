@@ -22,13 +22,13 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  */
 public class Return extends Triplete {
 
-    private String pos;
+    private Triplete pos;
 
     public Return(Triplete operando1) {
         super(null, operando1, null);
     }
 
-    public Return(Triplete operando1, String pos) {
+    public Return(Triplete operando1, Triplete pos) {
         super(null, operando1, null);
         this.pos = pos;
     }
@@ -36,10 +36,32 @@ public class Return extends Triplete {
     @Override
     public String devolverString() {
         if (pos == null) {
+            return "stack[p] = " + this.operando1.id;
+        } else {
+            return "stack[" + pos + "] = " + this.operando1.id;
+        }
+    }
+
+    @Override
+    public String devolverStringE() {
+        if (pos == null) {
             return "stack[p] = " + this.operando1.id + ";";
         } else {
             return "stack[" + pos + "] = " + this.operando1.id + ";";
         }
+    }
+
+    @Override
+    public String asm() {
+        Triplete sum;
+        Triplete tri;
+        if (pos == null) {
+            tri = new Stack(new P());
+        } else {
+            tri = new Stack(pos);
+        }
+        sum = new AsignarValor(null, tri, operando1);
+        return sum.asm();
     }
 
 }

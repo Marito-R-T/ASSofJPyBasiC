@@ -26,6 +26,7 @@ import java.util.List;
 public abstract class CondicionalOperator extends Triplete {
 
     protected List<Triplete> tripletes = new ArrayList<>();
+    protected String et;
 
     public CondicionalOperator(Triplete operando1, Triplete operando2, List<Triplete> trip1, List<Triplete> trip2) {
         super(null, operando1, operando2);
@@ -38,4 +39,39 @@ public abstract class CondicionalOperator extends Triplete {
         return tripletes;
     }
 
+    public void setEt(String et) {
+        this.et = et;
+    }
+
+    @Override
+    public String asm() {
+        String s = "";
+        if (operando1 instanceof Stack) {
+            s += "\tcltq\n"
+                    + ((Stack) this.operando1).asm(false)
+                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
+        } else if (operando1 instanceof Heap) {
+            s += "\tcltq\n"
+                    + ((Heap) this.operando1).asm(false)
+                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            s += "  movss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+        } else {
+            s += "  movss\t" + operando1.pos + "(%rbp), %xmm0\n";
+        }
+        if (operando2 instanceof Stack) {
+            s += "\tcltq\n"
+                    + ((Stack) this.operando2).asm(false)
+                    + "\tmovss\t(%rdx,%rax), %xmm1\n";
+        } else if (operando2 instanceof Heap) {
+            s += "\tcltq\n"
+                    + ((Heap) this.operando2).asm(false)
+                    + "\tmovss\t(%rdx,%rax), %xmm1\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            s += "\tmovss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm1\n";
+        } else {
+            s += "\tmovss\t" + operando1.pos + "(%rbp), %xmm1\n";
+        }
+        return s;
+    }
 }

@@ -23,6 +23,7 @@ import com.mycompany.assofjpybasic.backend.analizador.principal.SintaxisPrograma
 import com.mycompany.assofjpybasic.backend.classes.ArchivoMLG;
 import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.io.StringReader;
+import java.util.List;
 
 /**
  * Clase donde se llama a los Analizadores Sintacticos y Lexicos, y cualquier
@@ -38,7 +39,7 @@ public class ManejadorAnalisis {
      * @param s Texto a analizar
      * @return String del codigo 3 direcciones
      */
-    public static String regresar3D(String s) {
+    public static List<String> regresar3D(String s) {
         try {
             AssGUI.editorTerminal.setText("");
             SintaxisPrincipal lengua = new SintaxisPrincipal(new LexicoPrincipal(new StringReader(s)));
@@ -46,7 +47,7 @@ public class ManejadorAnalisis {
             SintaxisPrograma pro = new SintaxisPrograma(new LexicoPrograma(new StringReader(archivo.getPrograma())));
             pro.setLineas(lengua.getJV(), lengua.getPY(), lengua.getVB(), lengua.getC());
             pro.setTipo(archivo.getJava(), archivo.getVisual(), archivo.getPython());
-            String string = (String) pro.parse().value;
+            List<String> string = (List<String>) pro.parse().value;
             if (AssGUI.editorTerminal.getText().equals("")) {
                 return string;
             } else {

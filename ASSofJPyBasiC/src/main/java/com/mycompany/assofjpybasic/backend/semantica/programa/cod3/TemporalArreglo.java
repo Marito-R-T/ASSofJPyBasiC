@@ -35,6 +35,12 @@ public class TemporalArreglo extends Triplete {
 
     @Override
     public String devolverString() {
+        String d = this.id + " = " + this.arreglo + "[" + this.operando2.getId() + "]";
+        return d;
+    }
+
+    @Override
+    public String devolverStringE() {
         String d = this.tipo + " " + this.id + " = " + this.arreglo + "[" + this.operando2.getId() + "];";
         return d;
     }

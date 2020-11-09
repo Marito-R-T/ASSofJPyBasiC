@@ -20,34 +20,19 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class DefinirArreglo extends Triplete {
+public class P extends TerminalOperator {
 
-    private Triplete triplete;
-    private String tipo;
-
-    public DefinirArreglo(String id, Triplete operando1, String tipo) {
-        super(id, operando1, null);
-        this.tipo = tipo;
-    }
-
-    public void setTriplete(Triplete triplete) {
-        this.triplete = triplete;
+    public P() {
+        super("p");
     }
 
     @Override
-    public String devolverString() {
-        if (this.triplete != null) {
-            return this.operando1.getId() + "[" + triplete.getId() + "]";
-        }
-        return null;
+    public String toString() {
+        return "p";
     }
 
-    @Override
-    public String devolverStringE() {
-        if (this.triplete != null) {
-            return this.tipo + " " + this.operando1.getId() + "[" + triplete.getId() + "];";
-        }
-        return null;
+    public String asm() {
+        return "\tmovl\tp(%rip), %eax\n";
     }
 
 }

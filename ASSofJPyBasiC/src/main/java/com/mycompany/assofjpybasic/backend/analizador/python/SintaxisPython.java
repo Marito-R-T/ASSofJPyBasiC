@@ -1279,9 +1279,9 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                 SumOperator sum = null;
                 if(d == 0){
                         d = sem.getVariables().size() + 1;
-                        sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(d.toString()), "int");
+                        sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
                 } else {
-                        sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(d.toString()), "int");
+                        sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
                 } RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum.getId()), e2, e3);
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("FOR",29, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-7)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
@@ -1500,7 +1500,7 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                         reportarSem("La variable con id: " + e1 + " no existe");
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionPython op = new OperacionPython(tipo.getTipo(), new TerminalOperator(sem.devolverDireccion(sum.getId())));
+                        OperacionPython op = new OperacionPython(tipo.getTipo(), sem.devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         RESULT = op;}
                 
@@ -1816,9 +1816,9 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                         }else{
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().size()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().size()),"int");
                                 tri.add(s);
-                                OperacionPython op = new OperacionPython(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPython op = new OperacionPython(met.getTIPO(), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }

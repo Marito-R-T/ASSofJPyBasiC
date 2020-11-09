@@ -83,12 +83,13 @@ non terminal List<OperacionPrograma> VARS;
 non terminal List<String> STRING;
 non terminal Else_Operator ELSE_IF;
 non terminal CasePrograma CASES;
-non terminal String PROGRAMA;
+non terminal List<String> PROGRAMA;
 non terminal List<ObjetoPrograma> LIST_CLASS;
 
 start with PROGRAMA;
 
-PROGRAMA ::= INCLUDE_LENG CONST MAIN {:RESULT = sem.mostrarCodigo();:}
+PROGRAMA ::= INCLUDE_LENG CONST MAIN {:List<String> st = new ArrayList<>(); st.add(sem.mostrarCodigo());
+                                        st.add(sem.mostrarCodigoEjecutable()); st.add(sem.crearAssembler()); RESULT = st;:}
 ;
 
 INCLUDE_LENG ::= INCLUDE_LENG IN_LENG
@@ -115,7 +116,7 @@ CONST ::= CONST constt TYPE:e1 id:e2 igual OPERACION_AC:e3 puntocoma
         } else {sem.getVar().addAll(e3.mostrarTripletes());
                 SumOperator sum = sem.getVariables().devolverSum(e2);
                 sem.getVar().add(sum);
-                sem.getVar().add(new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())),
+                sem.getVar().add(new AsignarValor(null, sem.getVariables().devolverDireccion(sum.getId()),
                 e3.getTriplete()));}
         :}
         | CONST ASIG_VAR:e1 {:ListaTripletes tri = new ListaTripletes();
@@ -212,7 +213,7 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         RESULT = op;}:}
         | entero:e1 {:RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));:}
@@ -225,7 +226,7 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                 var.getTipo(), e2, (ArregloPrograma) var);
                 SumOperator sum = sem.getVariables().devolverSum(e1);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
-                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())));
+                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum2.getId()));
                 corch.getTripletes().addAll(0, arr.getTripletes());
                 corch.getTripletes().add(sum);
                 corch.getTripletes().add(sum2);
@@ -280,7 +281,7 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 } else if (e2 == null) {
                         reportarSem("no hay ninguna expresión en la definición de Variable");
                 }else { SumOperator sum = sem.getVariables().devolverSum(e1);
-                        AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())), e2.getTriplete());
+                        AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum.getId()), e2.getTriplete());
                         /*tri.addAll(e2.mostrarTripletes());*/
                         tri.addAll(e2.mostrarTripletes());
                         tri.add(sum);
@@ -298,7 +299,7 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 tri.add(sum);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTriplete(), "int");
                 tri.add(sum2);
-                AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())), e3.getTriplete());
+                AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum2.getId()), e3.getTriplete());
                 tri.add(asig);
                 RESULT = tri; }:}
 ;
@@ -339,7 +340,7 @@ VARSS ::= VARSS:e2 coma asig id:e1 {:VariablePrograma var = new VariablePrograma
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         e2.add(op); RESULT = e2;}:}
         | {:List<OperacionPrograma> arr = new ArrayList<>(); RESULT = arr;:}
@@ -423,11 +424,11 @@ OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePro
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        SumOperator sum = new SumOperator(null, new TerminalOperator(sem.getVariables().devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        SumOperator sum = new SumOperator(null, sem.getVariables().devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(sum);
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
-                        tri.add(new AsignarValor(new TerminalOperator(sem.getVariables().devolverDireccion(ss2.getId())), sum, null));
+                        tri.add(new AsignarValor(sem.getVariables().devolverDireccion(ss2.getId()), sum, null));
                 } RESULT = tri;:}
         | id:e1 menosmenos {:ListaTripletes tri = new ListaTripletes(); VariablePrograma vars = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
                 if(vars == null){
@@ -435,11 +436,11 @@ OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePro
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        RestOperator rest = new RestOperator(null, new TerminalOperator(sem.getVariables().devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        RestOperator rest = new RestOperator(null,sem.getVariables().devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(rest); 
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
-                        tri.add(new AsignarValor(new TerminalOperator(sem.getVariables().devolverDireccion(ss2.getId())), rest, null));
+                        tri.add(new AsignarValor(sem.getVariables().devolverDireccion(ss2.getId()), rest, null));
                 } RESULT = tri;:}
 ;
 
@@ -476,9 +477,9 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
@@ -488,9 +489,9 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                         } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
@@ -505,9 +506,9 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                                 } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(sem.getVariables().getTamano()+1)),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;}
                         }:}
@@ -578,7 +579,7 @@ ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, 
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         op.setValor(var.getValor());
                         RESULT = op;}:}

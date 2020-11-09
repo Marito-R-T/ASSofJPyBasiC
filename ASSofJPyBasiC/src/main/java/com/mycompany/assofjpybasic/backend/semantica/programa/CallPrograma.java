@@ -20,6 +20,8 @@ import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -52,14 +54,14 @@ public class CallPrograma extends OperacionPrograma {
         int i = 2;
         for (OperacionPrograma operacione : operaciones) {
             this.getTripletes().addAll(operacione.getTripletes());
-            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + (i + size)), "int");
+            SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + (i + size)), "int");
             this.getTripletes().add(sum);
-            this.getTripletes().add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), operacione.triplete));
+            this.getTripletes().add(new AsignarValor(null, new Stack(sum), operacione.triplete));
             i++;
         }
-        SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + size), "int");
+        SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + size), "int");
         this.getTripletes().add(sum);
-        this.getTripletes().add(new AsignarValor(null, new TerminalOperator("p"), sum));
+        this.getTripletes().add(new AsignarValor(null, new P(), sum));
     }
 
     public static String regresarJava(MetodoJava java, String id) {

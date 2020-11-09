@@ -30,7 +30,18 @@ public class GetchOperator extends Triplete {
 
     @Override
     public String devolverString() {
+        return "getch()";
+    }
+
+    @Override
+    public String devolverStringE() {
         return "getch();";
+    }
+
+    @Override
+    public String asm() {
+        return "	movl	$0, %eax\n"
+                + "	call	getch";
     }
 
 }

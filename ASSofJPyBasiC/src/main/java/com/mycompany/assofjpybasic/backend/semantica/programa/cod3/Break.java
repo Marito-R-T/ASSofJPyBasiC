@@ -31,4 +31,9 @@ public class Break extends Triplete {
         return null;
     }
 
+    @Override
+    public String devolverStringE() {
+        return null;
+    }
+
 }

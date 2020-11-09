@@ -28,7 +28,16 @@ public class GoToOperator extends Triplete {
 
     @Override
     public String devolverString() {
+        return "goto " + super.getOperando1().getId();
+    }
+
+    @Override
+    public String devolverStringE() {
         return "goto " + super.getOperando1().getId() + ";";
+    }
+
+    public String asm() {
+        return "    jmp     ." + super.getOperando1().getId() + "\n";
     }
 
 }

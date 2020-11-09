@@ -54,17 +54,28 @@ public class AsignarValor extends Triplete {
     public String devolverString() {
         if (!(operando2 instanceof Input)) {
             if (operando2 != null && tipo != null) {
+                return this.operando1.getId() + " = " + operando2.getId();
+            } else if (operando2 != null && tipo == null) {
+                return this.operando1.getId() + " = " + this.operando2.getId();
+            }
+        } else {
+            return "read " + operando1.getId();
+        }
+        return "";
+    }
+
+    @Override
+    public String devolverStringE() {
+        if (!(operando2 instanceof Input)) {
+            if (operando2 != null && tipo != null) {
                 return this.operando1.getId() + " = " + operando2.getId() + ";";
-            } else if (tipo != null && operando2 == null) {
-                return this.operando1.getId() + ";";
             } else if (operando2 != null && tipo == null) {
                 return this.operando1.getId() + " = " + this.operando2.getId() + ";";
-            } else {
-                return this.operando1.getId() + ";";
             }
         } else {
             return "scanf(\"%f\",&" + operando1.getId() + ");";
         }
+        return "";
     }
 
     public void setTipo(String tipo) {
@@ -73,6 +84,30 @@ public class AsignarValor extends Triplete {
 
     public String getTipo() {
         return tipo;
+    }
+
+    @Override
+    public String asm() {
+        String s = "";
+        if (this.operando2 instanceof Stack) {
+            s += ((Stack) operando2).devolvers();
+        } else if (this.operando2 instanceof P) {
+            s += this.operando2.asm();
+        } else if (this.operando2 instanceof GetchOperator) {
+            s += this.operando2.asm() + "\n"
+                    + "\tmovsbl\t%al, eax\n"
+                    + "\tcvtsi2ssl\t%eax, %xmm0\n";
+        } else if (this.operando2 instanceof TerminalOperator) {
+            s += "\tmovss\t" + ((TerminalOperator) this.operando2).getBin() + ", %xmm0\n";
+        } else {
+            s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+        }
+        if (this.operando1 instanceof Stack) {
+            s += ((Stack) operando1).devolver();
+        } else if (this.operando1 instanceof P) {
+            s += "\tmovl\t%eax, p(%rip)";
+        }
+        return s;
     }
 
 }

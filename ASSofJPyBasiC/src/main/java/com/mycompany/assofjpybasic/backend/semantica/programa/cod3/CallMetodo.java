@@ -28,7 +28,18 @@ public class CallMetodo extends TerminalOperator {
 
     @Override
     public String devolverString() {
+        return id + "()";
+    }
+
+    @Override
+    public String devolverStringE() {
         return id + "();";
+    }
+
+    @Override
+    public String asm() {
+        return "	movl	$0, %eax\n"
+                + "\tcall\t" + this.id + "\n";
     }
 
 }

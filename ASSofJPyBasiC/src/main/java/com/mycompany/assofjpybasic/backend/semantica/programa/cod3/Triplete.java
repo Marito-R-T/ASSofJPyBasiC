@@ -25,7 +25,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
  */
 public abstract class Triplete {
 
-    protected String id;
+    protected String id, pos;
     protected final Triplete operando1;
     protected final Triplete operando2;
     public static int VARNUM = 0, ETNUM = 0;
@@ -76,6 +76,8 @@ public abstract class Triplete {
 
     public abstract String devolverString();
 
+    public abstract String devolverStringE();
+
     public static String devolverTipo(OperacionPrograma op1, OperacionPrograma op2) {
         if (op1.getTipo() >= op2.getTipo()) {
             return Triplete.tipos[op1.getTipo() - 1];
@@ -88,8 +90,33 @@ public abstract class Triplete {
         return Triplete.tipos[op1.getTipo() - 1];
     }
 
+    public static String devolverTipoP(String string) {
+        switch (string) {
+            case "%d":
+                return "int";
+            case "%f":
+                return "float";
+            case "%c":
+                return "char";
+            default:
+                return "float";
+        }
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String asm() {
+        return "\n";
+    }
+
+    public String getPos() {
+        return pos;
+    }
+
+    public void setPos(String pos) {
+        this.pos = pos;
     }
 
 }

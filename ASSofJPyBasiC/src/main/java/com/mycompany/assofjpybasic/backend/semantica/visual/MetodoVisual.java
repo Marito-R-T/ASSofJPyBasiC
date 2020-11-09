@@ -8,7 +8,9 @@ package com.mycompany.assofjpybasic.backend.semantica.visual;
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -167,7 +169,7 @@ public class MetodoVisual {
 
     public String mostrarMetodo() {
         String com = "//Metodo de VISUAL BASIC con id: " + this.id + "\n";
-        String params = "void VB_";
+        String params = "VB_";
         params += this.id;
         for (VariableVisual parametro : this.parametros) {
             params += "_" + OperacionVisual.obtenerTipo(parametro.getTipo());
@@ -181,22 +183,38 @@ public class MetodoVisual {
         return com + params + metodo;
     }
 
+    public String mostrarMetodoE() {
+        String com = "//Metodo de VISUAL BASIC con id: " + this.id + "\n";
+        String params = "void VB_";
+        params += this.id;
+        for (VariableVisual parametro : this.parametros) {
+            params += "_" + OperacionVisual.obtenerTipo(parametro.getTipo());
+        }
+        params += "()";
+        String metodo = "{\n";
+        for (Triplete triplete : tripletes) {
+            metodo += triplete.devolverStringE() + "\n";
+        }
+        metodo += "}\n";
+        return com + params + metodo;
+    }
+
     public List<Triplete> verMetodo(Integer pos, List<OperacionVisual> params) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
-                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 1) + ""), "int");
+                SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 1) + ""), "int");
                 tri.add(op1);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
+                tri.add(new AsignarValor(null, new Stack(op1), params.get(i).triplete));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
+            SumOperator op2 = new SumOperator(null, new P(), new TerminalOperator(pos.toString()), "int");
             tri.add(op2);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new AsignarValor(null, new P(), op2));
             tri.add(new CallMetodo(this.nombreMetodo()));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
+            RestOperator op3 = new RestOperator(null, new P(), new TerminalOperator(pos.toString()), "int");
             tri.add(op3);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            tri.add(new AsignarValor(null, new P(), op3));
             return tri;
         } else {
             return new ArrayList<>();
@@ -208,21 +226,49 @@ public class MetodoVisual {
             List<Triplete> tri = new ArrayList<>();
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
-                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 1) + ""), "int");
+                SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 1) + ""), "int");
                 tri.add(op1);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).getTriplete()));
+                tri.add(new AsignarValor(null, new Stack(op1), params.get(i).getTriplete()));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
+            SumOperator op2 = new SumOperator(null, new P(), new TerminalOperator(pos.toString()), "int");
             tri.add(op2);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new AsignarValor(null, new P(), op2));
             tri.add(new CallMetodo(this.nombreMetodo()));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos.toString()), "int");
+            RestOperator op3 = new RestOperator(null, new P(), new TerminalOperator(pos.toString()), "int");
             tri.add(op3);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            tri.add(new AsignarValor(null, new P(), op3));
             return tri;
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public String mostrarMetodoAss(int lf) {
+        String nom = this.nombreMetodo();
+        String s = "    .globl  " + nom + "\n"
+                + "     .type   " + nom + ", @function\n"
+                + nom + "\n"
+                + ".LFB" + lf + ":\n"
+                + "	.cfi_startproc\n"
+                + "	endbr64\n"
+                + "	pushq	%rbp\n"
+                + "	.cfi_def_cfa_offset 16\n"
+                + "	.cfi_offset 6, -16\n"
+                + "	movq	%rsp, %rbp\n"
+                + "	.cfi_def_cfa_register 6\n";
+        for (Triplete triplete : tripletes) {
+            s += triplete.asm();
+        }
+        s += "  "
+                + "nop\n"
+                + "	popq	%rbp\n"
+                + "	.cfi_def_cfa 7, 8\n"
+                + "	ret\n"
+                + "	.cfi_endproc\n"
+                + ".LFE" + lf + ":\n"
+                + "	.size	" + nom + ", .-" + nom + "\n"
+                + "	.section	.rodata\n";
+        return s;
     }
 
 }

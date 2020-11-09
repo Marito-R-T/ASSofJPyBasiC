@@ -16,11 +16,6 @@
  */
 package com.mycompany.assofjpybasic.backend;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
@@ -37,25 +32,9 @@ public class prueba2 {
     }
 
     public void hacer() {
-        try {
-            String s;
-            s = this.getClass().getResource("/programa.c").getPath();
-            File file = new File(s);
-            System.out.println(s);
-            Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.c", "-lm", "-o", "programa"}, null, file.getParentFile());
-            pr.waitFor();
-            int i = pr.exitValue();
-            System.out.println(i);
-            pr = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -e \"./programa\""}, null, file.getParentFile());
-            //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
-            pr.waitFor();
-            i = pr.exitValue();
-            System.out.println(i);
-        } catch (IOException ex) {
-            Logger.getLogger(prueba2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(prueba2.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        int bin;
+        bin = Float.floatToIntBits(Float.parseFloat("15.5"));
+        System.out.println(bin);
     }
 
 }

@@ -20,7 +20,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class DivOperator extends Triplete {
+public class DivOperator extends AritmeticaOperator {
 
     private final String OPERADOR = "/";
     private final String tipo;
@@ -34,8 +34,31 @@ public class DivOperator extends Triplete {
 
     @Override
     public String devolverString() {
+        String d = this.id + " = " + this.operando1.getId() + " / " + this.operando2.getId();
+        return d;
+    }
+
+    @Override
+    public String devolverStringE() {
         String d = this.tipo + " " + this.id + " = " + this.operando1.getId() + " / " + this.operando2.getId() + ";";
         return d;
+    }
+
+    @Override
+    public String asm() {
+        String s = "";
+        s += super.asm();
+        if (operando2 instanceof Stack) {
+            s += "\tcltq\n"
+                    + ((Stack) this.operando2).asm(false)
+                    + "\tdivss\t%xmm1, %xmm0\n";
+        } else if (operando2 instanceof AritmeticaOperator) {
+            s += "\tdivss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+        } else if (operando2 instanceof TerminalOperator) {
+            s += "\tdivss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+        }
+        s += "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
+        return s;
     }
 
 }

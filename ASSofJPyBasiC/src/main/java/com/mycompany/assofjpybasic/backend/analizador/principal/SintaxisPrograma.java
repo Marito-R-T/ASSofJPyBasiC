@@ -832,7 +832,7 @@ class CUP$SintaxisPrograma$actions {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).left;
 		int start_valright = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).right;
-		String start_val = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
+		List<String> start_val = (List<String>)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)).value;
 		RESULT = start_val;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -843,8 +843,9 @@ class CUP$SintaxisPrograma$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 1: // PROGRAMA ::= INCLUDE_LENG CONST MAIN 
             {
-              String RESULT =null;
-		RESULT = sem.mostrarCodigo();
+              List<String> RESULT =null;
+		List<String> st = new ArrayList<>(); st.add(sem.mostrarCodigo());
+                                        st.add(sem.mostrarCodigoEjecutable()); st.add(sem.crearAssembler()); RESULT = st;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("PROGRAMA",52, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -963,7 +964,7 @@ class CUP$SintaxisPrograma$actions {
         } else {sem.getVar().addAll(e3.mostrarTripletes());
                 SumOperator sum = sem.getVariables().devolverSum(e2);
                 sem.getVar().add(sum);
-                sem.getVar().add(new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())),
+                sem.getVar().add(new AsignarValor(null, sem.getVariables().devolverDireccion(sum.getId()),
                 e3.getTriplete()));}
         
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("CONST",2, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-6)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1364,7 +1365,7 @@ class CUP$SintaxisPrograma$actions {
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         RESULT = op;}
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",12, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1424,7 +1425,7 @@ class CUP$SintaxisPrograma$actions {
                 var.getTipo(), e2, (ArregloPrograma) var);
                 SumOperator sum = sem.getVariables().devolverSum(e1);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
-                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())));
+                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum2.getId()));
                 corch.getTripletes().addAll(0, arr.getTripletes());
                 corch.getTripletes().add(sum);
                 corch.getTripletes().add(sum2);
@@ -1692,7 +1693,7 @@ class CUP$SintaxisPrograma$actions {
                 } else if (e2 == null) {
                         reportarSem("no hay ninguna expresión en la definición de Variable");
                 }else { SumOperator sum = sem.getVariables().devolverSum(e1);
-                        AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())), e2.getTriplete());
+                        AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum.getId()), e2.getTriplete());
                         /*tri.addAll(e2.mostrarTripletes());*/
                         tri.addAll(e2.mostrarTripletes());
                         tri.add(sum);
@@ -1727,7 +1728,7 @@ class CUP$SintaxisPrograma$actions {
                 tri.add(sum);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTriplete(), "int");
                 tri.add(sum2);
-                AsignarValor asig = new AsignarValor(null, new TerminalOperator(sem.getVariables().devolverDireccion(sum2.getId())), e3.getTriplete());
+                AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum2.getId()), e3.getTriplete());
                 tri.add(asig);
                 RESULT = tri; }
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("DEF_VAR",30, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -1828,7 +1829,7 @@ class CUP$SintaxisPrograma$actions {
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else {
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         e2.add(op); RESULT = e2;}
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("VARSS",47, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -2276,11 +2277,11 @@ ProgramaSemantica.AMBITO += 1;
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        SumOperator sum = new SumOperator(null, new TerminalOperator(sem.getVariables().devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        SumOperator sum = new SumOperator(null, sem.getVariables().devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(sum);
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
-                        tri.add(new AsignarValor(new TerminalOperator(sem.getVariables().devolverDireccion(ss2.getId())), sum, null));
+                        tri.add(new AsignarValor(sem.getVariables().devolverDireccion(ss2.getId()), sum, null));
                 } RESULT = tri;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OP_VAR",36, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2299,11 +2300,11 @@ ProgramaSemantica.AMBITO += 1;
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        RestOperator rest = new RestOperator(null, new TerminalOperator(sem.getVariables().devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        RestOperator rest = new RestOperator(null,sem.getVariables().devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(rest); 
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
-                        tri.add(new AsignarValor(new TerminalOperator(sem.getVariables().devolverDireccion(ss2.getId())), rest, null));
+                        tri.add(new AsignarValor(sem.getVariables().devolverDireccion(ss2.getId()), rest, null));
                 } RESULT = tri;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OP_VAR",36, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -2511,9 +2512,9 @@ ProgramaSemantica.AMBITO += 1;
                         } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }
@@ -2537,9 +2538,9 @@ ProgramaSemantica.AMBITO += 1;
                         } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }
@@ -2571,9 +2572,9 @@ ProgramaSemantica.AMBITO += 1;
                                 } else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(sem.getVariables().getTamano()+1)),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;}
                         }
@@ -2908,7 +2909,7 @@ ProgramaSemantica.AMBITO += 1;
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), new TerminalOperator(sem.getVariables().devolverDireccion(sum.getId())));
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         op.setValor(var.getValor());
                         RESULT = op;}

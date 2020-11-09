@@ -31,6 +31,11 @@ public class AsignarArreglo extends Triplete {
 
     @Override
     public String devolverString() {
+        return this.id + "[" + operando1.getId() + "] = " + operando2.getId();
+    }
+
+    @Override
+    public String devolverStringE() {
         return this.id + "[" + operando1.getId() + "] = " + operando2.getId() + ";";
     }
 

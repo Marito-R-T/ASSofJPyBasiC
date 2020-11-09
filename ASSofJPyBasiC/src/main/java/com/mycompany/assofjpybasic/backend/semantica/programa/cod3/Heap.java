@@ -20,34 +20,33 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  *
  * @author Mario Tobar <marioramirez201830007 at cunoc.edu.gt>
  */
-public class DefinirArreglo extends Triplete {
+public class Heap extends TerminalOperator {
 
-    private Triplete triplete;
-    private String tipo;
+    private Triplete ref;
 
-    public DefinirArreglo(String id, Triplete operando1, String tipo) {
-        super(id, operando1, null);
-        this.tipo = tipo;
+    public Heap(Triplete operador) {
+        super("heap[" + operador.id + "]");
+        ref = operador;
     }
 
-    public void setTriplete(Triplete triplete) {
-        this.triplete = triplete;
-    }
-
-    @Override
-    public String devolverString() {
-        if (this.triplete != null) {
-            return this.operando1.getId() + "[" + triplete.getId() + "]";
+    public String asm(boolean derecha) {
+        String s = "";
+        if (ref instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n";
+        } else {
+            s += "\t" + ref.pos + "(%rbp), %eax\n"
+                    + "\tcltq\n";
         }
-        return null;
-    }
-
-    @Override
-    public String devolverStringE() {
-        if (this.triplete != null) {
-            return this.tipo + " " + this.operando1.getId() + "[" + triplete.getId() + "];";
+        if (derecha) {
+            s += "   leaq	0(,%rdx,4), %rcx\n"
+                    + "leaq    stack(%rip), %rdx\n"
+                    + " movss	(%rcx,%rdx), %xmm0\n";
+        } else {
+            s += "   cltq\n"
+                    + " leaq	0(,%rax,4), %rdx\n"
+                    + " leaq	heap(%rip), %rax\n";
         }
-        return null;
+        return s;
     }
 
 }

@@ -9,7 +9,9 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -149,7 +151,40 @@ public class MetodoJava {
         return tripletes;
     }
 
+    /**
+     * Metodo para mostrar el constructor en codigo tres direcciones
+     *
+     * @param id String
+     * @return String
+     */
     public String mostrarMetodo(String id) {
+        String comentario;
+        if (id.equals(this.id)) {
+            comentario = "//Constructor de la clase " + id + "\n";
+        } else {
+            comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
+        }
+        String params = "JV_" + id + "_" + this.id;
+        for (VariableJava parametro : this.parametros) {
+            params += "_" + OperacionJava.obtenerTipo(parametro.getTipo());
+        }
+        params += "()";
+        String metodo = "{\n";
+        for (Triplete triplete : this.tripletes) {
+            metodo += triplete.devolverString() + "\n";
+        }
+        metodo += "}\n";
+        return comentario + params + metodo;
+    }
+
+    /**
+     * Metodo para mostrar el constructor en codigo tres direcciones para
+     * ejecutar
+     *
+     * @param id String
+     * @return String
+     */
+    public String mostrarMetodoE(String id) {
         String comentario;
         if (id.equals(this.id)) {
             comentario = "//Constructor de la clase " + id + "\n";
@@ -163,7 +198,7 @@ public class MetodoJava {
         params += "()";
         String metodo = "{\n";
         for (Triplete triplete : this.tripletes) {
-            metodo += triplete.devolverString() + "\n";
+            metodo += triplete.devolverStringE() + "\n";
         }
         metodo += "}\n";
         return comentario + params + metodo;
@@ -178,7 +213,38 @@ public class MetodoJava {
         return params;
     }
 
+    /**
+     * Metodo para mostrar metodo de java
+     *
+     * @param id Id del metodo
+     * @param tri Lista
+     * @return
+     */
     public String mostrarMetodo(String id, List<Triplete> tri) {
+        String comentario;
+        if (id.equals(this.id)) {
+            comentario = "//Constructor de la clase " + id + "\n";
+        } else {
+            comentario = "//Metodo " + this.id + " de la clase " + id + "\n";
+        }
+        String params = "JV_" + id + "_" + this.id;
+        params = this.parametros.stream().map((parametro) -> "_" + OperacionJava.obtenerTipo(parametro.getTipo())).reduce(params, String::concat);
+        params += "()";
+        String metodo = "{\n";
+        metodo = tri.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
+        metodo = this.tripletes.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
+        metodo += "}\n";
+        return comentario + params + metodo;
+    }
+
+    /**
+     * Metodo para mostrar metodo de java Ejecutable
+     *
+     * @param id Id del metodo
+     * @param tri Lista
+     * @return
+     */
+    public String mostrarMetodoE(String id, List<Triplete> tri) {
         String comentario;
         if (id.equals(this.id)) {
             comentario = "//Constructor de la clase " + id + "\n";
@@ -189,8 +255,8 @@ public class MetodoJava {
         params = this.parametros.stream().map((parametro) -> "_" + OperacionJava.obtenerTipo(parametro.getTipo())).reduce(params, String::concat);
         params += "()";
         String metodo = "{\n";
-        metodo = tri.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
-        metodo = this.tripletes.stream().map((triplete) -> triplete.devolverString() + "\n").reduce(metodo, String::concat);
+        metodo = tri.stream().map((triplete) -> triplete.devolverStringE() + "\n").reduce(metodo, String::concat);
+        metodo = this.tripletes.stream().map((triplete) -> triplete.devolverStringE() + "\n").reduce(metodo, String::concat);
         metodo += "}\n";
         return comentario + params + metodo;
     }
@@ -202,22 +268,22 @@ public class MetodoJava {
     public List<Triplete> verMetodo(Integer pos, List<OperacionJava> params) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
-            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos + 2), "int");
+            SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + (pos + 2)), "int");
             tri.add(sum);
-            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("stack[p]")));
+            tri.add(new AsignarValor(null, new Stack(sum), new Stack(new P())));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
-                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 3) + ""), "int");
+                SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 4) + ""), "int");
                 tri.add(op1);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
+                tri.add(new AsignarValor(null, new Stack(op1), params.get(i).triplete));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
+            SumOperator op2 = new SumOperator(null, new P(), new TerminalOperator((pos + 2) + ""), "int");
             tri.add(op2);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new AsignarValor(null, new P(), op2));
             tri.add(new CallMetodo(this.nombreMetodo()));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + 2) + ""), "int");
+            RestOperator op3 = new RestOperator(null, new P(), new TerminalOperator((pos + 2) + ""), "int");
             tri.add(op3);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            tri.add(new AsignarValor(null, new P(), op3));
             return tri;
         } else {
             return new ArrayList<>();
@@ -227,22 +293,22 @@ public class MetodoJava {
     public List<Triplete> verMetodo(Integer pos, List<OperacionJava> params, VariablePrograma pro) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
-            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos), "int");
+            SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + pos), "int");
             tri.add(sum);
-            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + pro.getHeap())));
+            tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + pro.getHeap())));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
-                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
+                SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 2) + ""), "int");
                 tri.add(op1);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).triplete));
+                tri.add(new AsignarValor(null, new Stack(op1), params.get(i).triplete));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            SumOperator op2 = new SumOperator(null, new P(), new TerminalOperator(pos + ""), "int");
             tri.add(op2);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new AsignarValor(null, new P(), op2));
             tri.add(new CallMetodo(this.nombreMetodo()));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            RestOperator op3 = new RestOperator(null, new P(), new TerminalOperator(pos + ""), "int");
             tri.add(op3);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            tri.add(new AsignarValor(null, new P(), op3));
             return tri;
         } else {
             return new ArrayList<>();
@@ -252,26 +318,85 @@ public class MetodoJava {
     public List<Triplete> verMetodo(Integer pos, VariablePrograma pro, List<OperacionPrograma> params) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
-            SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + pos), "int");
+            SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + pos), "int");
             tri.add(sum);
-            tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + pro.getHeap())));
+            tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + pro.getHeap())));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
-                SumOperator op1 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator((pos + i + 2) + ""), "int");
+                SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 2) + ""), "int");
                 tri.add(op1);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + op1.getId() + "]"), params.get(i).getTriplete()));
+                tri.add(new AsignarValor(null, new Stack(op1), params.get(i).getTriplete()));
             }
-            SumOperator op2 = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            SumOperator op2 = new SumOperator(null, new P(), new TerminalOperator(pos + ""), "int");
             tri.add(op2);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op2));
+            tri.add(new AsignarValor(null, new P(), op2));
             tri.add(new CallMetodo(this.nombreMetodo()));
-            RestOperator op3 = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator(pos + ""), "int");
+            RestOperator op3 = new RestOperator(null, new P(), new TerminalOperator(pos + ""), "int");
             tri.add(op3);
-            tri.add(new AsignarValor(null, new TerminalOperator("p"), op3));
+            tri.add(new AsignarValor(null, new P(), op3));
             return tri;
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public String mostrarMetodoAss(int lf) {
+        String nom = this.nombreMetodo();
+        String s = "    .globl  " + nom + "\n"
+                + "     .type   " + nom + ", @function\n"
+                + nom + "\n"
+                + ".LFB" + lf + ":\n"
+                + "	.cfi_startproc\n"
+                + "	endbr64\n"
+                + "	pushq	%rbp\n"
+                + "	.cfi_def_cfa_offset 16\n"
+                + "	.cfi_offset 6, -16\n"
+                + "	movq	%rsp, %rbp\n"
+                + "	.cfi_def_cfa_register 6\n";
+        for (Triplete triplete : tripletes) {
+            s += triplete.asm();
+        }
+        s += "  "
+                + "nop\n"
+                + "	popq	%rbp\n"
+                + "	.cfi_def_cfa 7, 8\n"
+                + "	ret\n"
+                + "	.cfi_endproc\n"
+                + ".LFE" + lf + ":\n"
+                + "	.size	" + nom + ", .-" + nom + "\n"
+                + "	.section	.rodata\n";
+        return s;
+    }
+
+    public String mostrarMetodoAss(int lf, List<Triplete> trip) {
+        String nom = this.nombreMetodo();
+        List<Triplete> tr = new ArrayList<>();
+        tr.addAll(trip);
+        tr.addAll(this.tripletes);
+        String s = "    .globl  " + nom + "\n"
+                + "     .type   " + nom + ", @function\n"
+                + nom + "\n"
+                + ".LFB" + lf + ":\n"
+                + "	.cfi_startproc\n"
+                + "	endbr64\n"
+                + "	pushq	%rbp\n"
+                + "	.cfi_def_cfa_offset 16\n"
+                + "	.cfi_offset 6, -16\n"
+                + "	movq	%rsp, %rbp\n"
+                + "	.cfi_def_cfa_register 6\n";
+        for (Triplete triplete : tripletes) {
+            s += triplete.asm();
+        }
+        s += "  "
+                + "nop\n"
+                + "	popq	%rbp\n"
+                + "	.cfi_def_cfa 7, 8\n"
+                + "	ret\n"
+                + "	.cfi_endproc\n"
+                + ".LFE" + lf + ":\n"
+                + "	.size	" + nom + ", .-" + nom + "\n"
+                + "	.section	.rodata\n";
+        return s;
     }
 
 }

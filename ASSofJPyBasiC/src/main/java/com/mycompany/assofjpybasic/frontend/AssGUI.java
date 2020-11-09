@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
@@ -299,13 +300,18 @@ public class AssGUI extends javax.swing.JFrame {
     private void itemGenerarCod3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGenerarCod3ActionPerformed
         // TODO add your handling code here:
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
-        String s = ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText());
-        tabbed.getPaneCodigoT().setText(s);
-        if (s != null) {
+        List<String> s = ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText());
+        if (s != null && s.size() == 3) {
+            tabbed.getPaneCodigoT().setText(s.get(0));
+            tabbed.setaEjecutar(s.get(1));
+            tabbed.getPaneOptimizacion().setText(s.get(1));
+            tabbed.getPaneAssembler().setText(s.get(2));
             tabbed.getTabedGeneral().setSelectedIndex(1);
+            Triplete.VARNUM = 0;
+            Triplete.ETNUM = 0;
+        } else {
+            tabbed.getPaneCodigoT().setText(null);
         }
-        Triplete.VARNUM = 0;
-        Triplete.ETNUM = 0;
     }//GEN-LAST:event_itemGenerarCod3ActionPerformed
 
     private void menuEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEjecutarActionPerformed
@@ -315,7 +321,8 @@ public class AssGUI extends javax.swing.JFrame {
     private void itemEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEjecutarActionPerformed
         // TODO add your handling code here:
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
-        String s = tabbed.getPaneCodigoT().getText();
+        String s = tabbed.getaEjecutar();
+        tabbed.getPaneAssembler().setText(s);
         try {
             File file = new File(this.getClass().getResource("/programa.c").toURI());
             this.getClass().getResource("").getFile();

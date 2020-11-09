@@ -30,8 +30,18 @@ public class Etiqueta extends Triplete {
 
     @Override
     public String devolverString() {
+        return this.id + ":";
+    }
+
+    @Override
+    public String devolverStringE() {
         return this.id + ":\n"
                 + "printf(\" \");";
+    }
+
+    @Override
+    public String asm() {
+        return "." + this.id + ":\n";
     }
 
 }

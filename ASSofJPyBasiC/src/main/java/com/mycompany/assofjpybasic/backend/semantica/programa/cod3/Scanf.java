@@ -27,6 +27,7 @@ import java.util.List;
 public class Scanf extends Triplete {
 
     private final String tipo;
+    private String et;
 
     /**
      * Constructor de Scanf
@@ -41,7 +42,12 @@ public class Scanf extends Triplete {
 
     @Override
     public String devolverString() {
-        return "scanf(" + "\"%f\", &" + operando2.getId() + ");";
+        return "read " + operando2.getId();
+    }
+
+    @Override
+    public String devolverStringE() {
+        return "scanf(" + "\" " + this.tipo + "\", &" + operando2.getId() + ");";
     }
 
     /**
@@ -69,6 +75,27 @@ public class Scanf extends Triplete {
             }
         }
         return tri;
+    }
+
+    public String asm() {
+        if (this.operando2 instanceof Stack) {
+            return "\tcltq\n"
+                    + ((Stack) this.operando2).asm(false)
+                    + "\taddq    %rdx, %rax\n"
+                    + "\tmovq    %rax, %rsi\n"
+                    + "\tleaq    " + et + "(%rip), %rdi\n"
+                    + "\tmovl    $0, %eax\n"
+                    + "\tcall    __isoc99_scanf@PLT\n";
+        } else if (this.operando2 instanceof Heap) {
+            return "\tcltq\n"
+                    + ((Heap) this.operando2).asm(false)
+                    + "\taddq    %rdx, %rax\n"
+                    + "\tmovq    %rax, %rsi\n"
+                    + "\tleaq    " + et + "(%rip), %rdi\n"
+                    + "\tmovl    $0, %eax\n"
+                    + "\tcall    __isoc99_scanf@PLT\n";
+        }
+        return "\n";
     }
 
 }

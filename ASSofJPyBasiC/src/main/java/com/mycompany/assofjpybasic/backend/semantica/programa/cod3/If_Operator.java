@@ -42,6 +42,15 @@ public class If_Operator extends Triplete {
     @Override
     public String devolverString() {
         if (op == null) {
+            return "if" + this.operando1.devolverString() + " goto " + et.getId();
+        } else {
+            return "if" + this.op.devolverString() + " goto " + et.getId();
+        }
+    }
+
+    @Override
+    public String devolverStringE() {
+        if (op == null) {
             return "if" + this.operando1.devolverString() + " goto " + et.getId() + ";";
         } else {
             return "if" + this.op.devolverString() + " goto " + et.getId() + ";";
@@ -58,6 +67,17 @@ public class If_Operator extends Triplete {
 
     public void setOp(Triplete op) {
         this.op = new IgualOperator(this.operando1, op);
+    }
+
+    @Override
+    public String asm() {
+        if (op == null) {
+            ((CondicionalOperator) this.operando1).setEt("." + et.getId());
+            return this.operando1.asm();
+        } else {
+            ((CondicionalOperator) this.op).setEt("." + et.id);
+            return this.op.asm();
+        }
     }
 
 }

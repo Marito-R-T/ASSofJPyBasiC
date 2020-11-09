@@ -22,13 +22,26 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  */
 public class Clrs extends Triplete {
 
+    private String et;
+
     public Clrs() {
         super(null, null, null);
     }
 
     @Override
     public String devolverString() {
+        return "clrscr()";
+    }
+
+    @Override
+    public String devolverStringE() {
         return "system(\"clear\");";
+    }
+
+    @Override
+    public String asm() {
+        return "    leaq    " + et + "(%rip), %rdi\n"
+                + " call    system@PLT\n";
     }
 
 }

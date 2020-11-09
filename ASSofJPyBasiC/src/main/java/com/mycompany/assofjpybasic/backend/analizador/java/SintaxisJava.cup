@@ -165,8 +165,8 @@ RETURN ::= returnn OPERACION_A:e1 puntocoma {:ListaTripletes tri = new ListaTrip
                                 + " y se espera un tipo: " + OperacionJava.obtenerTipo(actual.getTIPO()));
                                 RESULT = tri;}
                         else{tri.setRet(true); tri.addAll(e1.mostrarTripletes()); 
-                        SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("1"),"int"); tri.add(sum);
-                        tri.add(new Return(e1.getTriplete(), sum.getId()));
+                        SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("1"),"int"); tri.add(sum);
+                        tri.add(new Return(e1.getTriplete(), sum));
                         RESULT = tri;}:}
 ;
 
@@ -213,13 +213,8 @@ FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc BLOQUE
                 {:RESULT = Else_Operator.FOR(e1, e3, e2, e4);:}
 ;
 
-INICIO ::= THIS:e0 id:e1 {:List<Triplete> tri = new ArrayList<>();
-                        VariableJava num; if(e0){num = tabla.existeVarGlobal(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        else {num = tabla.existeVar(new VariableJava(e1, TablaJava.AMBITO, null));}
-                        if(num == null){
-                                reportarSem("No existe variable con id: " + e1);
-                        }
-                        RESULT = new ListaTripletes(tri);:}
+INICIO ::= AS_VAR_LINE:e1 {:
+                        RESULT = new ListaTripletes(e1);:}
         | TYPE:e1 {:TablaJava.AMBITO += 1; variables = new ArrayList<>();:} 
                 AS_VAR:e2 {:ListaTripletes tri = new ListaTripletes();
                 VariableJava.agregarTipo(variables, e1);
@@ -230,7 +225,7 @@ INICIO ::= THIS:e0 id:e1 {:List<Triplete> tri = new ArrayList<>();
                 tri.addAll(e2.getTripletes());
                 SumOperator sum = tabla.devolverSum(e2.getId(), false);
                 tri.add(sum);
-                tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete().getOperando2(), null));} RESULT = tri;:}
+                tri.add(new AsignarValor(tabla.devolverDireccion(sum.getId()), e2.getTriplete().getOperando2(), null));} RESULT = tri;:}
 ;
 
 STEP ::= AS_VAR_LINE:e1 {:RESULT = e1;:}
@@ -291,12 +286,12 @@ AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {:ListaTripletes tri = new Li
                                         tri.addAll(e2.mostrarTripletes());
                                         SumOperator sum = tabla.devolverSum(e1, true);
                                         tri.add(sum);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(sum.getId())), e2.getTriplete(), null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(sum.getId()), e2.getTriplete(), null));
                                 } else {
                                         tri.addAll(e2.mostrarTripletes());
                                         SumOperator sum = tabla.devolverSum(e1, false);
                                         tri.add(sum);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(sum.getId())), e2.getTriplete(), null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(sum.getId()), e2.getTriplete(), null));
                                 }
                         }RESULT = tri;:}
 ;
@@ -314,20 +309,20 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator ss1 = tabla.devolverSum(e1, true);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccionH(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, true);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(ss2.getId())), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2.getId()), sum, null));
                                         RESULT = tri;
                                 } else {
                                         SumOperator ss1 = tabla.devolverSum(e1, false);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2.getId()), sum, null));
                                         RESULT = tri;
                                 }}:}
         | THIS:e0 id:e1 menosmenos {:ListaTripletes tri = new ListaTripletes();
@@ -339,20 +334,20 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator ss1 = tabla.devolverSum(e1, true);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccionH(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, true);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccionH(ss2.getId())), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2.getId()), sum, null));
                                         RESULT = tri;
                                 } else {
                                         SumOperator ss1 = tabla.devolverSum(e1, false);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, new TerminalOperator(tabla.devolverDireccion(ss1.getId())), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(new TerminalOperator(tabla.devolverDireccion(ss2.getId())), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2.getId()), sum, null));
                                         RESULT = tri;
                                 }}:}
 ;
@@ -394,13 +389,15 @@ ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){VariableJava num;
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
                                 if(tabla.getVar_definidas().contains(num)){
+                                        System.out.println("CONTIENE EL VALOR");
                                         SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum.getId()));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
+                                        System.out.println("NO CONTIENE EL VALOR");
                                         SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccion(sum.getId())));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum.getId()));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }}}
@@ -410,9 +407,9 @@ ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){VariableJava num;
                         }else{
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+tabla.getVariables().size()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(tabla.getVariables().size()+3)),"int");
                                 tri.add(s);
-                                OperacionJava op = new OperacionJava(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionJava op = new OperacionJava(met.getTIPO(), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }}:}
@@ -475,12 +472,12 @@ EXPR ::= INPUT:e1 {:RESULT = e1;:}
                         }else{
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum.getId()));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
                                         SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), new TerminalOperator(tabla.devolverDireccionH(sum.getId())));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum.getId()));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }
@@ -511,9 +508,9 @@ LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoJava met = tabla.existe
                         }else{
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+tabla.getVariables().size()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(tabla.getVariables().size()+3)),"int");
                                 tri.add(s);
-                                OperacionJava op = new OperacionJava(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionJava op = new OperacionJava(met.getTIPO(), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}

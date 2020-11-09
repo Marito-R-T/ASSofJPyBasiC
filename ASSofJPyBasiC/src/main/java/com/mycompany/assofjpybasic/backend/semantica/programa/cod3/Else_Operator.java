@@ -21,7 +21,6 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.CondicionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.ListaTripletes;
 import com.mycompany.assofjpybasic.backend.semantica.python.OperacionPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.OperacionVisual;
-import com.mycompany.assofjpybasic.backend.semantica.visual.VisualSemantica;
 import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.util.ArrayList;
 import java.util.List;
@@ -193,29 +192,28 @@ public class Else_Operator extends ListaTripletes {
      * @param tri Tripletes del For
      * @return Regresa los tripletes del for
      */
-    public static ListaTripletes FORP(SumOperator ss, String id, List<OperacionPython> op, ListaTripletes tri) {
+    public static ListaTripletes FORP(SumOperator ss, Stack id, List<OperacionPython> op, ListaTripletes tri) {
         if (id != null && op != null && tri != null) {
-            TerminalOperator terminal = new TerminalOperator(id);
             Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
             MenorOperator men;
             ListaTripletes nuevos = new ListaTripletes();
             if (op.size() >= 2) {
                 nuevos.addAll(op.get(0).getTripletes());
                 nuevos.add(ss);
-                nuevos.add(new AsignarValor(terminal, op.get(0).getTriplete(), "int"));
+                nuevos.add(new AsignarValor(id, op.get(0).getTriplete(), "int"));
             } else {
                 nuevos.add(ss);
-                nuevos.add(new AsignarValor(terminal, new TerminalOperator("0"), "int"));
+                nuevos.add(new AsignarValor(id, new TerminalOperator("0"), "int"));
             }
             nuevos.add(et);
             SumOperator ss2 = new SumOperator(null, ss.operando1, ss.operando2, "int");
             if (op.size() < 2) {
                 nuevos.addAll(op.get(0).mostrarTripletes());
 
-                men = new MenorOperator(op.get(0).getTriplete(), new TerminalOperator("stack[" + ss2.id + "]"));
+                men = new MenorOperator(op.get(0).getTriplete(), new Stack(ss2));
             } else {
                 nuevos.addAll(op.get(1).mostrarTripletes());
-                men = new MenorOperator(op.get(1).getTriplete(), new TerminalOperator("stack[" + ss2.id + "]"));
+                men = new MenorOperator(op.get(1).getTriplete(), new Stack(ss2));
             }
             nuevos.add(ss2);
             If_Operator iff = new If_Operator(men, buena);// Manejo del If
@@ -226,14 +224,14 @@ public class Else_Operator extends ListaTripletes {
             SumOperator ss3 = new SumOperator(null, ss.operando1, ss.operando2, "int");
             nuevos.add(ss3);
             if (op.size() < 3) {
-                SumOperator sum = new SumOperator(null, new TerminalOperator("stack[" + ss3.id + "]"), new TerminalOperator("1"), "int");
+                SumOperator sum = new SumOperator(null, new Stack(ss3), new TerminalOperator("1"), "int");
                 nuevos.add(sum);
-                nuevos.add(new AsignarValor(new TerminalOperator("stack[" + ss3.id + "]"), sum, null));
+                nuevos.add(new AsignarValor(new Stack(ss3), sum, null));
             } else {
                 nuevos.addAll(op.get(2).getTripletes());
-                SumOperator sum = new SumOperator(null, new TerminalOperator("stack[" + ss3.id + "]"), op.get(2).getTriplete(), "int");
+                SumOperator sum = new SumOperator(null, new Stack(ss3), op.get(2).getTriplete(), "int");
                 nuevos.add(sum);
-                nuevos.add(new AsignarValor(new TerminalOperator("stack[" + ss3.id + "]"), sum, null));
+                nuevos.add(new AsignarValor(new Stack(ss3), sum, null));
             }
             nuevos.add(new GoToOperator(et));
             nuevos.add(mala);
@@ -258,8 +256,8 @@ public class Else_Operator extends ListaTripletes {
      */
     public static ListaTripletes FORV(Integer direccion, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, ListaTripletes tri) {
         if (direccion != null && tipo != null && inicio != null && fin != null && step != null && tri != null) {
-            SumOperator smm = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(direccion.toString()), "int");
-            TerminalOperator term = new TerminalOperator("stack[" + smm.id + "]");
+            SumOperator smm = new SumOperator(null, new P(), new TerminalOperator(direccion.toString()), "int");
+            TerminalOperator term = new Stack(smm);
             Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
             ListaTripletes nuevos = new ListaTripletes();
             nuevos.addAll(inicio.mostrarTripletes());

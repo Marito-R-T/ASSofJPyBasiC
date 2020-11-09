@@ -1071,7 +1071,7 @@ VisualSemantica.AMBITO += 1;
                                 reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);}
                                 else{trip.addAll(e2.mostrarTripletes()); SumOperator sum = sem.devolverSum(e1);
                                 trip.add(sum);
-                                trip.add(new AsignarValor(new TerminalOperator(sem.devolverDireccion(sum.getId())), e2.getTriplete(), null));}
+                                trip.add(new AsignarValor(sem.devolverDireccion(sum.getId()), e2.getTriplete(), null));}
                                 RESULT = trip;
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("ASIGVAR",30, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
@@ -1326,7 +1326,7 @@ VisualSemantica.AMBITO += 1;
                         reportarSem("No existe la variable con id: " + e1);
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionVisual op = new OperacionVisual(var.getTipo(), new TerminalOperator(sem.devolverDireccion(sum.getId())));
+                        OperacionVisual op = new OperacionVisual(var.getTipo(), sem.devolverDireccion(sum.getId()));
                         op.getTripletes().add(sum);
                         RESULT = op;
                 }
@@ -2462,9 +2462,9 @@ VisualSemantica.AMBITO += 1;
                         }else {
                                 List<Triplete> tri = new ArrayList<>();
                                 tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
-                                SumOperator s = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(""+sem.getVariables().size()),"int");
+                                SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().size()),"int");
                                 tri.add(s);
-                                OperacionVisual op = new OperacionVisual(met.getTIPO(), new TerminalOperator("stack["+s.getId()+"]"));
+                                OperacionVisual op = new OperacionVisual(met.getTIPO(), new Stack(s));
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }

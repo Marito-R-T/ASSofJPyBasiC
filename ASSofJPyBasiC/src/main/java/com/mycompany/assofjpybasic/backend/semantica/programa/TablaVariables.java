@@ -18,6 +18,8 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -60,12 +62,12 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
         return 0;
     }
 
-    public String devolverDireccion(String id) {
-        return "stack[" + id + "]";
+    public Stack devolverDireccion(String id) {
+        return new Stack(new TerminalOperator(id));
     }
 
     public SumOperator devolverSum(String id) {
-        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+        return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
     /**
@@ -84,7 +86,7 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
                 if (variableJava.getTriplete().getOperando2() != null) {
                     SumOperator sum = this.devolverSum(variableJava.getId());
                     tri.add(sum);
-                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableJava.getTriplete().getOperando2(), null));
                 }
             }
         }
@@ -106,7 +108,7 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
             if (var.getTriplete().getOperando2() != null) {
                 SumOperator sum = this.devolverSum(var.getId());
                 tri.add(sum);
-                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), var.getTriplete().getOperando2(), null));
+                tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), var.getTriplete().getOperando2(), null));
             }
         }
         return tri;

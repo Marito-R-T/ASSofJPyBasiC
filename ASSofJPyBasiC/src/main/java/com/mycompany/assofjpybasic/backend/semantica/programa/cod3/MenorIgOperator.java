@@ -43,4 +43,18 @@ public class MenorIgOperator extends CondicionalOperator {
         return "(" + this.operando1.getId() + this.OPERADOR + this.operando2.getId() + ")";
     }
 
+    @Override
+    public String devolverStringE() {
+        return "(" + this.operando1.getId() + this.OPERADOR + this.operando2.getId() + ")";
+    }
+
+    @Override
+    public String asm() {
+        String s = "";
+        s += super.asm();
+        s += "\tucomiss\t%xmm0, %xmm1\n";
+        s += "\tjle\t" + super.et + "\n";
+        return s;
+    }
+
 }

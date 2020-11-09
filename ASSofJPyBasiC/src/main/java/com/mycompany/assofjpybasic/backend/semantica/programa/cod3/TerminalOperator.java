@@ -23,6 +23,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class TerminalOperator extends Triplete {
 
     private String operador;
+    private Integer bin;
 
     /**
      * iniciar tripleta
@@ -32,11 +33,22 @@ public class TerminalOperator extends Triplete {
     public TerminalOperator(String operador) {
         super(operador, null, null);
         this.operador = operador;
+        bin = Float.floatToIntBits(Float.parseFloat("15.5"));
+
     }
 
     @Override
     public String devolverString() {
+        return this.id;
+    }
+
+    @Override
+    public String devolverStringE() {
         return this.id + ";";
+    }
+
+    public Integer getBin() {
+        return bin;
     }
 
 }

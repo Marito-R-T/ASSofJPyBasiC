@@ -20,7 +20,9 @@ import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.RestOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -60,14 +62,14 @@ public class ObjetoPrograma {
             var.setHeap(sem.getHeap());
             sem.setHeap(sem.getHeap() + met.getVar_definidas().size());
             if (pro != null && sem.addVar(var)) {
-                SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator("" + integ), "int");
+                SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + integ), "int");
                 tri.add(sum);
-                tri.add(new AsignarValor(null, new TerminalOperator("stack[" + sum.getId() + "]"), new TerminalOperator("" + var.getHeap())));
+                tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + var.getHeap())));
                 tri.addAll(pro.mostrarTripletes());
                 tri.add(pro.getTriplete());
-                RestOperator rest = new RestOperator(null, new TerminalOperator("p"), new TerminalOperator("" + integ), "int");
+                RestOperator rest = new RestOperator(null, new P(), new TerminalOperator("" + integ), "int");
                 tri.add(rest);
-                tri.add(new AsignarValor(null, new TerminalOperator("p"), new TerminalOperator(rest.getId())));
+                tri.add(new AsignarValor(null, new P(), rest));
             }
         }
         return tri;

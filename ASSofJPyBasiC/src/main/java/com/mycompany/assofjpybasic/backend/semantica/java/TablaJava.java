@@ -6,7 +6,11 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Heap;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -29,6 +33,7 @@ public class TablaJava {
     private final List<MetodoJava> metodos = new ArrayList<>();
     private final List<MetodoJava> constructores = new ArrayList<>();
     private final List<Triplete> principales = new ArrayList<>();
+    private Integer num;
 
     /**
      * constructor para incializar AMBITO a 0 e Inicializar el primer ambito
@@ -232,6 +237,17 @@ public class TablaJava {
         return s;
     }
 
+    public String mostrarClaseE() {
+        String s = "// Clase de JAVA con nombre " + this.id + "\n";
+        for (MetodoJava constructor : this.constructores) {
+            s += constructor.mostrarMetodoE(this.id, this.principales);
+        }
+        for (MetodoJava metodo : this.metodos) {
+            s += metodo.mostrarMetodoE(this.id);
+        }
+        return s;
+    }
+
     public void verificarConstructores() {
         if (constructores.isEmpty()) {
             constructores.add(new MetodoJava(this.id, 5, new ArrayList<>(), this.id));
@@ -255,23 +271,23 @@ public class TablaJava {
                 if (this.var_definidas.contains(variableJava)) {
                     SumOperator sum = this.devolverSum(variableJava.getId(), true);
                     tri.add(sum);
-                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccionH(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccionH(sum.getId()), variableJava.getTriplete().getOperando2(), null));
                 } else {
                     SumOperator sum = this.devolverSum(variableJava.getId());
                     tri.add(sum);
-                    tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableJava.getTriplete().getOperando2(), null));
                 }
             }
         }
         return tri;
     }
 
-    public String devolverDireccion(String id) {
-        return "stack[" + id + "]";
+    public Stack devolverDireccion(String id) {
+        return new Stack(new TerminalOperator(id));
     }
 
-    public String devolverDireccionH(String id) {
-        return "heap[" + id + "]";
+    public Heap devolverDireccionH(String id) {
+        return new Heap(new TerminalOperator(id));
     }
 
     public SumOperator devolverSum(String id) {
@@ -280,9 +296,9 @@ public class TablaJava {
 
     public SumOperator devolverSum(String id, boolean global) {
         if (global) {
-            return new SumOperator(null, new TerminalOperator("stack[p]"), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
+            return new SumOperator(null, new Stack(new P()), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
         } else {
-            return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+            return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
         }
     }
 
@@ -327,6 +343,44 @@ public class TablaJava {
             }
         }
         return null;
+    }
+
+    public String mostrarClaseAss(int lf) {
+        String s = "";
+        int num = lf;
+        for (MetodoJava constructor : this.constructores) {
+            List<Triplete> trip = new ArrayList<>();
+            trip.addAll(this.principales);
+            trip.addAll(constructor.getTripletes());
+            int pos = -4;
+            for (int i = trip.size() - 1; i >= 0; i--) {
+                Triplete triplete = trip.get(i);
+                if (triplete instanceof AritmeticaOperator) {
+                    triplete.setPos(pos + "");
+                    pos -= 4;
+                }
+            }
+            s += constructor.mostrarMetodoAss(num, this.principales);
+            num++;
+        }
+        for (MetodoJava metodo : this.metodos) {
+            int pos = -4;
+            for (int i = metodo.getTripletes().size() - 1; i >= 0; i--) {
+                Triplete triplete = metodo.getTripletes().get(i);
+                if (triplete instanceof AritmeticaOperator) {
+                    triplete.setPos(pos + "");
+                    pos -= 4;
+                }
+            }
+            s += metodo.mostrarMetodoAss(num);
+            num++;
+        }
+        this.num = num;
+        return s;
+    }
+
+    public Integer getNum() {
+        return num;
     }
 
 }

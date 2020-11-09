@@ -6,6 +6,8 @@
 package com.mycompany.assofjpybasic.backend.semantica.python;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -92,7 +94,7 @@ public class PythonSemantica {
                 list.addAll(t.mostrarTripletes());
                 SumOperator sum = this.devolverSum(py.getId());
                 list.add(sum);
-                list.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), t.getTriplete(), null));
+                list.add(new AsignarValor(this.devolverDireccion(sum.getId()), t.getTriplete(), null));
             }
             return list;
         } else {
@@ -100,12 +102,12 @@ public class PythonSemantica {
         }
     }
 
-    public String devolverDireccion(String id) {
-        return "stack[" + id + "]";
+    public Stack devolverDireccion(String id) {
+        return new Stack(new TerminalOperator(id));
     }
 
     public SumOperator devolverSum(String id) {
-        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+        return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
     /**

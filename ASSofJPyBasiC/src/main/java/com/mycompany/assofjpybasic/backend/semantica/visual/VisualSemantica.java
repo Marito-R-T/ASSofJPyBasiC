@@ -6,6 +6,8 @@
 package com.mycompany.assofjpybasic.backend.semantica.visual;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
@@ -207,7 +209,7 @@ public class VisualSemantica {
                 SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(variableVisual.getDireccion().toString()), null);
                 variableVisual.getTripletes().add(sum);
                 tri.addAll(variableVisual.getTripletes());
-                tri.add(new AsignarValor(new TerminalOperator(this.devolverDireccion(sum.getId())), variableVisual.getTriplete().getOperando2(), null));
+                tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableVisual.getTriplete().getOperando2(), null));
             } else {
                 tri.addAll(variableVisual.getTripletes());
             }
@@ -227,12 +229,12 @@ public class VisualSemantica {
         });
     }
 
-    public String devolverDireccion(String id) {
-        return "stack[" + id + "]";
+    public Stack devolverDireccion(String id) {
+        return new Stack(new TerminalOperator(id));
     }
 
     public SumOperator devolverSum(String id) {
-        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+        return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
     public Integer obtenerDireccion(String id) {

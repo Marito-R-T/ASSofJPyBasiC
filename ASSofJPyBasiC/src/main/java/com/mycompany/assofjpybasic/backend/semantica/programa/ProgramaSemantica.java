@@ -39,6 +39,7 @@ public class ProgramaSemantica {
     private List<Triplete> tripletes = new ArrayList<>();
     private List<Triplete> var = new ArrayList<>();
     private List<String> imports = new ArrayList<>();
+    private CrearAssembler assembler = new CrearAssembler();
 
     /**
      * Constructor de la semantica del programa, donde se inicializa el ambito a
@@ -318,12 +319,19 @@ public class ProgramaSemantica {
         return null;
     }
 
+    public String crearAssembler() {
+        assembler.getClasesJava().addAll(this.clasesImportadas);
+        assembler.getMetodosPython().addAll(this.metodosPython);
+        assembler.getMetodosVisual().addAll(this.metodosVisual);
+        List<Triplete> main = new ArrayList<>();
+        main.addAll(this.var);
+        main.addAll(this.tripletes);
+        assembler.getMain().addAll(main);
+        return assembler.getAssembler();
+    }
+
     public String mostrarCodigo() {
         String s = "";
-        s = this.imports.stream().map(aImport -> aImport + "\n").reduce(s, String::concat);
-        s += this.librerias(s);
-        s += this.principal();
-        s += this.getch();
         if (metodosPython != null) {
             s += this.Python();
         }
@@ -335,6 +343,26 @@ public class ProgramaSemantica {
         }
         s += "\n//Main de C \n";
         s += this.main();
+        return s;
+    }
+
+    public String mostrarCodigoEjecutable() {
+        String s = "";
+        s = this.imports.stream().map(aImport -> aImport + "\n").reduce(s, String::concat);
+        s += this.librerias(s);
+        s += this.principal();
+        s += this.getch();
+        if (metodosPython != null) {
+            s += this.PythonE();
+        }
+        if (metodosVisual != null) {
+            s += this.VisualE();
+        }
+        if (this.clasesImportadas != null) {
+            s += this.importadasE();
+        }
+        s += "\n//Main de C \n";
+        s += this.mainE();
         return s;
     }
 
@@ -417,6 +445,32 @@ public class ProgramaSemantica {
         return s;
     }
 
+    public String PythonE() {
+        String s = "";
+        for (MetodoPython metodoPython : this.metodosPython) {
+            s += "\n";
+            s += metodoPython.mostrarMetodoE();
+        }
+        return s;
+    }
+
+    public String VisualE() {
+        String s = "";
+        for (MetodoVisual metodoVisual : this.metodosVisual) {
+            s += "\n";
+            s += metodoVisual.mostrarMetodoE();
+        }
+        return s;
+    }
+
+    public String importadasE() {
+        String s = "";
+        for (TablaJava clasesImportada : this.clasesImportadas) {
+            s += clasesImportada.mostrarClaseE();
+        }
+        return s;
+    }
+
     public String main() {
         String s = "int main() {\n";
         s += "\n//Variables y constantes Globales \n";
@@ -426,6 +480,20 @@ public class ProgramaSemantica {
         s += "\n//empieza el main \n";
         for (Triplete triplete : this.tripletes) {
             s += triplete.devolverString() + "\n";
+        }
+        s += "}\n";
+        return s;
+    }
+
+    public String mainE() {
+        String s = "int main() {\n";
+        s += "\n//Variables y constantes Globales \n";
+        for (Triplete triplete : this.var) {
+            s += triplete.devolverStringE() + "\n";
+        }
+        s += "\n//empieza el main \n";
+        for (Triplete triplete : this.tripletes) {
+            s += triplete.devolverStringE() + "\n";
         }
         s += "}\n";
         return s;

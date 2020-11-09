@@ -21,6 +21,7 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     private final File[] archivo;
     private boolean compilado;
+    private String aEjecutar;
 
     /**
      * Creates new form TabbedPanel
@@ -94,7 +95,7 @@ public final class TabbedPanel extends javax.swing.JPanel {
         paneOptimizacion.setEditable(false);
         spOptimizacion.setViewportView(paneOptimizacion);
 
-        tabedGeneral.addTab("Optimización", spOptimizacion);
+        tabedGeneral.addTab("Ejecutable", spOptimizacion);
 
         paneAssembler.setEditable(false);
         spAssembler.setViewportView(paneAssembler);
@@ -210,6 +211,22 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     public JTabbedPane getTabedGeneral() {
         return tabedGeneral;
+    }
+
+    public JTextPane getPaneAssembler() {
+        return paneAssembler;
+    }
+
+    public JTextPane getPaneOptimizacion() {
+        return paneOptimizacion;
+    }
+
+    public String getaEjecutar() {
+        return aEjecutar;
+    }
+
+    public void setaEjecutar(String aEjecutar) {
+        this.aEjecutar = aEjecutar;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

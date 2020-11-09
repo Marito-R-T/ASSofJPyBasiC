@@ -72,8 +72,8 @@
         <Container class="javax.swing.JScrollPane" name="spOptimizacion">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Optimizaci&#xf3;n">
-                <Property name="tabTitle" type="java.lang.String" value="Optimizaci&#xf3;n"/>
+              <JTabbedPaneConstraints tabName="Ejecutable">
+                <Property name="tabTitle" type="java.lang.String" value="Ejecutable"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
