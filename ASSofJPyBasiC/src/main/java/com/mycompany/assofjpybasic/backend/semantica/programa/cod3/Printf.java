@@ -87,7 +87,7 @@ public class Printf extends Triplete {
         for (String string : texto) {
             if (string.equals("%d") || string.equals("%f") || string.equals("%c")) {
                 if (term < ope.size()) {
-                    tri.addAll(ope.get(term).getTripletes());
+                    tri.addAll(ope.get(term).mostrarTripletes());
                     if (string.equals("%v")) {
                         tri.add(new Printf("%f", ope.get(term).getTriplete(), "float"));
                     } else {

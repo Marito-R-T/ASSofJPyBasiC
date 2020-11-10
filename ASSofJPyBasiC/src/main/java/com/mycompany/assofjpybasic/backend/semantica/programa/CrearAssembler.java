@@ -18,6 +18,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.MetodoVisual;
@@ -65,7 +66,7 @@ public class CrearAssembler {
             int pos = -4;
             for (int i = metodoPython.getTrip().size() - 1; i >= 0; i--) {
                 Triplete trip = metodoPython.getTrip().get(i);
-                if (trip instanceof AritmeticaOperator) {
+                if (trip instanceof AritmeticaOperator || trip instanceof AsignarTemporal) {
                     trip.setPos(pos + "");
                     pos -= 4;
                 }
@@ -83,7 +84,7 @@ public class CrearAssembler {
             int pos = -4;
             for (int i = metodoVisual.getTripletes().size() - 1; i >= 0; i--) {
                 Triplete trip = metodoVisual.getTripletes().get(i);
-                if (trip instanceof AritmeticaOperator) {
+                if (trip instanceof AritmeticaOperator || trip instanceof AsignarTemporal) {
                     trip.setPos(pos + "");
                     pos -= 4;
                 }
@@ -109,7 +110,7 @@ public class CrearAssembler {
         int ite = - 4;
         for (int i = this.main.size() - 1; i >= 0; i--) {
             Triplete tr = this.main.get(i);
-            if (tr instanceof AritmeticaOperator) {
+            if (tr instanceof AritmeticaOperator || tr instanceof AsignarTemporal) {
                 tr.setPos(ite + "");
                 ite -= 4;
             }

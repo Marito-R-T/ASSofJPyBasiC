@@ -143,7 +143,7 @@ public final class TabbedPanel extends javax.swing.JPanel {
                 if (archivo[1] == null && compilado) {
                     guardarComoArchivo(guardado);
                 } else {
-                    guardado.guardarTexto(archivo[1], paneCodigoT.getText());
+                    guardado.guardarTexto(archivo[1], paneOptimizacion.getText());
                 }
                 break;
             case 2:
@@ -177,17 +177,17 @@ public final class TabbedPanel extends javax.swing.JPanel {
                 break;
             case 1:
                 if (compilado) {
-                    archivo[1] = guardado.guardarComo(paneCodigoT.getText(), ".cpp", "Codigo en 3 Direcciones");
+                    archivo[1] = guardado.guardarComo(paneOptimizacion.getText(), ".c", "Codigo en 3 Direcciones");
                 }
                 break;
             case 2:
                 if (compilado) {
-                    archivo[2] = guardado.guardarComo(paneOptimizacion.getText(), ".cpp", "3 Direcciones Optimizado");
+                    archivo[2] = guardado.guardarComo(paneOptimizacion.getText(), ".c", "3 Direcciones Optimizado");
                 }
                 break;
             case 3:
                 if (compilado) {
-                    archivo[3] = guardado.guardarComo(paneAssembler.getText(), ".asm", "Codigo en Assembler");
+                    archivo[3] = guardado.guardarComo(paneAssembler.getText(), ".s", "Codigo en Assembler");
                 }
                 break;
         }

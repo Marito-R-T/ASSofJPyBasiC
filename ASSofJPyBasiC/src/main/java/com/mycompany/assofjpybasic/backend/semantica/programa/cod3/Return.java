@@ -38,7 +38,7 @@ public class Return extends Triplete {
         if (pos == null) {
             return "stack[p] = " + this.operando1.id;
         } else {
-            return "stack[" + pos + "] = " + this.operando1.id;
+            return "stack[" + pos.id + "] = " + this.operando1.id;
         }
     }
 
@@ -47,7 +47,7 @@ public class Return extends Triplete {
         if (pos == null) {
             return "stack[p] = " + this.operando1.id + ";";
         } else {
-            return "stack[" + pos + "] = " + this.operando1.id + ";";
+            return "stack[" + pos.id + "] = " + this.operando1.id + ";";
         }
     }
 

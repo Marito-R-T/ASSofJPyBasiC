@@ -100,7 +100,7 @@ IN_LENG ::= py {:sem.iniciarPY(py, p);:}
         | vb {:sem.iniciarVB(vb, v);:}
         | java IN_CLASS:e1 comilla {:if(e1.equals("$$*$$")){sem.importarTodasClases();}else{sem.importarClase(e1);}:}
         | includee:e1 idlib:e2 {:sem.getImports().add(e1 + " " + e2);:}
-        | error IN_LENG
+        | error IN_LENG {:reportarSem("Error en la importación de librerías o trozos de codigo");:}
 ;
 
 IN_CLASS ::= por {:RESULT = "$$*$$";:}
@@ -125,7 +125,10 @@ CONST ::= CONST constt TYPE:e1 id:e2 igual OPERACION_AC:e3 puntocoma
                         tri.addAll(sem.getVariables().obtenerTriplete(var, var.getTipo()));
                         } sem.getVar().addAll(tri);:}
         | {::}
-        | error
+        | CONST constt TYPE id igual error puntocoma {:reportarSem("Error en la asignación de constante, se esperaba una operacion");:}
+        | CONST constt error igual OPERACION_AC puntocoma {:reportarSem("Error en la asignacion de constante, se esperaba un id");:}
+        | CONST constt TYPE id error OPERACION_AC puntocoma {:reportarSem("Error en la asignacion de constante, se esperaba un igual");:}
+        | CONST constt TYPE id igual OPERACION_AC error {:reportarSem("Error en la asignacion de constante, se esperaba un ;");:}
 ;
 
 TYPE ::= intt {:RESULT = VariablePrograma.INT;:}
@@ -151,18 +154,29 @@ ASIG_VAR ::= TYPE:e1 LIST_ASIG:e2 puntocoma {:if(!sem.addListVar(e2, e1)){
                 if(!sem.addVar(arr)){
                         reportarSem("Variable ya creda con el mismo nombre: <" + e2 + ">");
                 }else {var.add(arr);} RESULT = var;:}
+        | TYPE id error puntocoma {:reportarSem("Error en la asignacion de variable, se esperaba arreglo");:}
+        | TYPE error CORCHETESF:e4 puntocoma {:reportarSem("Error en la asignacion de variable, se esperaba un id");:}
 ;
 
 CORCHETESF ::= CORCHETESF:e1 cora OPERACION_AC:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
         | cora OPERACION_AC:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>();
                 if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
+        | cora error corc {:reportarSem("Error en los corchetes, se esperaba una operacion"); RESULT = new ArrayList<>();:}
+        | cora OPERACION_AC error {:reportarSem("Error en los corchetes, se esperaba un \"]\""); RESULT = new ArrayList<>();:}
+        | error OPERACION_AC corc {:reportarSem("Error en los corchetes, se esperaba un \"]\""); RESULT = new ArrayList<>();:}
+        | CORCHETESF:e1 cora error corc {:reportarSem("Error en los corchetes, se esperaba una operacion"); RESULT = e1;:}
+        | CORCHETESF:e1 cora OPERACION_AC error {:reportarSem("Error en los corchetes, se esperaba un \"]\""); RESULT = e1;:}
+        | CORCHETESF:e1 error OPERACION_AC corc {:reportarSem("Error en los corchetes, se esperaba un \"[\""); RESULT = e1;:}
 ;
 
 CORCHETES ::= CORCHETES:e1 cora OPERACION_A:e2 corc {:if(e2.getTipo()<=VariablePrograma.INT) e1.add(e2); RESULT = e1;:}
         | cora OPERACION_A:e1 corc {:List<OperacionPrograma> opr = new ArrayList<>();
                 if(e1.getTipo()<=VariablePrograma.INT) opr.add(e1);
                 RESULT = opr;:}
+        | cora error corc {:reportarSem("Error en los corchetes, se esperaba una operacion"); RESULT = new ArrayList<>();:}
+        | cora OPERACION_A error {:reportarSem("Error en los corchetes, se esperaba un \"]\""); RESULT = new ArrayList<>();:}
+        | CORCHETES:e1 cora error corc {:reportarSem("Error en los corchetes, se esperaba una operacion"); RESULT = e1;:}
 ;
 
 LIST_ASIG ::= LIST_ASIG:e1 coma id:e2 ASIG:e3 {:
@@ -170,14 +184,17 @@ LIST_ASIG ::= LIST_ASIG:e1 coma id:e2 ASIG:e3 {:
                 new AsignarValor(null, new TerminalOperator(e2), e3.getTriplete())));
                 else e1.add(new VariablePrograma(e2, ProgramaSemantica.AMBITO,
                 new AsignarValor("", new TerminalOperator(e2), null))); RESULT = e1;:}
-            | id:e1 ASIG:e2 {:List<VariablePrograma> vars = new ArrayList<>();
+        | id:e1 ASIG:e2 {:List<VariablePrograma> vars = new ArrayList<>();
             if(e2!=null) vars.add(new VariablePrograma(e1, ProgramaSemantica.AMBITO, e2,
                 new AsignarValor(null, new TerminalOperator(e1), e2.getTriplete()))); 
             else vars.add(new VariablePrograma(e1, ProgramaSemantica.AMBITO,
                 new AsignarValor("", new TerminalOperator(e1), null))); RESULT = vars;:}
+        | LIST_ASIG:e1 coma error ASIG {:reportarSem("Error en la asignacion de variables, se esperaba un id"); RESULT = new ArrayList<>();:}
+        | error ASIG:e1 {:reportarSem("Error en la asignacion de variables, se esperaba un id"); RESULT = new ArrayList<>();:}
 ;
 
 ASIG ::= igual EXPR:e1 {:RESULT = e1;:}
+        | igual error {:reportarSem("Error en la asignacion de variable, se esperaba arreglo o puntocoma");:}
         |
 ;
 
@@ -186,7 +203,7 @@ OPERACION_A ::= OPERACION_A:e1 mas OPERACION_M:e2 {:if(e1 != null && e2 != null)
         | OPERACION_A:e1 menos OPERACION_M:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
                 new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));:}
         | OPERACION_M:e1 {:RESULT = e1;:}
-        | error OPERACION_M:e1 {:RESULT = e1;:}
+        | error OPERACION_M:e1 {:reportarSem("Error en una operación Aritmetica"); RESULT = e1;:}
 ;
 
 OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1 != null && e2 != null) RESULT = new OperacionPrograma(e1, e2,
@@ -233,9 +250,14 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                 RESULT = corch;}
                 :}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
+        | error  CORCHETES {:reportarSem("Error en la referencia de variables, se esperaba un id que haga referencia a un arreglo");:}
 ;
 
 MAIN ::= voidd mainn para parc llavea STATEMENTS:e1 llavec {:sem.getTripletes().addAll(e1);:}
+        | voidd error para parc llavea STATEMENTS:e1 llavec {:reportarSem("Error en el main, no tiene el main");:}
+        | voidd mainn error parc llavea STATEMENTS:e1 llavec {:reportarSem("Error en el main, se espera (");:}
+        | voidd mainn para error llavea STATEMENTS:e1 llavec {:reportarSem("Error en el main, se espera )");:}
+        | voidd mainn para parc error STATEMENTS:e1 llavec {:reportarSem("Error en el main, se espera {");:}
 ;
 
 STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:if(!e2.isFin()){
@@ -247,7 +269,7 @@ STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:if(!e2.isFin()){
 
 STATEMENT ::= COMPOUND:e1 {:RESULT = e1;:}
         | STATEMENTLINE:e1 {:RESULT = e1;:}
-        | error {:RESULT = new ListaTripletes();:}
+        | error {:reportarSem("Error en una parte del codigo"); RESULT = new ListaTripletes();:}
 ;
 
 COMPOUND ::= WHILE:e1 {:RESULT = e1;:}
@@ -302,10 +324,19 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum2.getId()), e3.getTriplete());
                 tri.add(asig);
                 RESULT = tri; }:}
+        | id igual error {:reportarSem("Error en definicion de Variable, se esperaba una asignación"); RESULT = new ListaTripletes();:}
+        | id error igual EXPR {:reportarSem("Error en definicion de Variable, se esperaba un ="); RESULT = new ListaTripletes();:}
+        | error igual igual EXPR {:reportarSem("Error en definicion de Variable, se esperaba un id"); RESULT = new ListaTripletes();:}
+        | id CORCHETES igual error {:reportarSem("Error en definicion de Arreglo, se esperaba una asignación"); RESULT = new ListaTripletes();:}
+        | error CORCHETES igual error {:reportarSem("Error en definicion de Arreglo, se esperaba un id"); RESULT = new ListaTripletes();:}
 ;
 
 PRINTF ::= printf para comilla STRING:e1 comilla VARS:e2 parc puntocoma 
                 {:if(e1 != null) RESULT = Printf.regresarTripletes(e1, e2);:}
+        | printf para error VARS parc puntocoma 
+                {:reportarSem("Error en el printf, se esperaba un String"); RESULT = new ListaTripletes();:}
+        | printf para comilla STRING comilla error parc puntocoma 
+                {:reportarSem("Error en el printf, se esperaba una lista de variables"); RESULT = new ListaTripletes();:}
 ;
 
 /*STRING ::= comilla STR comilla
@@ -326,12 +357,15 @@ STRING ::= STRING:e1 string:e2 {:e1.add(e2); RESULT = e1;:}
         | {:RESULT = new ArrayList<>();:}
 ;
 
-VARS ::= VARS:e1 coma OPERACION_A:e2 {:if(e1!=null && e2!= null){e1.add(e2); RESULT = e1;}:}
+VARS ::= VARS:e1 coma EXPR:e2 {:if(e1!=null && e2!= null){e1.add(e2); RESULT = e1;}:}
         | {:List<OperacionPrograma> op = new ArrayList<>(); RESULT = op;:}
+        | VARS coma error {:reportarSem("Error en una variable de un print, se esperaba una operacion"); RESULT = new ArrayList<>();:}
 ;
 
 SCANF ::= scanf para comilla STRING:e1 comilla VARSS:e2 parc puntocoma 
                 {:if(e2!=null) RESULT = Scanf.regresarTripletes(e1, e2);:}
+        | scanf para comilla error parc puntocoma 
+                {:reportarSem("Error en el scanf en los parametros, se esperaba un parametro"); RESULT = new ListaTripletes();:}
 ;
 
 VARSS ::= VARSS:e2 coma asig id:e1 {:VariablePrograma var = new VariablePrograma(e1, ProgramaSemantica.AMBITO, null);
@@ -344,16 +378,49 @@ VARSS ::= VARSS:e2 coma asig id:e1 {:VariablePrograma var = new VariablePrograma
                         op.getTripletes().add(sum);
                         e2.add(op); RESULT = e2;}:}
         | {:List<OperacionPrograma> arr = new ArrayList<>(); RESULT = arr;:}
+        | VARSS:e2 error asig id {:reportarSem("Error en la variable del scanf, se esperaba una coma"); RESULT = e2;:}
+        | VARSS:e2 coma error id {:reportarSem("Error en la variable del scanf, se esperaba un & (espacio en memoria)"); RESULT = e2;:}
+        | VARSS:e2 coma asig error {:reportarSem("Error en la variable del scanf, se esperaba un id"); RESULT = e2;:}
 ;
 
 IF_ELSE ::= iff para CONDICION:e1 parc llavea {:ProgramaSemantica.AMBITO += 1;:} 
         STATEMENTS:e2 llavec ELSE_IF:e3 ELSE:e4 {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);:}
+        | iff para error parc llavea {:reportarSem("Error en un if, se esperaba una condicion"); ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTS llavec ELSE_IF ELSE {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = new ListaTripletes();:}
+        | error para CONDICION parc llavea {:reportarSem("Error en una condicion, se esperaba if/while"); ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTS llavec ELSE_IF ELSE {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = new ListaTripletes();:}
+        | iff error CONDICION parc llavea {:reportarSem("Error en un if, se esperaba ("); ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTS llavec ELSE_IF ELSE {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = new ListaTripletes();:}
+        | iff para CONDICION error llavea {:reportarSem("Error en un if, se esperaba )"); ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTS llavec ELSE_IF ELSE {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = new ListaTripletes();:}
+        | iff para CONDICION parc error {:reportarSem("Error en un if, se esperaba {"); ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTS llavec ELSE_IF ELSE {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = new ListaTripletes();:}
 ;
 
 ELSE_IF ::= ELSE_IF:e1 elsee iff para CONDICION:e2 parc llavea {:ProgramaSemantica.AMBITO += 1;:}
         STATEMENTS:e3 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 RESULT = e1.agregarElseIf(e2, e3);:}
+        |  ELSE_IF:e1 elsee iff para error parc llavea {:reportarSem("Error en else if, se esperaba una condicional"); ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = e1;:}
+        |  ELSE_IF:e1 elsee error para CONDICION parc llavea {:reportarSem("Error en else if, se esperaba if ya que tiene condicion"); ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = e1;:}
+        |  ELSE_IF:e1 elsee iff error CONDICION parc llavea {:reportarSem("Error en else if, se esperaba ("); ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = e1;:}
+        |  ELSE_IF:e1 elsee iff para CONDICION error llavea {:reportarSem("Error en else if, se esperaba )"); ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = e1;:}
+        |  ELSE_IF:e1 elsee iff para CONDICION parc error {:reportarSem("Error en else if, se esperaba {"); ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                RESULT = e1;:}
         | {:RESULT = new Else_Operator();:}
 ;
 
@@ -364,11 +431,21 @@ ELSE ::= elsee llavea {:ProgramaSemantica.AMBITO += 1;:}
 ;
 
 SWITCH ::= switchh para EXPR:e1 parc llavea CASES:e2 DEFAULT:e3 llavec {:RESULT = e2.agregarDefault(e1, e3);:}
+        | switchh para error parc llavea CASES DEFAULT llavec {:reportarSem("Error en la expresion del switch, se esperaba una Operacion"); 
+                        RESULT = new ListaTripletes();:}
+        | switchh error EXPR parc llavea CASES DEFAULT llavec {:reportarSem("Error en la expresion del switch, se esperaba ("); 
+                        RESULT = new ListaTripletes();:}
+        | switchh para EXPR error llavea CASES DEFAULT llavec {:reportarSem("Error en la expresion del switch, se esperaba )"); 
+                        RESULT = new ListaTripletes();:}
+        | switchh para EXPR parc error CASES DEFAULT llavec {:reportarSem("Error en la expresion del switch, se esperaba {"); 
+                        RESULT = new ListaTripletes();:}
 ;
 
 CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:esCase = true; ProgramaSemantica.AMBITO += 1;:} 
         STATEMENTSC:e3 {:esCase = false; sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
                 if(e2!=null){RESULT  = e1.agregarCase(e2, e3);}:}
+        | CASES:e1 casee error dosp {:esCase = true; ProgramaSemantica.AMBITO += 1;:} 
+        STATEMENTSC:e3 {:reportarSem("Error en la condicion del case, se espera una operacion aritmetica"); RESULT = new CasePrograma();:}
         | {:RESULT = new CasePrograma();:}
 ;
 
@@ -389,6 +466,9 @@ DEFAULT ::= defaultt dosp {:esCase = true; ProgramaSemantica.AMBITO += 1;:}
 WHILE ::= whilee para CONDICION:e1 parc llavea {:ProgramaSemantica.AMBITO += 1;:}
         STATEMENTS:e2 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
         RESULT = Else_Operator.WHILE(e1, e2);:}
+        | whilee para error parc llavea {:ProgramaSemantica.AMBITO += 1;:}
+        STATEMENTS llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
+                reportarSem("Error en la condición de un while, se esperaba una condicional"); RESULT = new ListaTripletes();:}
 ;
 
 DO_WHILE ::= doo llavea {:ProgramaSemantica.AMBITO += 1;:} 
@@ -399,6 +479,24 @@ DO_WHILE ::= doo llavea {:ProgramaSemantica.AMBITO += 1;:}
 FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc llavea {:ProgramaSemantica.AMBITO += 1;:}
         STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1;
         RESULT = Else_Operator.FOR(e1, e3, e2, e5);:}
+        | forr para error puntocoma CONDICION puntocoma STEP parc llavea {:ProgramaSemantica.AMBITO += 1;
+                                reportarSem("Error en el inicio del for, se esperaba una inicialización de variable");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma error puntocoma STEP parc llavea {:ProgramaSemantica.AMBITO += 1;
+                                reportarSem("Error en la condicional del for, se esperaba una condicion de variable");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma CONDICION puntocoma error parc llavea {:ProgramaSemantica.AMBITO += 1;
+                                reportarSem("Error en el Step del for, se esperaba el step del for");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr para error parc llavea {:
+                                reportarSem("Error el espacio del for, se esperaba un punto y coma");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr error INICIO puntocoma CONDICION puntocoma STEP parc llavea {:
+                                reportarSem("Error el espacio del for, se esperaba (");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma CONDICION puntocoma STEP parc error {:
+                                reportarSem("Error el espacio del for, se esperaba {");:}
+                                STATEMENTS:e5 llavec {:sem.eliminarAmbito(ProgramaSemantica.AMBITO); ProgramaSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
 ;
 
 INICIO ::= DEF_VAR:e1 {:RESULT = e1;:}
@@ -442,6 +540,9 @@ OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePro
                         tri.add(ss2);
                         tri.add(new AsignarValor(sem.getVariables().devolverDireccion(ss2.getId()), rest, null));
                 } RESULT = tri;:}
+        | error masmas {:reportarSem("Error en la operacion incremento, se espera un id antes del ++"); RESULT = new ListaTripletes();:}
+        | error menosmenos {:reportarSem("Error en la operacion incremento, se espera un id antes del --"); RESULT = new ListaTripletes();:}
+        | id error {:reportarSem("Error en la operacion incremento, se espera un ++ o --"); RESULT = new ListaTripletes();:}
 ;
 
 CONDICION ::= CONDICION:e1 orr AND:e2 {:RESULT = IfPrograma.OR(e1, e2);:}
@@ -512,6 +613,18 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;}
                         }:}
+                | error punto id para LIST_PARAM parc {:reportarSem("Llamada a metodo incorrecta, se esperaba PY|VB");:}
+                | error punto id punto id para LIST_PARAM parc {:reportarSem("Llamada a metodo incorrecta, se esperaba JV");:}
+                | pyy error id para LIST_PARAM parc {:reportarSem("Llamada a metodo py incorrecta, se esperaba un punto");:}
+                | vbb error id para LIST_PARAM parc {:reportarSem("Llamada a metodo vb incorrecta, se esperaba un punto");:}
+                | pyy punto error para LIST_PARAM parc {:reportarSem("Llamada a metodo py incorrecta, se esperaba un id");:}
+                | vbb punto error para LIST_PARAM parc {:reportarSem("Llamada a metodo vb incorrecta, se esperaba un id");:}
+                | pyy punto id error LIST_PARAM parc {:reportarSem("Llamada a metodo py incorrecta, se esperaba un (");:}
+                | vbb punto id error LIST_PARAM parc {:reportarSem("Llamada a metodo vb incorrecta, se esperaba un (");:}
+                | javaa error id punto id para LIST_PARAM parc {:reportarSem("Llamada a metodo java incorrecta, se esperaba un punto");:}
+                | javaa punto error punto id para LIST_PARAM parc {:reportarSem("Llamada a metodo java incorrecta, se esperaba un id");:}
+                | javaa punto id error id para LIST_PARAM parc {:reportarSem("Llamada a metodo java incorrecta, se esperaba un punto");:}
+                | javaa punto id punto error para LIST_PARAM parc {:reportarSem("Llamada a metodo java incorrecta, se esperaba un id");:}
 ;
 
 EXPR ::= LLAMADA_METODO:e1 {:if(!e1.getTipo().equals(Triplete.tipos[3])){RESULT = new OperacionPrograma(new AsignarTemporal(null, e1.getTriplete(),
@@ -522,6 +635,10 @@ EXPR ::= LLAMADA_METODO:e1 {:if(!e1.getTipo().equals(Triplete.tipos[3])){RESULT 
 
 CLASS ::= javaa punto id:e1 LIST_CLASS:e2 puntocoma {:
         RESULT = new ListaTripletes(ObjetoPrograma.triplete(e1, e2, sem, ProgramaSemantica.AMBITO));:}
+        | error punto id LIST_CLASS puntocoma {:reportarSem("Llamada a constructor java incorrecto, se esperaba la llamada jv"); RESULT = new ListaTripletes();:}
+        | javaa error id LIST_CLASS puntocoma {:reportarSem("Llamada a constructor java incorrecto, se esperaba un punto"); RESULT = new ListaTripletes();:}
+        | javaa punto error LIST_CLASS puntocoma {:reportarSem("Llamada a constructor java incorrecto, se esperaba un id"); RESULT = new ListaTripletes();:}
+        | javaa punto id LIST_CLASS error {:reportarSem("Llamada a constructor java incorrecto, se esperaba un ;"); RESULT = new ListaTripletes();:}
 ;
 
 LIST_CLASS ::= LIST_CLASS:e1 coma id:e2 PARAM:e3 {:ObjetoPrograma ob = new ObjetoPrograma(e2, e3);
@@ -529,9 +646,11 @@ LIST_CLASS ::= LIST_CLASS:e1 coma id:e2 PARAM:e3 {:ObjetoPrograma ob = new Objet
             | id:e1 PARAM:e2 {:ObjetoPrograma ob = new ObjetoPrograma(e1, e2);
             List<ObjetoPrograma> pro = new ArrayList<>(); pro.add(ob);
             RESULT = pro;:}
+            | LIST_CLASS coma error PARAM {:reportarSem("Error en objetos java, se esperaba un id para el objeto"); RESULT = new ArrayList<>();:}
 ;
 
 PARAM ::= para LIST_PARAM:e1 parc {:RESULT = e1;:}
+        | para error parc {:reportarSem("Error en parametros del constructor, se esperaban parametros"); RESULT = new ArrayList<>();:}
         | {:RESULT = new ArrayList<>();:}
 ;
 
@@ -541,6 +660,7 @@ LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
 
 LIST ::= LIST:e1 coma OPERACION_A:e2 {:e1.add(e2); RESULT = e1;:}
         | OPERACION_A:e1 {:List<OperacionPrograma> params = new ArrayList<>(); params.add(e1); RESULT = params;:}
+        | LIST error OPERACION_A {:reportarSem("Error en parametros de constructor, se esperaba una coma"); RESULT = new ArrayList<>();:}
 ;
 
 OPERACION_AC ::= OPERACION_AC:e1 mas OPERACION_MC:e2 {:if(e1 != null && e2 != null){
@@ -550,7 +670,6 @@ OPERACION_AC ::= OPERACION_AC:e1 mas OPERACION_MC:e2 {:if(e1 != null && e2 != nu
                 OperacionPrograma op = new OperacionPrograma(e1, e2, new RestOperator(null, e1.getTriplete(), e2.getTriplete(), Triplete.devolverTipo(e1, e2)));
                 op.setValor(e1.getValor() - e2.getValor()); RESULT = op;}:}
         | OPERACION_MC:e1 {:RESULT = e1;:}
-        | error OPERACION_MC:e1 {:RESULT = e1;:}
 ;
 
 OPERACION_MC ::= OPERACION_MC:e1 por OPERACION_UC:e2 {:if(e1 != null && e2 != null){

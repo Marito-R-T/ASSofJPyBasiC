@@ -43,6 +43,23 @@ public class AsignarTemporal extends Triplete {
         return d;
     }
 
+    @Override
+    public String asm() {
+        String s = "";
+        if (operando1 instanceof Stack) {
+            s += "\tcltq\n"
+                    + ((Stack) this.operando1).asm()
+                    + "\tmovss   " + " %xmm0, " + this.getPos() + "(%rip)\n";
+        } else if (operando1 instanceof AritmeticaOperator) {
+            s += "\tmovss   " + operando1.getPos() + "(%rip), " + this.getPos() + "(%rip)\n";
+        } else if (operando1 instanceof P) {
+            s += "\tmovss   p(%rip), " + this.getPos() + "(%rip)\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            s += "\tmovss   ." + this.operando1.getPos() + ", " + this.getPos() + "(%rip)\n";
+        }
+        return s;
+    }
+
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }

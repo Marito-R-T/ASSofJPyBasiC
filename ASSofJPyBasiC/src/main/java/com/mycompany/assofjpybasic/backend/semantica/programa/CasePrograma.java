@@ -63,6 +63,7 @@ public class CasePrograma extends ListaTripletes {
                 tri.add(gotoo);
             }
             this.addAll(tri);
+            this.add(gotoo);
             this.add(n2);
             return this;
         } else {
@@ -93,6 +94,7 @@ public class CasePrograma extends ListaTripletes {
                 tri.add(gotoo);
             }
             this.addAll(tri);
+            this.add(gotoo);
             this.add(n2);
             return this;
         } else {
@@ -108,6 +110,7 @@ public class CasePrograma extends ListaTripletes {
                 aIf.setOp(operacion.getTriplete());
             }
             this.addAll(tri);
+            this.add(gotoo);
             this.add(salida);
             return this;
         } else {
@@ -123,6 +126,7 @@ public class CasePrograma extends ListaTripletes {
                 aIf.setOp(operacion.getTriplete());
             }
             this.addAll(tri);
+            this.add(gotoo);
             this.add(salida);
             return this;
         } else {

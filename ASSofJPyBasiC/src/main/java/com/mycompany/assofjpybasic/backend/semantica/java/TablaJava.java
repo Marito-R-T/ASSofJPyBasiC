@@ -7,6 +7,7 @@ package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOperator;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Heap;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
@@ -355,7 +356,7 @@ public class TablaJava {
             int pos = -4;
             for (int i = trip.size() - 1; i >= 0; i--) {
                 Triplete triplete = trip.get(i);
-                if (triplete instanceof AritmeticaOperator) {
+                if (triplete instanceof AritmeticaOperator || triplete instanceof AsignarTemporal) {
                     triplete.setPos(pos + "");
                     pos -= 4;
                 }

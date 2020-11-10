@@ -130,6 +130,8 @@ LISTPARAM ::= LISTPARAM:e1 coma BYVAL id:e2 TYPE:e3 {:e1.add(new VariableVisual(
         | BYVAL id:e1 TYPE:e2 {:List<VariableVisual> var = new ArrayList<>();
                         var.add(new VariableVisual(e1, (VisualSemantica.AMBITO + 1), e2, new TerminalOperator(e1)));
                         RESULT = var;:}
+        | LISTPARAM:e1 error BYVAL id TYPE {:reportarSem("Error con los parametros, se esperaba una coma"); RESULT = e1;:}
+        | LISTPARAM:e1 coma BYVAL error TYPE {:reportarSem("Error con los parametros, se esperaba un id"); RESULT = e1;:}
 ;
 
 BYVAL ::= byval 
@@ -161,6 +163,7 @@ LISTVAR ::= LISTVAR:e1 coma id:e2 TYPEE:e3 DEF:e4 {:String tipo = VariableVisual
                         if(tipo == null && e2 != null && e3 != null){
                                 reportarSem("No coincide el tipo con la asignación de la variable con id: " + e1);
                         } vars.add(va); RESULT = vars;:}
+        | LISTVAR error id TYPEE DEF {:reportarSem("Error con la asignacion de variables, se esperaba una coma"); RESULT = new ArrayList<>();:}
 ;
 
 ASIGVAR ::= id:e1 igual EXPR:e2 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, VisualSemantica.AMBITO, null));
@@ -171,6 +174,9 @@ ASIGVAR ::= id:e1 igual EXPR:e2 {:VariableVisual var = sem.existeVar(new Variabl
                                 trip.add(sum);
                                 trip.add(new AsignarValor(sem.devolverDireccion(sum.getId()), e2.getTriplete(), null));}
                                 RESULT = trip;:}
+        | error igual EXPR {:reportarSem("Error en la asignacion de variable, se esperaba un id"); RESULT = new ListaTripletes();:}
+        | id error EXPR {:reportarSem("Error en la asignacion de variable, se esperaba un igual"); RESULT = new ListaTripletes();:}
+        | id igual error {:reportarSem("Error en la asignacion de variable, se esperaba una operacion"); RESULT = new ListaTripletes();:}
 ;
 
 TYPE ::= ass integerr {:RESULT = VisualSemantica.INT;:}
@@ -263,11 +269,16 @@ IF_ELSE ::= iff CONDICION:e1 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATE
         | iff CONDICION:e1 thenn {:VisualSemantica.AMBITO += 1;:} STATEMENTLINE:e2
                 espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; 
                 RESULT = Else_Operator.IFSIMPLE(e1, e2);:}
+        | iff error THEN espacio {:reportarSem("Error en el if, se esperaba la condicion"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF:e3 ELSE:e4 endd iff espacio 
+                {:RESULT = new ListaTripletes();:}
 ;
 
 ELSE_IF ::= ELSE_IF:e1 elseiff CONDICION:e2 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = e1.agregarElseIf(e2, e3);:}
         | {:RESULT = new Else_Operator();:}
+        | ELSE_IF:e1 elseiff error THEN espacio {:reportarSem("Error en el else if, se esperaba la condicion"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new Else_Operator();:}
 ;
 
 ELSE ::= elsee espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e1 
@@ -292,7 +303,8 @@ STATEMENTLINE ::= CONSOLEWRITE:e1 {:RESULT = e1;:}
 
 SELECT ::= selectt CA EXPR:e1 espacio CASES:e2 CASEELSE:e3 endd selectt espacio
                 {:RESULT = e2.agregarDefault(e1, e3);:}
-        | error espacio CASES CASEELSE endd selectt espacio {:RESULT = new ListaTripletes();:}
+        | error espacio CASES CASEELSE endd selectt espacio {: reportarSem("Error en el select, no hay un inicio correcto");
+        RESULT = new ListaTripletes();:}
 ;
 
 CA ::= casee

@@ -37,7 +37,7 @@ public abstract class AritmeticaOperator extends Triplete {
         } else if (operando1 instanceof P) {
             s += "\tmovss   p(%rip), %xmm0\n";
         } else if (operando1 instanceof TerminalOperator) {
-            s += "\tmovss   ." + this.operando1.getPos() + ", %xmm0\n";
+            s += "\tmovss   ." + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
         }
         return s;
     }

@@ -33,9 +33,9 @@ public class Stack extends TerminalOperator {
     public String asm(boolean derecha) {
         String s = "";
         if (ref instanceof P) {
-            s += "\tmovl\tp(%rip), %eax\n";
+            s += "\tmovl\tp(%rip), %xmm1\n";
         } else {
-            s += "\t" + ref.pos + "(%rbp), %eax\n"
+            s += "\tmovss\t" + ref.pos + "(%rbp), %xmm1\n"
                     + "\tcltq\n";
         }
         if (derecha) {

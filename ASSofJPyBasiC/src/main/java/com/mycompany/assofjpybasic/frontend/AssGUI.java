@@ -265,9 +265,12 @@ public class AssGUI extends javax.swing.JFrame {
         if (tb.getArchivo()[0] != null) {
             tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[0].getName().substring(0, tb.getArchivo()[0].getName().length() - 4));
             tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[0].getPath());
-        } else {
-            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), null);
-            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), null);
+        } else if (tb.getArchivo()[1] != null || tb.getArchivo()[2] != null) {
+            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[2].getName().substring(0, tb.getArchivo()[2].getName().length() - 2));
+            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[2].getPath());
+        } else if (tb.getArchivo()[3] != null) {
+            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[3].getName().substring(0, tb.getArchivo()[3].getName().length() - 2));
+            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[3].getPath());
         }
     }//GEN-LAST:event_itemGuardarActionPerformed
 
@@ -283,9 +286,12 @@ public class AssGUI extends javax.swing.JFrame {
         if (tb.getArchivo()[0] != null) {
             tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[0].getName().substring(0, tb.getArchivo()[0].getName().length() - 4));
             tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[0].getPath());
-        } else {
-            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), null);
-            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), null);
+        } else if (tb.getArchivo()[1] != null || tb.getArchivo()[2] != null) {
+            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[2].getName().substring(0, tb.getArchivo()[2].getName().length() - 2));
+            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[2].getPath());
+        } else if (tb.getArchivo()[3] != null) {
+            tabbedArchivo.setTitleAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[3].getName().substring(0, tb.getArchivo()[3].getName().length() - 2));
+            tabbedArchivo.setToolTipTextAt(tabbedArchivo.getSelectedIndex(), tb.getArchivo()[3].getPath());
         }
     }//GEN-LAST:event_itemGuardarComoActionPerformed
 
@@ -309,6 +315,7 @@ public class AssGUI extends javax.swing.JFrame {
             tabbed.getTabedGeneral().setSelectedIndex(1);
             Triplete.VARNUM = 0;
             Triplete.ETNUM = 0;
+            tabbed.setCompilado(true);
         } else {
             tabbed.getPaneCodigoT().setText(null);
         }
