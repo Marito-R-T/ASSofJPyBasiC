@@ -96,10 +96,17 @@ DEF ::= deff id:e1 para PAR_LIST:e2 parc dosp {:MetodoPython met = new MetodoPyt
                                         actual.setTIPO(PythonSemantica.VOID);
                                 } actual.getTrip().addAll(e2);:}
         | error DEF:e1 {:RESULT = e1;:}
+        | deff error para PAR_LIST parc dosp SUITE:e3 {:reportarSem("error en la definicion de metodo, se esperaba un id para el mismo");:}
+        | deff id error PAR_LIST parc dosp SUITE:e3 {:reportarSem("error en la definicion de metodo, se esperaba un ( antes de los parametros");:}
+        | deff id para error parc dosp SUITE:e3 {:reportarSem("error en la definicion de metodo, se esperaba parametros entre los parentesis");:}
+        | deff id para PAR_LIST error dosp SUITE:e3 {:reportarSem("error en la definicion de metodo, se esperaba un ) despues de los parametros");:}
+        | deff id para PAR_LIST parc error SUITE:e3 {:reportarSem("error en la definicion de metodo, se esperaba : despues de id(parametros)");:}
 ;
 
 PAR_LIST ::= PAR_LIST:e1 coma id:e2 {:e1.add(new VariablePython(e2, 1)); RESULT = e1;:}
         | id:e1 {:List<VariablePython> var = new ArrayList<>(); var.add(new VariablePython(e1, 1)); RESULT = var;:}
+        | PAR_LIST error id:e1 {:reportarSem("error en los parametros, no hay una coma que lo separe"); RESULT = new ArrayList<>();:}
+        | PAR_LIST error {:reportarSem("error en los parametros, no hay un id después de la coma"); RESULT = new ArrayList<>();:}
 ;
 
 SUITE ::=  {:PythonSemantica.AMBITO += 1;:} STMT_LIST:e1 newline  {:sem.eliminarAmbito(PythonSemantica.AMBITO);
@@ -108,7 +115,8 @@ SUITE ::=  {:PythonSemantica.AMBITO += 1;:} STMT_LIST:e1 newline  {:sem.eliminar
         |  {:PythonSemantica.AMBITO += 1;:} newline indent STATEMENTS:e1 dedent  {:sem.eliminarAmbito(PythonSemantica.AMBITO);
                                                 PythonSemantica.AMBITO -= 1;
                                                 RESULT = e1;:}
-        | error dedent {:sem.eliminarAmbito(PythonSemantica.AMBITO); PythonSemantica.AMBITO -= 1;:}
+        | error indent STATEMENTS dedent {:reportarSem("Error en la parte de metodo, se esperaba un salto de linea"); sem.eliminarAmbito(PythonSemantica.AMBITO); PythonSemantica.AMBITO -= 1;:}
+        | error newline {:reportarSem("Error en la parte de metodo, se esperaba un conjunto de statements"); sem.eliminarAmbito(PythonSemantica.AMBITO); PythonSemantica.AMBITO -= 1;:}
 ;
 
 STMT_LIST ::= STATEMENTLINE:e1 puntocoma STMT_LIST:e2 {:e1.addAll(e2); RESULT = e1;:}
@@ -148,11 +156,13 @@ AS_VAR ::= LISTVAR:e1 coma igual LISTDEF:e2 coma {:if(!sem.addVar(e1, e2)){
         reportarSem("Una de las variables ya habia sido asignada a otro tipo diferente");
                 RESULT  = new ListaTripletes();} 
         else{RESULT = new ListaTripletes(sem.devolverAsig(e1, e2));}:}
+        | LISTVAR error LISTDEF {:reportarSem("Error en la definicion de variables, se esperaba un igual entre las variables e igualdades"); RESULT =new ListaTripletes();:}
 ;
 
 LISTVAR ::= LISTVAR:e1 coma id:e2 {:e1.add(new VariablePython(e2, PythonSemantica.AMBITO)); RESULT = e1;:}
         | id:e1 {:List<VariablePython> var = new ArrayList<>();
                 var.add(new VariablePython(e1, PythonSemantica.AMBITO)); RESULT = var;:}
+        | LISTVAR coma error {:reportarSem("Error en la lista de variables, después de una coma, se espera un id"); RESULT = new ArrayList<>();:}
 ;
 
 LISTDEF ::= LISTDEF:e1 coma D:e2 {:e1.add(e2); RESULT = e1;:}
@@ -165,6 +175,9 @@ D ::= character:e1 {:RESULT = new OperacionPython(PythonSemantica.CHAR, new Term
 ;
 
 WRITE ::= print para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
+        | print error STRING parc {:reportarSem("Error en el print, se esperaba un parentesis antes de los valores"); RESULT = new ListaTripletes();:}
+        | print para error parc {:reportarSem("Error en el print, se esperaban valores entre los parentesis"); RESULT = new ListaTripletes();:}
+        | print para STRING error {:reportarSem("Error en el print, se esperaba un parentesis despues de los valores"); RESULT = new ListaTripletes();:}
 ;
 
 INPUT ::= intinput para string:e1 parc {:OperacionPython op = new OperacionPython(PythonSemantica.INT,
@@ -179,6 +192,15 @@ INPUT ::= intinput para string:e1 parc {:OperacionPython op = new OperacionPytho
                                 new Input("%f"));
                                 op.getTripletes().add(new Printf(e1));
                                 RESULT = op;:}
+        | charinput error string parc {:reportarSem("error en el charinput, se esperaba un parentesis antes del string");:}
+        | charinput para error parc {:reportarSem("error en el charinput, se esperaba un string entre los parentesis");:}
+        | charinput para string error {:reportarSem("error en el charinput, se esperaba un parentesis despues del string");:}
+        | floatinput error string parc {:reportarSem("error en el floatinput, se esperaba un parentesis antes del string");:}
+        | floatinput para error parc {:reportarSem("error en el floatinput, se esperaba un string entre los parentesis");:}
+        | floatinput para string error {:reportarSem("error en el floatinput, se esperaba un parentesis despues del string");:}
+        | intinput error string parc {:reportarSem("error en el intinput, se esperaba un parentesis antes del string");:}
+        | intinput para error parc {:reportarSem("error en el intinput, se esperaba un string entre los parentesis");:}
+        | intinput para string error {:reportarSem("error en el intinput, se esperaba un parentesis despues del string");:}
 ;
 
 STATEMENTS ::= STATEMENT:e1 STATEMENTS:e2 {:if(e1.isRet()){
@@ -195,17 +217,24 @@ STATEMENT ::= IF:e1 {:RESULT = e1;:}
 ;
 
 IF ::= iff CONDICION:e1 dosp SUITE:e2 ELSEIF:e3 ELSE:e4 {:e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);:}
+        | iff error dosp SUITE ELSEIF ELSE {:reportarSem("Error en el if, se esperaba una condicion despues del if"); RESULT = new ListaTripletes();:}
+        | iff CONDICION error SUITE ELSEIF ELSE {:reportarSem("Error en el if, se esperaba : después de la condicion"); RESULT = new ListaTripletes();:}
 ;
 
 ELSEIF ::= ELSEIF:e1 elseiff CONDICION:e2 dosp SUITE:e3 {:RESULT = e1.agregarElseIf(e2, e3);:}
         | {:RESULT = new Else_Operator();:}
+        | ELSEIF elseiff error dosp SUITE {:reportarSem("Error en el elseif, se esperaba una condicion despues del elif"); RESULT = new Else_Operator();:}
+        | ELSEIF elseiff CONDICION error SUITE {:reportarSem("Error en el elseif, se esperaba : despues de la condicion"); RESULT = new Else_Operator();:}
 ;
 
 ELSE ::= elsee dosp SUITE:e1 {:RESULT = e1;:}
         | {:RESULT = new ListaTripletes();:}
+        | elsee error SUITE {:reportarSem("Error en else, se espera : después del else"); RESULT = new ListaTripletes();:}
 ;
 
 WHILE ::= whilee CONDICION:e1 dosp SUITE:e2 {:RESULT = Else_Operator.WHILE(e1, e2);:}
+        | whilee error dosp SUITE {:reportarSem("Error en un while, se esperaba una condición despues del while"); RESULT = new ListaTripletes();:}
+        | whilee CONDICION error SUITE {:reportarSem("Error en un while, se esperaba : despues de la condicion"); RESULT = new ListaTripletes();:}
 ;
 
 COMA ::= coma
@@ -221,7 +250,8 @@ FOR ::= forr id:e1 {:if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBIT
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
                 } else {
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
-                } RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum.getId()), e2, e3);:}
+                } RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum), e2, e3);:}
+        | forr error COMA inn RANGE dosp SUITE {:reportarSem("Error en el for, se esperaba un id"); RESULT = new ListaTripletes();:}
 ;
 
 RANGE ::= range para OPERACION_A:e1 parc {:List<OperacionPython> op = new ArrayList<>();
@@ -260,7 +290,7 @@ ATOM ::= id:e1 {:VariablePython tipo = sem.existeVar(new VariablePython(e1, Pyth
                         reportarSem("La variable con id: " + e1 + " no existe");
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionPython op = new OperacionPython(tipo.getTipo(), sem.devolverDireccion(sum.getId()));
+                        OperacionPython op = new OperacionPython(tipo.getTipo(), sem.devolverDireccion(sum));
                         op.getTripletes().add(sum);
                         RESULT = op;}
                 :}
@@ -304,6 +334,8 @@ STRING ::= STRING:e1 coma D:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));
                 RESULT = tri;:}
+        | STRING error D {:reportarSem("Error en String del print, se esperaba una coma antes del valor"); RESULT = new ListaTripletes();:}
+        | STRING coma error {:reportarSem("Error en String del print, se esperaba un valor despues de la coma"); RESULT = new ListaTripletes();:}
 ;
 
 LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = sem.existeMetodo(e1, e2);
@@ -319,6 +351,7 @@ LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = sem.existe
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
+                | id para error parc {:reportarSem("Error en llamada de un metodo, se esperaban parametros entre los parentesis");:}
 ;
 
 LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}

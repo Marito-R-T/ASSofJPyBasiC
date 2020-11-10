@@ -272,27 +272,27 @@ public class TablaJava {
                 if (this.var_definidas.contains(variableJava)) {
                     SumOperator sum = this.devolverSum(variableJava.getId(), true);
                     tri.add(sum);
-                    tri.add(new AsignarValor(this.devolverDireccionH(sum.getId()), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccionH(sum), variableJava.getTriplete().getOperando2(), null));
                 } else {
                     SumOperator sum = this.devolverSum(variableJava.getId());
                     tri.add(sum);
-                    tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccion(sum), variableJava.getTriplete().getOperando2(), null));
                 }
             }
         }
         return tri;
     }
 
-    public Stack devolverDireccion(String id) {
-        return new Stack(new TerminalOperator(id));
+    public Stack devolverDireccion(Triplete tri) {
+        return new Stack(tri);
     }
 
-    public Heap devolverDireccionH(String id) {
-        return new Heap(new TerminalOperator(id));
+    public Heap devolverDireccionH(Triplete id) {
+        return new Heap(id);
     }
 
     public SumOperator devolverSum(String id) {
-        return new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
+        return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
     public SumOperator devolverSum(String id, boolean global) {

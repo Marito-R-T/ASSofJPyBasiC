@@ -94,7 +94,7 @@ public class PythonSemantica {
                 list.addAll(t.mostrarTripletes());
                 SumOperator sum = this.devolverSum(py.getId());
                 list.add(sum);
-                list.add(new AsignarValor(this.devolverDireccion(sum.getId()), t.getTriplete(), null));
+                list.add(new AsignarValor(this.devolverDireccion(sum), t.getTriplete(), null));
             }
             return list;
         } else {
@@ -102,8 +102,8 @@ public class PythonSemantica {
         }
     }
 
-    public Stack devolverDireccion(String id) {
-        return new Stack(new TerminalOperator(id));
+    public Stack devolverDireccion(Triplete id) {
+        return new Stack(id);
     }
 
     public SumOperator devolverSum(String id) {

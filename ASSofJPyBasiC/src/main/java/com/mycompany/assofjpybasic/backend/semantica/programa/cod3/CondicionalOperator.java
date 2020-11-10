@@ -48,8 +48,7 @@ public abstract class CondicionalOperator extends Triplete {
         String s = "";
         if (operando1 instanceof Stack) {
             s += "\tcltq\n"
-                    + ((Stack) this.operando1).asm(false)
-                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
+                    + ((Stack) this.operando1).asm(false);
         } else if (operando1 instanceof Heap) {
             s += "\tcltq\n"
                     + ((Heap) this.operando1).asm(false)

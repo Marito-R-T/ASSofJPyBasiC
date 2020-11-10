@@ -1443,7 +1443,7 @@ TablaJava.AMBITO += 1; variables = new ArrayList<>();
                 tri.addAll(e2.getTripletes());
                 SumOperator sum = tabla.devolverSum(e2.getId(), false);
                 tri.add(sum);
-                tri.add(new AsignarValor(tabla.devolverDireccion(sum.getId()), e2.getTriplete().getOperando2(), null));} RESULT = tri;
+                tri.add(new AsignarValor(tabla.devolverDireccion(sum), e2.getTriplete().getOperando2(), null));} RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("INICIO",40, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -1740,12 +1740,12 @@ cas++;
                                         tri.addAll(e2.mostrarTripletes());
                                         SumOperator sum = tabla.devolverSum(e1, true);
                                         tri.add(sum);
-                                        tri.add(new AsignarValor(tabla.devolverDireccionH(sum.getId()), e2.getTriplete(), null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(sum), e2.getTriplete(), null));
                                 } else {
                                         tri.addAll(e2.mostrarTripletes());
                                         SumOperator sum = tabla.devolverSum(e1, false);
                                         tri.add(sum);
-                                        tri.add(new AsignarValor(tabla.devolverDireccion(sum.getId()), e2.getTriplete(), null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(sum), e2.getTriplete(), null));
                                 }
                         }RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("AS_VAR_LINE",43, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
@@ -1795,20 +1795,20 @@ cas++;
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator ss1 = tabla.devolverSum(e1, true);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, true);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2.getId()), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2), sum, null));
                                         RESULT = tri;
                                 } else {
                                         SumOperator ss1 = tabla.devolverSum(e1, false);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2.getId()), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2), sum, null));
                                         RESULT = tri;
                                 }}
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("OP_VAR",42, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
@@ -1834,20 +1834,20 @@ cas++;
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator ss1 = tabla.devolverSum(e1, true);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, true);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2.getId()), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2), sum, null));
                                         RESULT = tri;
                                 } else {
                                         SumOperator ss1 = tabla.devolverSum(e1, false);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1.getId()), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2.getId()), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccion(ss2), sum, null));
                                         RESULT = tri;
                                 }}
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("OP_VAR",42, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
@@ -2036,13 +2036,13 @@ cas++;
                                 if(tabla.getVar_definidas().contains(num)){
                                         System.out.println("CONTIENE EL VALOR");
                                         SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum.getId()));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
                                         System.out.println("NO CONTIENE EL VALOR");
                                         SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum.getId()));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }}}
@@ -2433,12 +2433,12 @@ cas++;
                         }else{
                                 if(tabla.getVar_definidas().contains(num)){
                                         SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum.getId()));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
                                         SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum.getId()));
+                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum));
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }

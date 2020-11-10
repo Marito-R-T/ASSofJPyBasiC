@@ -209,7 +209,7 @@ public class VisualSemantica {
                 SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(variableVisual.getDireccion().toString()), null);
                 variableVisual.getTripletes().add(sum);
                 tri.addAll(variableVisual.getTripletes());
-                tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableVisual.getTriplete().getOperando2(), null));
+                tri.add(new AsignarValor(this.devolverDireccion(sum), variableVisual.getTriplete().getOperando2(), null));
             } else {
                 tri.addAll(variableVisual.getTripletes());
             }
@@ -229,8 +229,8 @@ public class VisualSemantica {
         });
     }
 
-    public Stack devolverDireccion(String id) {
-        return new Stack(new TerminalOperator(id));
+    public Stack devolverDireccion(Triplete id) {
+        return new Stack(id);
     }
 
     public SumOperator devolverSum(String id) {

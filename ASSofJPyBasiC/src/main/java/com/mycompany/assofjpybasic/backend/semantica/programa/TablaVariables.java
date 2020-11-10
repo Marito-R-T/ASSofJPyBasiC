@@ -62,8 +62,8 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
         return 0;
     }
 
-    public Stack devolverDireccion(String id) {
-        return new Stack(new TerminalOperator(id));
+    public Stack devolverDireccion(Triplete id) {
+        return new Stack(id);
     }
 
     public SumOperator devolverSum(String id) {
@@ -86,7 +86,7 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
                 if (variableJava.getTriplete().getOperando2() != null) {
                     SumOperator sum = this.devolverSum(variableJava.getId());
                     tri.add(sum);
-                    tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), variableJava.getTriplete().getOperando2(), null));
+                    tri.add(new AsignarValor(this.devolverDireccion(sum), variableJava.getTriplete().getOperando2(), null));
                 }
             }
         }
@@ -108,7 +108,7 @@ public class TablaVariables extends ArrayList<VariablePrograma> {
             if (var.getTriplete().getOperando2() != null) {
                 SumOperator sum = this.devolverSum(var.getId());
                 tri.add(sum);
-                tri.add(new AsignarValor(this.devolverDireccion(sum.getId()), var.getTriplete().getOperando2(), null));
+                tri.add(new AsignarValor(this.devolverDireccion(sum), var.getTriplete().getOperando2(), null));
             }
         }
         return tri;

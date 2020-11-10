@@ -172,7 +172,7 @@ ASIGVAR ::= id:e1 igual EXPR:e2 {:VariableVisual var = sem.existeVar(new Variabl
                                 reportarSem("No coincide el tipo con la asignación de la variable con id: " + e2);}
                                 else{trip.addAll(e2.mostrarTripletes()); SumOperator sum = sem.devolverSum(e1);
                                 trip.add(sum);
-                                trip.add(new AsignarValor(sem.devolverDireccion(sum.getId()), e2.getTriplete(), null));}
+                                trip.add(new AsignarValor(sem.devolverDireccion(sum), e2.getTriplete(), null));}
                                 RESULT = trip;:}
         | error igual EXPR {:reportarSem("Error en la asignacion de variable, se esperaba un id"); RESULT = new ListaTripletes();:}
         | id error EXPR {:reportarSem("Error en la asignacion de variable, se esperaba un igual"); RESULT = new ListaTripletes();:}
@@ -222,7 +222,7 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
                         reportarSem("No existe la variable con id: " + e1);
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionVisual op = new OperacionVisual(var.getTipo(), sem.devolverDireccion(sum.getId()));
+                        OperacionVisual op = new OperacionVisual(var.getTipo(), sem.devolverDireccion(sum));
                         op.getTripletes().add(sum);
                         RESULT = op;
                 }:}
@@ -272,12 +272,17 @@ IF_ELSE ::= iff CONDICION:e1 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATE
         | iff error THEN espacio {:reportarSem("Error en el if, se esperaba la condicion"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF:e3 ELSE:e4 endd iff espacio 
                 {:RESULT = new ListaTripletes();:}
+        | iff CONDICION error {:reportarSem("Error en el if, se esperaba un salto de linea despues de la condicion"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e2
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1;:} ELSE_IF:e3 ELSE:e4 endd iff espacio 
+                {:RESULT = new ListaTripletes();:}
 ;
 
 ELSE_IF ::= ELSE_IF:e1 elseiff CONDICION:e2 THEN espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = e1.agregarElseIf(e2, e3);:}
         | {:RESULT = new Else_Operator();:}
         | ELSE_IF:e1 elseiff error THEN espacio {:reportarSem("Error en el else if, se esperaba la condicion"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
+                {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new Else_Operator();:}
+        | ELSE_IF:e1 elseiff CONDICION THEN error {:reportarSem("Error en el else if, se esperaba un salto de linea despues del then"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e3
                 {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new Else_Operator();:}
 ;
 
@@ -335,6 +340,24 @@ FOR ::= forr id:e1 TYPE:e2 igual OPERACION_A:e3 to OPERACION_A:e4 STEP:e5 espaci
                 if(e7!=null && !e1.equals(e1)){
                         reportarSem("No coincide el id del for, con el next del mismo for, id1: " + e1 + "  id2: " + e7);}
                 else{RESULT = Else_Operator.FORV(sem.obtenerDireccion(e1), e2, e3, e4, e5, e6);}:}
+        | forr error TYPE igual OPERACION_A to OPERACION_A STEP espacio {:reportarSem("Error en el for, se esperaba el id de la variable for");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr id TYPE error OPERACION_A to OPERACION_A STEP espacio {:reportarSem("Error en el for, se esperaba el igual despues del tipado");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr id TYPE igual error to OPERACION_A STEP espacio {:reportarSem("Error en el for, se esperaba la operación de inicio");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr id TYPE igual OPERACION_A to error STEP espacio {:reportarSem("Error en el for, se esperaba la operación del final");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr id TYPE igual OPERACION_A error OPERACION_A STEP espacio {:reportarSem("Error en el for, se esperaba el simbolo to, entre operaciones");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | forr id TYPE igual OPERACION_A to OPERACION_A error espacio {:reportarSem("Error en el for, se esperaba la operación del paso (STEP)");
+                VisualSemantica.AMBITO += 1;:}
+        STATEMENTS nextt ID espacio {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
 ;
 
 ID ::= id:e1 {:RESULT = e1;:}
@@ -346,6 +369,10 @@ STEP ::= stepp OPERACION_A:e1 {:RESULT = e1;:}
 
 WHILE ::= whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:} STATEMENTS:e2 endd whilee espacio
          {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.WHILE(e1, e2);:}
+        | whilee error espacio {:reportarSem("Se esperaba la condicion del while"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e2 endd whilee espacio
+         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
+        | whilee CONDICION error {:reportarSem("Se esperaba un salto de linea, despues de la condicion del while"); VisualSemantica.AMBITO += 1;:} STATEMENTS:e2 endd whilee espacio
+         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
 ;
 
 DO_WHILE ::= doo whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:} 
@@ -354,10 +381,19 @@ DO_WHILE ::= doo whilee CONDICION:e1 espacio {:VisualSemantica.AMBITO += 1;:}
         | doo espacio {:VisualSemantica.AMBITO += 1;:} 
                 STATEMENTS:e2 loopp whilee CONDICION:e1 espacio
         {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = Else_Operator.DOWHILE(e1, e2);:}
+        | doo error {:reportarSem("Error en el do while, se espera un salto de linea despues del do"); VisualSemantica.AMBITO += 1;:} 
+                STATEMENTS:e2 loopp whilee CONDICION:e1 espacio
+        {:sem.eliminarAmbito(VisualSemantica.AMBITO); VisualSemantica.AMBITO -= 1; RESULT = new ListaTripletes();:}
 ;
 
 CONSOLEWRITE ::= write para STRING:e1 parc {:RESULT = e1;:}
         | writeln para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
+        | write error STRING parc {:reportarSem("Error en el write, se esperaba un ( antes del valor"); RESULT = new ListaTripletes();:}
+        | write para error parc {:reportarSem("Error en el write, se esperaba un valor dentro de los ()"); RESULT = new ListaTripletes();:}
+        | write para STRING error {:reportarSem("Error en el write, se esperaba un ) despues del valor"); RESULT = new ListaTripletes();:}
+        | writeln error STRING parc {:reportarSem("Error en el write, se esperaba un ( antes del valor"); RESULT = new ListaTripletes();:}
+        | writeln para error parc {:reportarSem("Error en el write, se esperaba un valor dentro de los ()"); RESULT = new ListaTripletes();:}
+        | writeln para STRING error {:reportarSem("Error en el write, se esperaba un ) despues del valor"); RESULT = new ListaTripletes();:}
 ;
 
 INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisual(VisualSemantica.CHAR,
@@ -372,6 +408,15 @@ INPUT ::= charinput para string:e1 parc {:OperacionVisual op = new OperacionVisu
                                 new Input("%f"));
                                 op.getTripletes().add(new Printf(e1));
                                 RESULT = op;:}
+        | charinput error string parc {:reportarSem("error en el charinput, se esperaba un parentesis antes del string");:}
+        | charinput para error parc {:reportarSem("error en el charinput, se esperaba un string entre los parentesis");:}
+        | charinput para string error {:reportarSem("error en el charinput, se esperaba un parentesis despues del string");:}
+        | floatinput error string parc {:reportarSem("error en el floatinput, se esperaba un parentesis antes del string");:}
+        | floatinput para error parc {:reportarSem("error en el floatinput, se esperaba un string entre los parentesis");:}
+        | floatinput para string error {:reportarSem("error en el floatinput, se esperaba un parentesis despues del string");:}
+        | intinput error string parc {:reportarSem("error en el intinput, se esperaba un parentesis antes del string");:}
+        | intinput para error parc {:reportarSem("error en el intinput, se esperaba un string entre los parentesis");:}
+        | intinput para string error {:reportarSem("error en el intinput, se esperaba un parentesis despues del string");:}
 ;
 
 CONDICION ::= CONDICION:e1 orr AND:e2 {:RESULT = IfPrograma.OR(e1, e2);:}
@@ -423,6 +468,7 @@ LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoVisual met = sem.existe
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
+                | id para LIST_PARAM error {:reportarSem("Error en la llamada de metodo, se esperaba un parentesis despues de los parametros");:}
 ;
 
 LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}
