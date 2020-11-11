@@ -357,11 +357,8 @@ public class AssGUI extends javax.swing.JFrame {
             pr.waitFor();
             int i = pr.exitValue();
             System.out.println(i);
-            pr = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -e \"./programa\""}, null, file.getParentFile());
+            Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
             //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
-            pr.waitFor();
-            i = pr.exitValue();
-            System.out.println(i);
             //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
             //pb.start();
             System.out.println("ya salio");

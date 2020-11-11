@@ -60,7 +60,7 @@ public class ModOperator extends AritmeticaOperator {
                     + "\tcvtsd2ss\t%xmm0, %xmm0\n";
         } else if (operando2 instanceof TerminalOperator) {
             s += super.asm(true);
-            s += "  cvtss2sd\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
+            s += "  cvtss2sd\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n"
                     + "call\tfmod@PLT\n"
                     + "	cvtsd2ss\t%xmm0, %xmm0\n";
         }

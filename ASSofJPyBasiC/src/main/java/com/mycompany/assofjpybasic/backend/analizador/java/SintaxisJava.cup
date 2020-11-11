@@ -84,6 +84,15 @@ CLASS ::= publicc classs id:e1 llavea {:TablaJava sem = new TablaJava(e1); if(!j
                                 tabla = sem; TablaJava.AMBITO += 1;:}
         STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1; 
                 tabla.verificarConstructores(); tabla = null;:}
+        | publicc error id:e1 llavea {:TablaJava sem = new TablaJava(e1);
+                                tabla = sem; TablaJava.AMBITO += 1; reportarSem("Error en la iniciacion de clases, falto la palabra class");:}
+        STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+        | publicc classs error llavea {:TablaJava sem = new TablaJava("");
+                                tabla = sem; TablaJava.AMBITO += 1; reportarSem("Error en la iniciacion de clases, falto el id");:}
+        STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+        | publicc classs id:e1 error {:TablaJava sem = new TablaJava(e1);
+                                tabla = sem; TablaJava.AMBITO += 1; reportarSem("Error en la iniciacion de clases, falto la palabra class");:}
+        STATEMENTS_CLASS llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
         | error CLASS
 ;
 
@@ -108,6 +117,18 @@ CONSTRUCTOR ::= publicc id:e2 para LIST_PAR:e3 parc llavea {:
                 actual.getTripletes().addAll(e4);
                 actual = null;
                 :}
+                | publicc error para LIST_PAR:e3 parc llavea {: reportarSem("Error en constructor, falta id");
+                MetodoJava met = new MetodoJava("", 5, e3, tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+                | publicc id:e2 error LIST_PAR:e3 parc llavea {: reportarSem("Error en constructor, falta ( antes de parametros");
+                MetodoJava met = new MetodoJava(e2, 5, e3, tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+                | publicc id:e2 para error parc llavea {: reportarSem("Error en constructor, se esperaban parametros entre los ()");
+                MetodoJava met = new MetodoJava(e2, 5, new ArrayList<>(), tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
 ;
 
 METODO ::= publicc TYPE_V:e1 id:e2 para LIST_PAR:e3 parc llavea {:ret = e1;
@@ -121,6 +142,18 @@ METODO ::= publicc TYPE_V:e1 id:e2 para LIST_PAR:e3 parc llavea {:ret = e1;
                 actual.getTripletes().addAll(e4);
                 actual = null;
                 :}
+        | publicc error id:e2 para LIST_PAR:e3 parc llavea {: reportarSem("Error en inicialización de clase, se esperaba un tipo antes del id");
+                MetodoJava met = new MetodoJava(e2, 0, e3, tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+        | publicc TYPE_V:e1 error para LIST_PAR:e3 parc llavea {: reportarSem("Error en inicialización de clase, se esperaba un id después del tipado");
+                MetodoJava met = new MetodoJava("", e1, e3, tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
+        | publicc TYPE_V:e1 id:e2 para error parc llavea {: reportarSem("Error en inicialización de clase, se esperaban parametros entre los ()");
+                MetodoJava met = new MetodoJava(e2, e1, new ArrayList<>(), tabla.getId());
+                actual = met; TablaJava.AMBITO += 1;:}
+                STATEMENTS_METODO:e4 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;:}
 ;
 
 TYPE_V ::= voidd {:RESULT = TablaJava.VOID;:}
@@ -202,6 +235,12 @@ COMP_STATE ::= WHILE:e1 {:RESULT = e1;:}
 
 WHILE ::= whilee para CONDICION:e1 parc BLOQUE:e2 
         {:RESULT = Else_Operator.WHILE(e1, e2);:}
+        | whilee error CONDICION parc BLOQUE {:reportarSem("Error en un while, se esperaba un ( antes de la condicion");
+                RESULT = new ListaTripletes();:}
+        | whilee para error parc BLOQUE {:reportarSem("Error en un while, se esperaba una condicion");
+                RESULT = new ListaTripletes();:}
+        | whilee para CONDICION error BLOQUE {:reportarSem("Error en un while, se ) despues de la condicion");
+                RESULT = new ListaTripletes();:}
 ;
 
 BLOQUE ::= llavea {:TablaJava.AMBITO += 1;:}  STATEMENTS_METODO:e1 llavec {:tabla.eliminarAmbito(TablaJava.AMBITO); TablaJava.AMBITO -= 1;
@@ -211,6 +250,19 @@ BLOQUE ::= llavea {:TablaJava.AMBITO += 1;:}  STATEMENTS_METODO:e1 llavec {:tabl
 
 FOR ::= forr para INICIO:e1 puntocoma CONDICION:e2 puntocoma STEP:e3 parc BLOQUE:e4 
                 {:RESULT = Else_Operator.FOR(e1, e3, e2, e4);:}
+        | forr error INICIO puntocoma CONDICION puntocoma STEP parc BLOQUE {: reportarSem("Error en for, se esperaba un ( despues del for");
+                RESULT = new ListaTripletes();:}
+        | forr para error puntocoma CONDICION puntocoma STEP parc BLOQUE {: reportarSem("Error en for, se esperaba una inicializacion de variable despues del (");
+                RESULT = new ListaTripletes();:}
+        | forr para INICIO error CONDICION puntocoma STEP parc BLOQUE {: reportarSem("Error en for, se esperaba un ; despues de la inicializacion de variable");
+                RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma error puntocoma STEP parc BLOQUE {: reportarSem("Error en for, se esperaba una condicion despues del primer ;");
+                RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma CONDICION error STEP parc BLOQUE {: reportarSem("Error en for, se esperaba un : despues de la condicion");
+                RESULT = new ListaTripletes();:}
+        | forr para INICIO puntocoma CONDICION puntocoma error parc BLOQUE {: reportarSem("Error en for, se esperaba un el paso del for despues del segundo ;");
+                RESULT = new ListaTripletes();:}
+        
 ;
 
 INICIO ::= AS_VAR_LINE:e1 {:
@@ -234,15 +286,39 @@ STEP ::= AS_VAR_LINE:e1 {:RESULT = e1;:}
 
 DO_WHILE ::= doo BLOQUE:e1 whilee para CONDICION:e2 parc puntocoma 
         {:RESULT = Else_Operator.DOWHILE(e2, e1);:}
+        | doo BLOQUE error para CONDICION parc puntocoma {:reportarSem("Error en un do-while, se esperaba un while, despues del bloque de codigo");
+                RESULT = new ListaTripletes();:}
+        | doo BLOQUE whilee error CONDICION parc puntocoma {:reportarSem("Error en un do-while, se esperaba un while, despues del bloque");
+                RESULT = new ListaTripletes();:}
+        | doo BLOQUE whilee para error parc puntocoma {:reportarSem("Error en un do-while, se esperaba una condicional");
+                RESULT = new ListaTripletes();:}
+        | doo BLOQUE whilee para CONDICION error puntocoma {:reportarSem("Error en un do-while, se esperaba un ), despues de la condicion");
+                RESULT = new ListaTripletes();:}
+        | doo BLOQUE whilee para CONDICION parc error {:reportarSem("Error en un do-while, se esperaba un ; al final");
+                RESULT = new ListaTripletes();:}
 ;
 
 IF_ELSE ::= iff para CONDICION:e1 parc BLOQUE:e2 ELSEIF:e3 ELSE:e4  
                 {:e3.agregarIf(e1, e2); RESULT = e3.juntarTripletes(e4);:}
+        | iff error CONDICION parc BLOQUE ELSEIF ELSE {:reportarSem("Error en un if, se esperaba ( antes de la condicion");
+                RESULT = new ListaTripletes();:}
+        | iff para error parc BLOQUE ELSEIF ELSE {:reportarSem("Error en un if, se esperaba una condicion");
+                RESULT = new ListaTripletes();:}
+        | iff para CONDICION error BLOQUE ELSEIF ELSE {:reportarSem("Error en un if, se esperaba ) despues de la condicion");
+                RESULT = new ListaTripletes();:}
 ;
 
 ELSEIF ::= ELSEIF:e1 elsee iff para CONDICION:e2 parc BLOQUE:e3  
                 {:RESULT = e1.agregarElseIf(e2, e3);:}
         | {:RESULT = new Else_Operator();:}
+        | ELSEIF:e1 elsee error para CONDICION parc BLOQUE {:reportarSem("Error en un else if, se esperaba un else if, y no un else, ya que tiene condicion");
+                RESULT = e1;:}
+        | ELSEIF:e1 elsee iff error CONDICION parc BLOQUE {:reportarSem("Error en un else if, se esperaba ( despues del if");
+                RESULT = e1;:}
+        | ELSEIF:e1 elsee iff para error parc BLOQUE {:reportarSem("Error en un else if, se esperaba una condicion");
+                RESULT = e1;:}
+        | ELSEIF:e1 elsee iff para CONDICION error BLOQUE {:reportarSem("Error en un else if, se esperaba ) despues de la condicion");
+                RESULT = e1;:}
 ;
 
 ELSE ::= elsee BLOQUE:e1 {:RESULT = e1;:}
@@ -250,11 +326,19 @@ ELSE ::= elsee BLOQUE:e1 {:RESULT = e1;:}
 ;
 
 SWITCH ::= switchh para OPERACION_A:e1 parc llavea CASES:e2 DEFAULT:e3 llavec {:RESULT = e2.agregarDefault(e1, e3);:}
+        | switchh error OPERACION_A parc llavea CASES DEFAULT llavec {: reportarSem("Error en switch se esperaba ( despues del switch");
+                RESULT = new CasePrograma();:}
+        | switchh para error parc llavea CASES DEFAULT llavec {: reportarSem("Error en switch se esperaba una condicional entre los ()");
+                RESULT = new CasePrograma();:}
+        | switchh para OPERACION_A error llavea CASES DEFAULT llavec {: reportarSem("Error en switch se esperaba ) despues de la condicional");
+                RESULT = new CasePrograma();:}
 ;
 
 CASES ::= CASES:e1 casee OPERACION_A:e2 dosp {:cas++;:} STATEMENTS_METODO:e3
         {:cas--; if(e2!=null){RESULT  = e1.agregarCase(e2, e3);}:}
         | {:RESULT = new CasePrograma();:}
+        | CASES:e1 casee error dosp STATEMENT_METODO {: reportarSem("Error en case del switch, se esperaba una operacion despues del case");
+        RESULT = e1;:}
 ;
 
 
@@ -298,6 +382,12 @@ AS_VAR_LINE ::= THIS:e0 id:e1 igual OPERACION_A:e2 {:ListaTripletes tri = new Li
 
 WRITE ::= println para STRING:e1 parc {:e1.add(new Printf("\\n")); RESULT = e1;:}
        | print para STRING:e1 parc {:RESULT = e1;:}
+       | println error STRING parc {:reportarSem("error en println, se esperaba un ( antes de los valores");
+       RESULT = new ListaTripletes();:}
+       | println para error parc {:reportarSem("error en println, se esperaban valores entre los ()");
+       RESULT = new ListaTripletes();:}
+       | println para STRING error {:reportarSem("error en println, se esperaba un ) despues de los valores");
+       RESULT = new ListaTripletes();:}
 ;
 
 OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
@@ -500,6 +590,15 @@ INPUT ::= charinput para string:e1 parc {:OperacionJava op = new OperacionJava(T
                                 new Input("%f"));
                                 op.getTripletes().add(new Printf(e1));
                                 RESULT = op;:}
+        | charinput error string parc {:reportarSem("error en el charinput, se esperaba un parentesis antes del string");:}
+        | charinput para error parc {:reportarSem("error en el charinput, se esperaba un string entre los parentesis");:}
+        | charinput para string error {:reportarSem("error en el charinput, se esperaba un parentesis despues del string");:}
+        | floatinput error string parc {:reportarSem("error en el floatinput, se esperaba un parentesis antes del string");:}
+        | floatinput para error parc {:reportarSem("error en el floatinput, se esperaba un string entre los parentesis");:}
+        | floatinput para string error {:reportarSem("error en el floatinput, se esperaba un parentesis despues del string");:}
+        | intinput error string parc {:reportarSem("error en el intinput, se esperaba un parentesis antes del string");:}
+        | intinput para error parc {:reportarSem("error en el intinput, se esperaba un string entre los parentesis");:}
+        | intinput para string error {:reportarSem("error en el intinput, se esperaba un parentesis despues del string");:}
 ;
 
 LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoJava met = tabla.existeMetodo(e2, e1);
@@ -514,6 +613,8 @@ LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoJava met = tabla.existe
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
+                | id error LIST_PARAM parc {:reportarSem("Error en la llamada de metodo, se esperaba un ( antes de los parametros");:}
+                | id para error parc {:reportarSem("Error en la llamada de metodo, se esperaban parametros entre los ()");:}
 ;
 
 LIST_PARAM ::= LIST:e1 {:RESULT = e1;:}

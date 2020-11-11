@@ -47,7 +47,7 @@ public class Scanf extends Triplete {
 
     @Override
     public String devolverStringE() {
-        return "scanf(" + "\" " + this.tipo + "\", &" + operando2.getId() + ");";
+        return "scanf(" + "\"%f\", &" + operando2.getId() + ");";
     }
 
     /**

@@ -55,7 +55,7 @@ public class RestOperator extends AritmeticaOperator {
         } else if (operando2 instanceof AritmeticaOperator) {
             s += "\tsubss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
         } else if (operando2 instanceof TerminalOperator) {
-            s += "\tsubss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            s += "\tsubss\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
         }
         s += "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
         return s;

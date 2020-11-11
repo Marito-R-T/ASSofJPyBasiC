@@ -66,8 +66,8 @@ public abstract class CondicionalOperator extends Triplete {
             s += "\tcltq\n"
                     + ((Heap) this.operando2).asm(false)
                     + "\tmovss\t(%rdx,%rax), %xmm1\n";
-        } else if (operando1 instanceof TerminalOperator) {
-            s += "\tmovss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm1\n";
+        } else if (operando2 instanceof TerminalOperator) {
+            s += "\tmovss\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n";
         } else {
             s += "\tmovss\t" + operando1.pos + "(%rbp), %xmm1\n";
         }

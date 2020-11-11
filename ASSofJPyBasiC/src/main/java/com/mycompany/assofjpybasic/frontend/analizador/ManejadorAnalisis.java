@@ -55,6 +55,8 @@ public class ManejadorAnalisis {
                         + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");
             }
         } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println(ex.getLocalizedMessage());
             AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "\n"
                     + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");
         }

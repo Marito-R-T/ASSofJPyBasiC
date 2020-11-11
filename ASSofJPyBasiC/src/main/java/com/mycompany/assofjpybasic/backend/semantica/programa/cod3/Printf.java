@@ -123,7 +123,7 @@ public class Printf extends Triplete {
                         + "\tmovl\t$0, %eax\n"
                         + "\tcall\tprintf@PLT\n";
             } else if (this.operando2 instanceof TerminalOperator) {
-                return "\tmovq\t$" + ((TerminalOperator) operando1).getBin() + ", %rax\n"
+                return "\tmovq\t$" + ((TerminalOperator) operando2).getBin() + ", %rax\n"
                         + "\tmovq\t%rax, %xmm0\n"
                         + "\tleaq\t" + et + "(%rip), %rax\n"
                         + "\tmovl\t$1, %eax\n"

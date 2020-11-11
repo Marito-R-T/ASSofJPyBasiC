@@ -55,7 +55,7 @@ public class DivOperator extends AritmeticaOperator {
         } else if (operando2 instanceof AritmeticaOperator) {
             s += "\tdivss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
         } else if (operando2 instanceof TerminalOperator) {
-            s += "\tdivss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            s += "\tdivss\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
         }
         s += "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
         return s;
