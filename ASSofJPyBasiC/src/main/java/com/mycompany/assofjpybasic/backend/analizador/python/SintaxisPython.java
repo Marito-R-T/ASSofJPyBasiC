@@ -1954,7 +1954,8 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                         reportarSem("La variable con id: " + e1 + " no existe");
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionPython op = new OperacionPython(tipo.getTipo(), sem.devolverDireccion(sum));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.devolverDireccion(sum), "float");
+                        OperacionPython op = new OperacionPython(tipo.getTipo(), ast);
                         op.getTripletes().add(sum);
                         RESULT = op;}
                 
@@ -1981,7 +1982,13 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1));
+		
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s);
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1, s));
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("ATOM",21, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;
@@ -2290,7 +2297,8 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                                 tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().size()),"int");
                                 tri.add(s);
-                                OperacionPython op = new OperacionPython(met.getTIPO(), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionPython op = new OperacionPython(met.getTIPO(), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }

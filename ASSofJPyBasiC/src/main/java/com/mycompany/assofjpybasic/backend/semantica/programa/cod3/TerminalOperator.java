@@ -23,7 +23,8 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class TerminalOperator extends Triplete {
 
     private String operador;
-    private Integer bin;
+    private String bin;
+    private boolean flo;
 
     /**
      * iniciar tripleta
@@ -33,8 +34,21 @@ public class TerminalOperator extends Triplete {
     public TerminalOperator(String operador) {
         super(operador, null, null);
         this.operador = operador;
-        bin = Float.floatToIntBits(Float.parseFloat("15.5"));
+        bin = operador;
+        flo = false;
+    }
 
+    /**
+     * iniciar tripleta su es un float
+     *
+     * @param operador Nombre o valor del operador
+     * @param f si lo que se esta ingresando es un float
+     */
+    public TerminalOperator(String operador, String f) {
+        super(operador, null, null);
+        this.operador = operador;
+        bin = f;//Float.floatToIntBits(Float.parseFloat("15.5"));
+        flo = true;
     }
 
     @Override
@@ -47,8 +61,28 @@ public class TerminalOperator extends Triplete {
         return this.id + ";";
     }
 
-    public Integer getBin() {
+    public String getBin() {
+        if (flo) {
+            return bin + "(%rip)";
+        } else {
+            return "$" + bin;
+        }
+    }
+
+    public String getBinario() {
         return bin;
+    }
+
+    public String getBin(String s) {
+        if (flo) {
+            return "\t" + s + "\t$" + bin + ", %eax\n";
+        } else {
+            return bin + "(%rip)";
+        }
+    }
+
+    public boolean isFlo() {
+        return flo;
     }
 
 }

@@ -23,7 +23,6 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class DivOperator extends AritmeticaOperator {
 
     private final String OPERADOR = "/";
-    private final String tipo;
 
     public DivOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
@@ -47,18 +46,45 @@ public class DivOperator extends AritmeticaOperator {
     @Override
     public String asm() {
         String s = "";
-        s += super.asm();
-        if (operando2 instanceof Stack) {
-            s += "\tcltq\n"
-                    + ((Stack) this.operando2).asm(false)
-                    + "\tdivss\t%xmm1, %xmm0\n";
-        } else if (operando2 instanceof AritmeticaOperator) {
-            s += "\tdivss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
-        } else if (operando2 instanceof TerminalOperator) {
-            s += "\tdivss\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
-        }
-        s += "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
+        s += super.asm(this.tipo);
+        s += this.derecha();
         return s;
+    }
+
+    public String derecha() {
+        if (this.tipo.equals("int") || this.tipo.equals("char")) {
+            String s = "";
+            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
+                s += "\tdivss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n";
+            } else if (operando2 instanceof TerminalOperator) {
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tmovsd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
+                            + "\tdivsd\t%xmm1, %xmm0\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n"
+                            + "\tdivss\t%xmm1, %xmm0\n";
+                }
+            }
+            return s + "\tcvttss2sil\t%xmm0, %eax\n"
+                    + "\tmovl\t%eax, " + this.pos + "(%rbp)\n";
+        } else {
+            String s = "";
+            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
+                s += "\tdivss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n";
+            } else if (operando2 instanceof TerminalOperator) {
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tmovsd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
+                            + "\tdivsd\t%xmm1, %xmm0\n"
+                            + "\tcvtsd2ss\t%xmm0, %xmm0\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n"
+                            + "\tdivss\t%xmm1, %xmm0\n";
+                }
+            }
+            return s + "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
+        }
     }
 
 }

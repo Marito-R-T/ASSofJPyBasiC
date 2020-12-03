@@ -19,6 +19,7 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.OperacionJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.VariableJava;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;

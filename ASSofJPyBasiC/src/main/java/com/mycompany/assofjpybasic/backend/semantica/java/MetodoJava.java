@@ -7,6 +7,7 @@ package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
@@ -30,6 +31,7 @@ public class MetodoJava {
     private final List<VariableJava> parametros;
     private final List<Triplete> tripletes = new ArrayList<>();
     private final String clase;
+    private final List<String> fl = new ArrayList<>();
 
     /**
      *
@@ -270,7 +272,9 @@ public class MetodoJava {
             List<Triplete> tri = new ArrayList<>();
             SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + (pos + 2)), "int");
             tri.add(sum);
-            tri.add(new AsignarValor(null, new Stack(sum), new Stack(new P())));
+            Triplete ast2 = new AsignarTemporal(null, new Stack(new P()), "float");
+            tri.add(ast2);
+            tri.add(new AsignarValor(null, new Stack(sum), ast2));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
                 SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 4) + ""), "int");
@@ -340,63 +344,71 @@ public class MetodoJava {
         }
     }
 
-    public String mostrarMetodoAss(int lf) {
+    public String mostrarMetodoAss(int lf, String str) {
         String nom = this.nombreMetodo();
-        String s = "    .globl  " + nom + "\n"
-                + "     .type   " + nom + ", @function\n"
-                + nom + "\n"
+        if (!str.equals("")) {
+            str = "\t.section\t.rodata\n" + str + "\t.text\n";
+        }
+        String s = str
+                + "\t.globl\t" + nom + "\n"
+                + "\t.type\t" + nom + ", @function\n"
+                + nom + ":\n"
                 + ".LFB" + lf + ":\n"
-                + "	.cfi_startproc\n"
-                + "	endbr64\n"
-                + "	pushq	%rbp\n"
-                + "	.cfi_def_cfa_offset 16\n"
-                + "	.cfi_offset 6, -16\n"
-                + "	movq	%rsp, %rbp\n"
-                + "	.cfi_def_cfa_register 6\n";
+                + "\t.cfi_startproc\n"
+                + "\tendbr64\n"
+                + "\tpushq\t%rbp\n"
+                + "\t.cfi_def_cfa_offset 16\n"
+                + "\t.cfi_offset 6, -16\n"
+                + "\tmovq\t%rsp, %rbp\n"
+                + "\t.cfi_def_cfa_register 6\n";
         for (Triplete triplete : tripletes) {
             s += triplete.asm();
         }
-        s += "  "
-                + "nop\n"
-                + "	popq	%rbp\n"
-                + "	.cfi_def_cfa 7, 8\n"
-                + "	ret\n"
-                + "	.cfi_endproc\n"
+        s += "\tnop\n"
+                + "\tpopq\t%rbp\n"
+                + "\t.cfi_def_cfa 7, 8\n"
+                + "\tret\n"
+                + "\t.cfi_endproc\n"
                 + ".LFE" + lf + ":\n"
-                + "	.size	" + nom + ", .-" + nom + "\n"
-                + "	.section	.rodata\n";
+                + "\t.size\t" + nom + ", .-" + nom + "\n";
         return s;
     }
 
-    public String mostrarMetodoAss(int lf, List<Triplete> trip) {
+    public String mostrarMetodoAss(int lf, List<Triplete> trip, String str) {
         String nom = this.nombreMetodo();
         List<Triplete> tr = new ArrayList<>();
         tr.addAll(trip);
         tr.addAll(this.tripletes);
-        String s = "    .globl  " + nom + "\n"
-                + "     .type   " + nom + ", @function\n"
-                + nom + "\n"
+        if (!str.equals("")) {
+            str = "\t.section\t.rodata\n" + str + "\t.text\n";
+        }
+        String s = str
+                + "\t.globl\t" + nom + "\n"
+                + "\t.type\t" + nom + ", @function\n"
+                + nom + ":\n"
                 + ".LFB" + lf + ":\n"
-                + "	.cfi_startproc\n"
-                + "	endbr64\n"
-                + "	pushq	%rbp\n"
-                + "	.cfi_def_cfa_offset 16\n"
-                + "	.cfi_offset 6, -16\n"
-                + "	movq	%rsp, %rbp\n"
-                + "	.cfi_def_cfa_register 6\n";
+                + "\t.cfi_startproc\n"
+                + "\tendbr64\n"
+                + "\tpushq\t%rbp\n"
+                + "\t.cfi_def_cfa_offset 16\n"
+                + "\t.cfi_offset 6, -16\n"
+                + "\tmovq\t%rsp, %rbp\n"
+                + "\t.cfi_def_cfa_register 6\n";
         for (Triplete triplete : tripletes) {
             s += triplete.asm();
         }
-        s += "  "
-                + "nop\n"
-                + "	popq	%rbp\n"
-                + "	.cfi_def_cfa 7, 8\n"
-                + "	ret\n"
-                + "	.cfi_endproc\n"
+        s += "\tnop\n"
+                + "\tpopq\t%rbp\n"
+                + "\t.cfi_def_cfa 7, 8\n"
+                + "\tret\n"
+                + "\t.cfi_endproc\n"
                 + ".LFE" + lf + ":\n"
-                + "	.size	" + nom + ", .-" + nom + "\n"
-                + "	.section	.rodata\n";
+                + "\t.size\t" + nom + ", .-" + nom + "\n";
         return s;
+    }
+
+    public List<String> getFl() {
+        return fl;
     }
 
 }

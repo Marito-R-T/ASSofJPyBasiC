@@ -29,6 +29,7 @@ public class MetodoVisual {
     private final List<VariableVisual> parametros;
     private VariableVisual visual;
     private final List<Triplete> tripletes = new ArrayList<>();
+    private final List<String> fl = new ArrayList<>();
 
     /**
      *
@@ -243,32 +244,37 @@ public class MetodoVisual {
         }
     }
 
-    public String mostrarMetodoAss(int lf) {
+    public String mostrarMetodoAss(int lf, String str) {
         String nom = this.nombreMetodo();
-        String s = "    .globl  " + nom + "\n"
-                + "     .type   " + nom + ", @function\n"
-                + nom + "\n"
+        if (!str.equals("")) {
+            str = "\t.section\t.rodata\n" + str + "\t.text\n";
+        }
+        String s = str
+                + "\t.type\t" + nom + ", @function\n"
+                + nom + ":\n"
                 + ".LFB" + lf + ":\n"
-                + "	.cfi_startproc\n"
-                + "	endbr64\n"
-                + "	pushq	%rbp\n"
-                + "	.cfi_def_cfa_offset 16\n"
-                + "	.cfi_offset 6, -16\n"
-                + "	movq	%rsp, %rbp\n"
-                + "	.cfi_def_cfa_register 6\n";
+                + "\t.cfi_startproc\n"
+                + "\tendbr64\n"
+                + "\tpushq\t%rbp\n"
+                + "\t.cfi_def_cfa_offset 16\n"
+                + "\t.cfi_offset 6, -16\n"
+                + "\tmovq\t%rsp, %rbp\n"
+                + "\t.cfi_def_cfa_register 6\n";
         for (Triplete triplete : tripletes) {
             s += triplete.asm();
         }
-        s += "  "
-                + "nop\n"
-                + "	popq	%rbp\n"
-                + "	.cfi_def_cfa 7, 8\n"
-                + "	ret\n"
-                + "	.cfi_endproc\n"
+        s += "\tnop\n"
+                + "\tpopq\t%rbp\n"
+                + "\t.cfi_def_cfa 7, 8\n"
+                + "\tret\n"
+                + "\t.cfi_endproc\n"
                 + ".LFE" + lf + ":\n"
-                + "	.size	" + nom + ", .-" + nom + "\n"
-                + "	.section	.rodata\n";
+                + "\t.size\t" + nom + ", .-" + nom + "\n";
         return s;
+    }
+
+    public List<String> getFl() {
+        return fl;
     }
 
 }

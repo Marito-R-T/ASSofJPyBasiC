@@ -22,6 +22,8 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  */
 public abstract class AritmeticaOperator extends Triplete {
 
+    protected String tipo;
+
     public AritmeticaOperator(String id, Triplete operando1, Triplete operando2) {
         super(id, operando1, operando2);
     }
@@ -32,12 +34,39 @@ public abstract class AritmeticaOperator extends Triplete {
         if (operando1 instanceof Stack) {
             s += "\tcltq\n"
                     + ((Stack) this.operando1).asm();
-        } else if (operando1 instanceof AritmeticaOperator) {
-            s += "\tmovss   " + this.operando1.getPos() + "(%rip), %xmm0\n";
+        } else if (operando1 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
+            s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
         } else if (operando1 instanceof P) {
-            s += "\tmovss   p(%rip), %xmm0\n";
+            s += "\tmovl\tp(%rip), %eax\n";
         } else if (operando1 instanceof TerminalOperator) {
-            s += "\tmovss   ." + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            s += "\tmovss\t." + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+        }
+        return s;
+    }
+
+    protected String asm(String tipo) {
+        String s = "";
+        if (operando1 instanceof AritmeticaOperator) {
+            if (((AritmeticaOperator) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
+        } else if (operando1 instanceof AsignarTemporal) {
+            if (((AsignarTemporal) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
+        } else if (operando1 instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            if (((TerminalOperator) operando1).isFlo()) {
+                s += "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            } else {
+                s += "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n"
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+            }
         }
         return s;
     }
@@ -45,16 +74,27 @@ public abstract class AritmeticaOperator extends Triplete {
     public String asm(boolean a) {
         String s = "";
         if (operando1 instanceof AritmeticaOperator) {
-            s += "\tcvtss2sd   " + this.operando1.getPos() + "(%rip), %xmm0\n";
-        } else if (operando1 instanceof Stack) {
-            s += "\tcltq\n"
-                    + ((Stack) this.operando1).asm();
+            if (((AritmeticaOperator) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
+        } else if (operando1 instanceof AsignarTemporal) {
+            if (((AsignarTemporal) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
         } else if (operando1 instanceof P) {
-            s += "\tmovss   p(%rip), %xmm0\n";
+            s += "\tmovss\tp(%rip), %xmm0\n";
         } else if (operando1 instanceof TerminalOperator) {
-            s += "\tcvtss2sd   $" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            s += "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
         }
         return s;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
 }

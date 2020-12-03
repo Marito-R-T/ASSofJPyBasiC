@@ -89,25 +89,106 @@ public class AsignarValor extends Triplete {
     @Override
     public String asm() {
         String s = "";
-        if (this.operando2 instanceof Stack) {
-            s += ((Stack) operando2).devolvers();
-        } else if (this.operando2 instanceof P) {
-            s += this.operando2.asm();
-        } else if (this.operando2 instanceof GetchOperator) {
-            s += this.operando2.asm() + "\n"
-                    + "\tmovsbl\t%al, eax\n"
-                    + "\tcvtsi2ssl\t%eax, %xmm0\n";
-        } else if (this.operando2 instanceof TerminalOperator) {
-            s += "\tmovss\t" + ((TerminalOperator) this.operando2).getBin() + ", %xmm0\n";
-        } else {
-            s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
-        }
-        if (this.operando1 instanceof Stack) {
-            s += ((Stack) operando1).devolver();
-        } else if (this.operando1 instanceof P) {
-            s += "\tmovl\t%eax, p(%rip)";
+        if (!(operando2 instanceof Input)) {
+            s += this.asigAssembler();
         }
         return s;
+    }
+
+    private String inputAssembler() {
+        return "";
+    }
+
+    private String asigAssembler() {
+        String s = "";
+        if (this.operando2 instanceof GetchOperator) {
+            s += "\tmovl\t$0, %eax\n"
+                    + "\tcall\tgetch\n"
+                    + "\tmovsbl\t%al, %eax\n"
+                    + "\tcvtsi2ssl\t%eax, %xmm0\n";
+        }
+        s += stack();
+        s += heap();
+        if (this.operando2 instanceof Stack) {
+            s += ((Stack) operando2).devolvers();
+        } else if (this.operando2 instanceof Heap) {
+            s += ((Heap) operando2).devolvers();
+        } else if (this.operando2 instanceof P) {
+            s += this.operando2.asm();
+        } else if (this.operando2 instanceof AritmeticaOperator) {
+            s += "\tcvtsi2ssl\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+        }
+        if (this.operando1 instanceof Stack) {
+            s += "\tcltq\n"
+                    + "\tleaq\t0(,%rax,4), %rdx\n"
+                    + "\tleaq\tstack(%rip), %rax\n";
+            if (this.operando2 instanceof AsignarTemporal) {
+                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+            } else if (this.operando2 instanceof TerminalOperator) {
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                }
+            }
+            s += "\tmovss\t%xmm0, (%rdx, %rax)\n";
+        } else if (this.operando1 instanceof Heap) {
+            s += "\tcltq\n"
+                    + "\tleaq\t0(,%rax,4), %rdx\n"
+                    + "\tleaq\theap(%rip), %rax\n";
+            if (this.operando2 instanceof AsignarTemporal) {
+                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+            } else if (this.operando2 instanceof TerminalOperator) {
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                }
+            }
+            s += "\tmovss\t%xmm0, (%rdx, %rax)\n";
+        } else if (this.operando1 instanceof P) {
+            s += "\tcvttsd2sil\t%xmm0, %eax\n"
+                    + "\tmovl\t%eax, p(%rip)\n";
+        }
+        return s;
+    }
+
+    private String stack() {
+        if (this.operando1 instanceof Stack && ((Stack) this.operando1).getRef() instanceof P) {
+            return "\tmovl\tp(%rip), %eax\n";
+        } else if ((this.operando1 instanceof Stack
+                && ((Stack) this.operando1).getRef() instanceof AritmeticaOperator)) {
+            return "\tmovl\t" + ((Stack) this.operando1).getRef().pos + "(%rbp), %eax\n";
+        } else if ((this.operando1 instanceof Stack
+                && ((Stack) this.operando1).getRef() instanceof TerminalOperator)) {
+            if (((TerminalOperator) operando1).isFlo()) {
+                return "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
+                        + "\tcvttsd2sil\t%xmm0, %eax";
+            } else {
+                return "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n";
+            }
+        }
+        return "";
+    }
+
+    private String heap() {
+        if (this.operando1 instanceof Heap && ((Heap) this.operando1).getRef() instanceof P) {
+            return "\tmovl\tp(%rip), %eax\n";
+        } else if ((this.operando1 instanceof Heap
+                && ((Heap) this.operando1).getRef() instanceof AritmeticaOperator)) {
+            return "\tmovl\t" + ((Heap) this.operando1).getRef().pos + "(%rbp), %eax\n";
+        } else if ((this.operando1 instanceof Heap
+                && ((Heap) this.operando1).getRef() instanceof TerminalOperator)) {
+            if (((TerminalOperator) operando1).isFlo()) {
+                return "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
+                        + "\tcvttsd2sil\t%xmm0, %eax";
+            } else {
+                return "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n";
+            }
+        }
+        return "";
     }
 
 }

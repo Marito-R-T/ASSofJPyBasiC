@@ -29,7 +29,7 @@ public class Printf extends Triplete {
     private final String tipo;
     private final String cast;
     private String valor;
-    private String et = "etiquetastring";
+    private String et;
 
     /**
      * Constructor cuando se necesita de una variable
@@ -104,42 +104,67 @@ public class Printf extends Triplete {
         return tri;
     }
 
+    @Override
     public String asm() {
         if (valor == null) {
-            if (this.operando2 instanceof Stack) {
-                return "\tcltq\n"
-                        + ((Stack) this.operando2).asm(false)
-                        + "\taddq\t%rdx, %rax\n"
-                        + "\tmovq\t%rax, %rsi\n"
-                        + "\tleaq\t" + et + "(%rip), %rdi\n"
-                        + "\tmovl\t$1, %eax\n"
-                        + "\tcall\tprintf@PLT\n";
-            } else if (this.operando2 instanceof Heap) {
-                return "    cltq\n"
-                        + ((Heap) this.operando2).asm(false)
-                        + "\taddq\t%rdx, %rax\n"
-                        + "\tmovq\t%rax, %rsi\n"
-                        + "\tleaq\t" + et + "(%rip), %rdi\n"
-                        + "\tmovl\t$0, %eax\n"
-                        + "\tcall\tprintf@PLT\n";
-            } else if (this.operando2 instanceof TerminalOperator) {
-                return "\tmovq\t$" + ((TerminalOperator) operando2).getBin() + ", %rax\n"
-                        + "\tmovq\t%rax, %xmm0\n"
-                        + "\tleaq\t" + et + "(%rip), %rax\n"
-                        + "\tmovl\t$1, %eax\n"
-                        + "\tcall\tprintf@PLT\n";
-            } else {
-                return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
-                        + "\tmovl\t%eax, %esi\n"
-                        + "\tleaq\t" + et + "(%rip), %rdi\n"
-                        + "\tmovl\t$0, %eax\n"
-                        + "\tcall\tprintf@PLT\n";
+            if (this.operando2 instanceof TerminalOperator) {
+                if (((TerminalOperator) this.operando2).isFlo()) {
+                    return "\tmovq\t" + ((TerminalOperator) operando2).getBin() + ", %rax\n"
+                            + "\tmovq\t%rax, %xmm0\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$1, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                } else {
+                    return "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %esi\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$0, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                }
+            } else if (this.operando2 instanceof AritmeticaOperator) {
+                if (((AritmeticaOperator) this.operando2).getTipo().equals("float")) {
+                    return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                            + "\tmovl\t%eax, %esi\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$0, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                } else {
+                    return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$1, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                }
+            } else if (this.operando2 instanceof AsignarTemporal) {
+                if (((AsignarTemporal) this.operando2).getTipo().equals("float")) {
+                    return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                            + "\tmovl\t%eax, %esi\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$0, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                } else {
+                    return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                            + "\tleaq\t" + et + "(%rip), %rdi\n"
+                            + "\tmovl\t$1, %eax\n"
+                            + "\tcall\tprintf@PLT\n";
+                }
             }
         } else {
-            return "\tleaq\t." + et + "(%rip), %rdi\n"
+            return "\tleaq\t" + et + "(%rip), %rdi\n"
                     + "\tmovl\t$0, %eax\n"
                     + "\tcall\tprintf@PLT\n";
         }
+        return "";
+    }
+
+    public void setEt(String et) {
+        this.et = et;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
 }

@@ -9,8 +9,10 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Clrs;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Heap;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Printf;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
@@ -270,7 +272,9 @@ public class TablaJava {
             tri.addAll(variableJava.getTripletes());
             if (variableJava.getTriplete().getOperando2() != null) {
                 if (this.var_definidas.contains(variableJava)) {
-                    SumOperator sum = this.devolverSum(variableJava.getId(), true);
+                    Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                    tri.add(ast);
+                    SumOperator sum = this.devolverSum(variableJava.getId(), true, ast);
                     tri.add(sum);
                     tri.add(new AsignarValor(this.devolverDireccionH(sum), variableJava.getTriplete().getOperando2(), null));
                 } else {
@@ -295,9 +299,9 @@ public class TablaJava {
         return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
     }
 
-    public SumOperator devolverSum(String id, boolean global) {
+    public SumOperator devolverSum(String id, boolean global, Triplete ast) {
         if (global) {
-            return new SumOperator(null, new Stack(new P()), new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
+            return new SumOperator(null, ast, new TerminalOperator(this.obtenerDireccionG(id).toString()), "int");
         } else {
             return new SumOperator(null, new P(), new TerminalOperator(this.obtenerDireccion(id).toString()), "int");
         }
@@ -354,26 +358,62 @@ public class TablaJava {
             trip.addAll(this.principales);
             trip.addAll(constructor.getTripletes());
             int pos = -4;
+            String tr = "";
             for (int i = trip.size() - 1; i >= 0; i--) {
                 Triplete triplete = trip.get(i);
                 if (triplete instanceof AritmeticaOperator || triplete instanceof AsignarTemporal) {
                     triplete.setPos(pos + "");
                     pos -= 4;
+                } else if (trip instanceof Printf) {
+                    String lc = ".LC" + Triplete.FLOAT;
+                    Triplete.FLOAT++;
+                    ((Printf) trip).setEt(lc);
+                    if (((Printf) trip).getValor() == null) {
+                        tr += lc + ":\n"
+                                + "\t.string \"" + ((Printf) trip).getTipo() + "\"\n";
+                    } else {
+                        tr += lc + ":\n"
+                                + "\t.string \"" + ((Printf) trip).getValor() + "\"\n";
+                    }
+                } else if (trip instanceof Clrs) {
+                    String lc = ".LC" + Triplete.FLOAT;
+                    Triplete.FLOAT++;
+                    ((Clrs) trip).setEt(lc);
+                    tr += lc + ":\n"
+                            + "\t.string \"clear\"\n";
                 }
             }
-            s += constructor.mostrarMetodoAss(num, this.principales);
+            s += constructor.mostrarMetodoAss(num, this.principales, tr);
             num++;
         }
         for (MetodoJava metodo : this.metodos) {
             int pos = -4;
+            String tr = "";
             for (int i = metodo.getTripletes().size() - 1; i >= 0; i--) {
                 Triplete triplete = metodo.getTripletes().get(i);
                 if (triplete instanceof AritmeticaOperator) {
                     triplete.setPos(pos + "");
                     pos -= 4;
+                } else if (triplete instanceof Printf) {
+                    String lc = ".LC" + Triplete.FLOAT;
+                    Triplete.FLOAT++;
+                    ((Printf) triplete).setEt(lc);
+                    if (((Printf) triplete).getValor() == null) {
+                        tr += lc + ":\n"
+                                + "\t.string \"" + ((Printf) triplete).getTipo() + "\"\n";
+                    } else {
+                        tr += lc + ":\n"
+                                + "\t.string \"" + ((Printf) triplete).getValor() + "\"\n";
+                    }
+                } else if (triplete instanceof Clrs) {
+                    String lc = ".LC" + Triplete.FLOAT;
+                    Triplete.FLOAT++;
+                    ((Clrs) triplete).setEt(lc);
+                    tr += lc + ":\n"
+                            + "\t.string \"clear\"\n";
                 }
             }
-            s += metodo.mostrarMetodoAss(num);
+            s += metodo.mostrarMetodoAss(num, tr);
             num++;
         }
         this.num = num;

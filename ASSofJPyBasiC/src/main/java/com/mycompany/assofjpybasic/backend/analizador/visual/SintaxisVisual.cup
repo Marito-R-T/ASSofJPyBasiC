@@ -222,12 +222,18 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
                         reportarSem("No existe la variable con id: " + e1);
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionVisual op = new OperacionVisual(var.getTipo(), sem.devolverDireccion(sum));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.devolverDireccion(sum), "float");
+                        OperacionVisual op = new OperacionVisual(var.getTipo(), ast);
                         op.getTripletes().add(sum);
                         RESULT = op;
                 }:}
         | entero:e1 {:RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));:}
-        | decimal:e1 {:RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1));:}
+        | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s);
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1, s));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
 ;
 
@@ -464,7 +470,8 @@ LLAMADA_METODO ::= id:e1 para LIST_PARAM:e2 parc {:MetodoVisual met = sem.existe
                                 tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().size()),"int");
                                 tri.add(s);
-                                OperacionVisual op = new OperacionVisual(met.getTIPO(), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionVisual op = new OperacionVisual(met.getTIPO(), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}

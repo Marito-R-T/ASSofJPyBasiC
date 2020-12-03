@@ -209,11 +209,14 @@ public class Else_Operator extends ListaTripletes {
             SumOperator ss2 = new SumOperator(null, ss.operando1, ss.operando2, "int");
             if (op.size() < 2) {
                 nuevos.addAll(op.get(0).mostrarTripletes());
-
-                men = new MenorOperator(op.get(0).getTriplete(), new Stack(ss2));
+                Triplete ast = new AsignarTemporal(null, new Stack(ss2), "float");
+                nuevos.add(ast);
+                men = new MenorOperator(op.get(0).getTriplete(), ast);
             } else {
                 nuevos.addAll(op.get(1).mostrarTripletes());
-                men = new MenorOperator(op.get(1).getTriplete(), new Stack(ss2));
+                Triplete ast = new AsignarTemporal(null, new Stack(ss2), "float");
+                nuevos.add(ast);
+                men = new MenorOperator(op.get(1).getTriplete(), ast);
             }
             nuevos.add(ss2);
             If_Operator iff = new If_Operator(men, buena);// Manejo del If
@@ -224,12 +227,16 @@ public class Else_Operator extends ListaTripletes {
             SumOperator ss3 = new SumOperator(null, ss.operando1, ss.operando2, "int");
             nuevos.add(ss3);
             if (op.size() < 3) {
-                SumOperator sum = new SumOperator(null, new Stack(ss3), new TerminalOperator("1"), "int");
+                Triplete ast = new AsignarTemporal(null, new Stack(ss3), "float");
+                nuevos.add(ast);
+                SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), "int");
                 nuevos.add(sum);
                 nuevos.add(new AsignarValor(new Stack(ss3), sum, null));
             } else {
                 nuevos.addAll(op.get(2).getTripletes());
-                SumOperator sum = new SumOperator(null, new Stack(ss3), op.get(2).getTriplete(), "int");
+                Triplete ast = new AsignarTemporal(null, new Stack(ss3), "float");
+                nuevos.add(ast);
+                SumOperator sum = new SumOperator(null, ast, op.get(2).getTriplete(), "int");
                 nuevos.add(sum);
                 nuevos.add(new AsignarValor(new Stack(ss3), sum, null));
             }

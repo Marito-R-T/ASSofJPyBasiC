@@ -38,14 +38,60 @@ public class Heap extends TerminalOperator {
                     + "\tcltq\n";
         }
         if (derecha) {
-            s += "   leaq	0(,%rdx,4), %rcx\n"
-                    + "leaq    stack(%rip), %rdx\n"
-                    + " movss	(%rcx,%rdx), %xmm0\n";
+            s += "   leaq\t0(,%rdx,4), %rcx\n"
+                    + "leaq\theap(%rip), %rdx\n"
+                    + "movss\t(%rcx,%rdx), %xmm0\n";
         } else {
-            s += "   cltq\n"
-                    + " leaq	0(,%rax,4), %rdx\n"
-                    + " leaq	heap(%rip), %rax\n";
+            s += "\tcltq\n"
+                    + "leaq\t0(,%rax,4), %rdx\n"
+                    + "leaq\theap(%rip), %rax\n";
         }
+        return s;
+    }
+
+    @Override
+    public String asm() {
+        String s = "";
+        if (ref instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n";
+        } else {
+            s += "\tmovl\t" + ref.pos + "(%rbp), %eax\n"
+                    + "\tcltq\n";
+        }
+        return s + "\tleaq\t0(,%rax,4), %rdx\n"
+                + "\tleaq\theap(%rip), %rax\n"
+                + "\tmovss\t(%rdx,%rax), %xmm0\n";
+    }
+
+    public Triplete getRef() {
+        return ref;
+    }
+
+    public String devolvers() {
+        String s = "";
+        if (ref instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n";
+        } else {
+            s += "\tmovss\t" + ref.pos + "(%rbp), %eax\n"
+                    + "\tcltq\n";
+        }
+        s += "\tleaq\t0(,%rax,4), %rdx\n"
+                + "\tleaq\theap(%rip), %rax\n"
+                + "\tmovss\t(%rdx,%rax), %xmm0\n";
+        return s;
+    }
+
+    public String scanf() {
+        String s = "";
+        if (ref instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n"
+                    + "\tcltq\n";
+        } else {
+            s += "\tmovl\t" + ref.pos + "(%rbp), %eax\n"
+                    + "\tcltq\n";
+        }
+        s += "\tleaq\t0(,%rax,4), %rdx\n"
+                + "\tleaq\tstack(%rip), %rax\n";
         return s;
     }
 

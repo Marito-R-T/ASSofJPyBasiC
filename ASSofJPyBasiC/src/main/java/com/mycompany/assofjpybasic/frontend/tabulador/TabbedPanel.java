@@ -221,6 +221,10 @@ public final class TabbedPanel extends javax.swing.JPanel {
         return paneOptimizacion;
     }
 
+    public String getaAssembler() {
+        return this.paneAssembler.getText();
+    }
+
     public String getaEjecutar() {
         return aEjecutar;
     }

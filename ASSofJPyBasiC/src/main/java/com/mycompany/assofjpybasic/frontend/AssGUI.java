@@ -329,19 +329,25 @@ public class AssGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
         String s = tabbed.getaEjecutar();
-        tabbed.getPaneAssembler().setText(s);
+        String s2 = tabbed.getaAssembler();
         try {
             File file = new File(this.getClass().getResource("/programa.c").toURI());
-            this.getClass().getResource("").getFile();
+            File file2 = new File(this.getClass().getResource("/prueba.s").toURI());
             FileWriter fichero = null;
             PrintWriter pw = null;
+            FileWriter fichero2 = null;
+            PrintWriter pw2 = null;
             try {
                 fichero = new FileWriter(file);
                 pw = new PrintWriter(fichero);
                 pw.print(s);
                 pw.flush();
                 pw.close();
-
+                fichero2 = new FileWriter(file2);
+                pw2 = new PrintWriter(fichero2);
+                pw2.print(s2);
+                pw2.flush();
+                pw2.close();
             } catch (IOException e) {
             } finally {
                 try {

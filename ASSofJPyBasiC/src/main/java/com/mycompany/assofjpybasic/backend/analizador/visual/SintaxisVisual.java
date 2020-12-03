@@ -1724,7 +1724,8 @@ VisualSemantica.AMBITO += 1;
                         reportarSem("No existe la variable con id: " + e1);
                 } else {
                         SumOperator sum = sem.devolverSum(e1);
-                        OperacionVisual op = new OperacionVisual(var.getTipo(), sem.devolverDireccion(sum));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.devolverDireccion(sum), "float");
+                        OperacionVisual op = new OperacionVisual(var.getTipo(), ast);
                         op.getTripletes().add(sum);
                         RESULT = op;
                 }
@@ -1751,7 +1752,12 @@ VisualSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s);
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1, s));
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("ATOM",19, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -3336,7 +3342,8 @@ reportarSem("Error en el do while, se espera un salto de linea despues del do");
                                 tri.addAll(met.verMetodo(sem.getVariables().size(), e2));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().size()),"int");
                                 tri.add(s);
-                                OperacionVisual op = new OperacionVisual(met.getTIPO(), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionVisual op = new OperacionVisual(met.getTIPO(), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }

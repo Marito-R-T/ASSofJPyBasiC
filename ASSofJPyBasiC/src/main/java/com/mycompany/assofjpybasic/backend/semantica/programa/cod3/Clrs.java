@@ -40,8 +40,12 @@ public class Clrs extends Triplete {
 
     @Override
     public String asm() {
-        return "    leaq    " + et + "(%rip), %rdi\n"
-                + " call    system@PLT\n";
+        return "\tleaq\t" + et + "(%rip), %rdi\n"
+                + "\tcall\tsystem@PLT\n";
+    }
+
+    public void setEt(String et) {
+        this.et = et;
     }
 
 }

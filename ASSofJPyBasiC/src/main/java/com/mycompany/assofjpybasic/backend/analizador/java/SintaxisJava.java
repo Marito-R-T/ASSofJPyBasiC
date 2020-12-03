@@ -2306,9 +2306,11 @@ TablaJava.AMBITO += 1; variables = new ArrayList<>();
                 }else { TablaJava.AMBITO -= 1;
                 ((AsignarValor) e2.getTriplete()).setTipo(OperacionJava.obtenerTipo(e1));
                 tri.addAll(e2.getTripletes());
-                SumOperator sum = tabla.devolverSum(e2.getId(), false);
+                SumOperator sum = tabla.devolverSum(e2.getId(), false, null);
                 tri.add(sum);
-                tri.add(new AsignarValor(tabla.devolverDireccion(sum), e2.getTriplete().getOperando2(), null));} RESULT = tri;
+                AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(sum), "float");
+                tri.add(ast);
+                tri.add(new AsignarValor(ast, e2.getTriplete().getOperando2(), null));} RESULT = tri;
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("INICIO",40, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.elementAt(CUP$SintaxisJava$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -2778,12 +2780,14 @@ cas++;
                         } else {
                                 if(tabla.getVar_definidas().contains(num)){
                                         tri.addAll(e2.mostrarTripletes());
-                                        SumOperator sum = tabla.devolverSum(e1, true);
+                                        Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        tri.add(ast);
+                                        SumOperator sum = tabla.devolverSum(e1, true, ast);
                                         tri.add(sum);
                                         tri.add(new AsignarValor(tabla.devolverDireccionH(sum), e2.getTriplete(), null));
                                 } else {
                                         tri.addAll(e2.mostrarTripletes());
-                                        SumOperator sum = tabla.devolverSum(e1, false);
+                                        SumOperator sum = tabla.devolverSum(e1, false, null);
                                         tri.add(sum);
                                         tri.add(new AsignarValor(tabla.devolverDireccion(sum), e2.getTriplete(), null));
                                 }
@@ -2863,20 +2867,28 @@ cas++;
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
                                 if(tabla.getVar_definidas().contains(num)){
-                                        SumOperator ss1 = tabla.devolverSum(e1, true);
+                                        Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        tri.add(ast);
+                                        SumOperator ss1 = tabla.devolverSum(e1, true, ast);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(ss1), "float");
+                                        tri.add(ast1);
+                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
-                                        SumOperator ss2 = tabla.devolverSum(e1, true);
+                                        Triplete ast2 = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        tri.add(ast2);
+                                        SumOperator ss2 = tabla.devolverSum(e1, true, ast2);
                                         tri.add(ss2);
-                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2), sum, null));
+                                        tri.add(new AsignarValor(tabla.devolverDireccionH(ss2), ss2, null));
                                         RESULT = tri;
                                 } else {
-                                        SumOperator ss1 = tabla.devolverSum(e1, false);
+                                        SumOperator ss1 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(ss1), "float");
+                                        tri.add(ast);
+                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
-                                        SumOperator ss2 = tabla.devolverSum(e1, false);
+                                        SumOperator ss2 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss2);
                                         tri.add(new AsignarValor(tabla.devolverDireccion(ss2), sum, null));
                                         RESULT = tri;
@@ -2902,20 +2914,28 @@ cas++;
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         } else {
                                 if(tabla.getVar_definidas().contains(num)){
-                                        SumOperator ss1 = tabla.devolverSum(e1, true);
+                                        Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        tri.add(ast);
+                                        SumOperator ss1 = tabla.devolverSum(e1, true, ast);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccionH(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(ss1), "float");
+                                        tri.add(ast1);
+                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
-                                        SumOperator ss2 = tabla.devolverSum(e1, true);
+                                        Triplete ast2 = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        tri.add(ast2);
+                                        SumOperator ss2 = tabla.devolverSum(e1, true, ast2);
                                         tri.add(ss2);
                                         tri.add(new AsignarValor(tabla.devolverDireccionH(ss2), sum, null));
                                         RESULT = tri;
                                 } else {
-                                        SumOperator ss1 = tabla.devolverSum(e1, false);
+                                        SumOperator ss1 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss1);
-                                        SumOperator sum = new SumOperator(null, tabla.devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(ss1), "float");
+                                        tri.add(ast);
+                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
-                                        SumOperator ss2 = tabla.devolverSum(e1, false);
+                                        SumOperator ss2 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss2);
                                         tri.add(new AsignarValor(tabla.devolverDireccion(ss2), sum, null));
                                         RESULT = tri;
@@ -3105,14 +3125,18 @@ cas++;
                         } else {
                                 if(tabla.getVar_definidas().contains(num)){
                                         System.out.println("CONTIENE EL VALOR");
-                                        SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum));
+                                        Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        SumOperator sum = tabla.devolverSum(e1, true, ast);
+                                        AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(sum), "float");
+                                        OperacionJava op = new OperacionJava(num.getTipo(), ast1);
+                                        op.getTripletes().add(ast);
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
                                         System.out.println("NO CONTIENE EL VALOR");
-                                        SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum));
+                                        SumOperator sum = tabla.devolverSum(e1, false, null);
+                                        AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(sum), "float");
+                                        OperacionJava op = new OperacionJava(num.getTipo(), ast);
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }}}
@@ -3124,7 +3148,8 @@ cas++;
                                 tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(tabla.getVariables().size()+3)),"int");
                                 tri.add(s);
-                                OperacionJava op = new OperacionJava(met.getTIPO(), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionJava op = new OperacionJava(met.getTIPO(), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }}
@@ -3151,7 +3176,12 @@ cas++;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s);
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("ATOM",13, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -3502,13 +3532,17 @@ cas++;
                                 reportarSem("Variable con id: "+ e1 + " no ha sido declarada");
                         }else{
                                 if(tabla.getVar_definidas().contains(num)){
-                                        SumOperator sum = tabla.devolverSum(e1, true);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccionH(sum));
+                                        Triplete ast = new AsignarTemporal(null, new Stack(new P()), "float");
+                                        SumOperator sum = tabla.devolverSum(e1, true, ast);
+                                        AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(sum), "float");
+                                        OperacionJava op = new OperacionJava(num.getTipo(), ast1);
+                                        op.getTripletes().add(ast);
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 } else {
-                                        SumOperator sum = tabla.devolverSum(e1, false);
-                                        OperacionJava op = new OperacionJava(num.getTipo(), tabla.devolverDireccion(sum));
+                                        SumOperator sum = tabla.devolverSum(e1, false, null);
+                                        AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(sum), "float");
+                                        OperacionJava op = new OperacionJava(num.getTipo(), ast);
                                         op.getTripletes().add(sum);
                                         RESULT = op;
                                 }
@@ -3536,7 +3570,12 @@ cas++;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisJava$stack.peek()).value;
-		RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s);
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));
               CUP$SintaxisJava$result = parser.getSymbolFactory().newSymbol("EXPR",14, ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisJava$stack.peek()), RESULT);
             }
           return CUP$SintaxisJava$result;
@@ -3709,7 +3748,8 @@ cas++;
                                 tri.addAll(met.verMetodo(tabla.getVariables().size(), e2));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(tabla.getVariables().size()+3)),"int");
                                 tri.add(s);
-                                OperacionJava op = new OperacionJava(met.getTIPO(), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionJava op = new OperacionJava(met.getTIPO(), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }

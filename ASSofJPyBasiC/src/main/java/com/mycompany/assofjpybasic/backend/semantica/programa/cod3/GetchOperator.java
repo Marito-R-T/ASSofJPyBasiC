@@ -40,8 +40,8 @@ public class GetchOperator extends Triplete {
 
     @Override
     public String asm() {
-        return "	movl	$0, %eax\n"
-                + "	call	getch";
+        return "\tmovl\t$0, %eax\n"
+                + "\tcall\tgetch";
     }
 
 }

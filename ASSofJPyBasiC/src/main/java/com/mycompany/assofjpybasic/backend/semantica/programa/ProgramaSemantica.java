@@ -40,6 +40,7 @@ public class ProgramaSemantica {
     private List<Triplete> var = new ArrayList<>();
     private List<String> imports = new ArrayList<>();
     private CrearAssembler assembler = new CrearAssembler();
+    private final List<String> fl = new ArrayList<>();
 
     /**
      * Constructor de la semantica del programa, donde se inicializa el ambito a
@@ -323,6 +324,7 @@ public class ProgramaSemantica {
         assembler.getClasesJava().addAll(this.clasesImportadas);
         assembler.getMetodosPython().addAll(this.metodosPython);
         assembler.getMetodosVisual().addAll(this.metodosVisual);
+        assembler.getFl().addAll(this.fl);
         List<Triplete> main = new ArrayList<>();
         main.addAll(this.var);
         main.addAll(this.tripletes);
@@ -529,6 +531,10 @@ public class ProgramaSemantica {
 
     public void setHeap(Integer heap) {
         this.heap = heap;
+    }
+
+    public List<String> getFl() {
+        return fl;
     }
 
 }

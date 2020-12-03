@@ -41,7 +41,9 @@ public class Etiqueta extends Triplete {
 
     @Override
     public String asm() {
-        return "." + this.id + ":\n";
+        return "." + this.id + ":\n"
+                + "\tmovl\t$32, %edi\n"
+                + "\tcall\tputchar@PLT\n";
     }
 
 }

@@ -52,8 +52,8 @@ public class NoIgualOperator extends CondicionalOperator {
     public String asm() {
         String s = "";
         s += super.asm();
-        s += "\tucomiss     %xmm0, %xmm1\n";
-        s += "\tjne  " + super.et + "\n";
+        s += "\tucomiss\t%xmm0, %xmm1\n";
+        s += "\tjne\t" + super.et + "\n";
         return s;
     }
 

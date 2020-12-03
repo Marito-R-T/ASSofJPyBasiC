@@ -47,25 +47,35 @@ public class ModOperator extends AritmeticaOperator {
     @Override
     public String asm() {
         String s = "";
-        if (operando2 instanceof Stack) {
-            s += super.asm();
-            s += "\tcltq\n"
-                    + ((Stack) this.operando2).asm(false)
-                    + "\tcall\tfmod@PLT\n"
-                    + "\tcvtsd2ss\t%xmm0, %xmm0\n";
-        } else if (operando2 instanceof AritmeticaOperator) {
-            s += super.asm();
-            s += "\tcvtss2sd\t" + this.operando2.getPos() + "(%rip), %xmm0\n"
-                    + "\tcall\tfmod@PLT\n"
-                    + "\tcvtsd2ss\t%xmm0, %xmm0\n";
-        } else if (operando2 instanceof TerminalOperator) {
-            s += super.asm(true);
-            s += "  cvtss2sd\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n"
-                    + "call\tfmod@PLT\n"
-                    + "	cvtsd2ss\t%xmm0, %xmm0\n";
-        }
-        s += "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
+        s += super.asm(true);
+        s += this.derecha();
         return s;
+    }
+
+    public String derecha() {
+        if (this.tipo.equals("int") || this.tipo.equals("char")) {
+            String s = "";
+            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
+                s += "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm1\n"
+                        + "\tcall\tfmod@PLT\n";
+            } else if (operando2 instanceof TerminalOperator) {
+                s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
+                        + "\tcall\tfmod@PLT\n";
+            }
+            return s + "\tcvttss2sil\t%xmm0, %eax\n"
+                    + "\tmovl\t%eax, " + this.pos + "(%rbp)\n";
+        } else {
+            String s = "";
+            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
+                s += "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm1\n"
+                        + "\tcall\tfmod@PLT\n";
+            } else if (operando2 instanceof TerminalOperator) {
+                s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
+                        + "\tcall\tfmod@PLT\n";
+            }
+            return s + "\tcvtsd2ss\t%xmm0, %xmm0\n"
+                    + "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";
+        }
     }
 
 }

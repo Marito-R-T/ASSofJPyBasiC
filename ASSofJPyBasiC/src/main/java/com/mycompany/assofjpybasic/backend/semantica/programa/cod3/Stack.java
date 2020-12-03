@@ -30,6 +30,10 @@ public class Stack extends TerminalOperator {
         ref = trip;
     }
 
+    public Triplete getRef() {
+        return ref;
+    }
+
     public String asm(boolean derecha) {
         String s = "";
         if (ref instanceof P) {
@@ -43,10 +47,24 @@ public class Stack extends TerminalOperator {
                     + "\tleaq\tstack(%rip), %rdx\n"
                     + "\tmovss\t(%rcx,%rdx), %xmm0\n";
         } else {
-            s += "\tleaq    0(,%rax,4), %rdx\n"
+            s += "\tleaq\t0(,%rax,4), %rdx\n"
                     + "\tleaq\tstack[%rip], %rax\n"
                     + "\tmovss\t(%rdx,%rax), %xmm0\n";
         }
+        return s;
+    }
+
+    public String scanf() {
+        String s = "";
+        if (ref instanceof P) {
+            s += "\tmovl\tp(%rip), %eax\n"
+                    + "\tcltq\n";
+        } else {
+            s += "\tmovl\t" + ref.pos + "(%rbp), %eax\n"
+                    + "\tcltq\n";
+        }
+        s += "\tleaq\t0(,%rax,4), %rdx\n"
+                + "\tleaq\tstack(%rip), %rax\n";
         return s;
     }
 
@@ -56,7 +74,7 @@ public class Stack extends TerminalOperator {
         if (ref instanceof P) {
             s += "\tmovl\tp(%rip), %eax\n";
         } else {
-            s += "\tmovss\t" + ref.pos + "(%rbp), %eax\n"
+            s += "\tmovl\t" + ref.pos + "(%rbp), %eax\n"
                     + "\tcltq\n";
         }
         return s + "\tleaq\t0(,%rax,4), %rdx\n"

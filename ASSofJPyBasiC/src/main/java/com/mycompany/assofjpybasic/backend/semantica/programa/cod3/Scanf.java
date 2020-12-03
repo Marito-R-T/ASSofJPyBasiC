@@ -64,7 +64,7 @@ public class Scanf extends Triplete {
         for (String string : texto) {
             if (string.equals("%d") || string.equals("%f") || string.equals("%c")) {
                 if (term < terminales.size()) {
-                    tri.addAll(terminales.get(term).getTripletes());
+                    tri.addAll(terminales.get(term).mostrarTripletes());
                     tri.add(new Scanf(string, terminales.get(term).getTriplete()));
                 } else {
                     return null;
@@ -77,25 +77,32 @@ public class Scanf extends Triplete {
         return tri;
     }
 
+    @Override
     public String asm() {
         if (this.operando2 instanceof Stack) {
-            return "\tcltq\n"
-                    + ((Stack) this.operando2).asm(false)
-                    + "\taddq    %rdx, %rax\n"
-                    + "\tmovq    %rax, %rsi\n"
-                    + "\tleaq    " + et + "(%rip), %rdi\n"
-                    + "\tmovl    $0, %eax\n"
-                    + "\tcall    __isoc99_scanf@PLT\n";
+            return ((Stack) this.operando2).scanf()
+                    + "\taddq\t%rdx, %rax\n"
+                    + "\tmovq\t%rax, %rsi\n"
+                    + "\tleaq\t.LC5(%rip), %rdi\n"
+                    + "\tmovl\t$0, %eax\n"
+                    + "\tcall\t__isoc99_scanf@PLT\n";
         } else if (this.operando2 instanceof Heap) {
-            return "\tcltq\n"
-                    + ((Heap) this.operando2).asm(false)
-                    + "\taddq    %rdx, %rax\n"
-                    + "\tmovq    %rax, %rsi\n"
-                    + "\tleaq    " + et + "(%rip), %rdi\n"
-                    + "\tmovl    $0, %eax\n"
-                    + "\tcall    __isoc99_scanf@PLT\n";
+            return ((Heap) this.operando2).scanf()
+                    + "\taddq\t%rdx, %rax\n"
+                    + "\tmovq\t%rax, %rsi\n"
+                    + "\tleaq\t.LC5(%rip), %rdi\n"
+                    + "\tmovl\t$0, %eax\n"
+                    + "\tcall\t__isoc99_scanf@PLT\n";
         }
         return "\n";
+    }
+
+    public void setEt(String et) {
+        this.et = et;
+    }
+
+    public String getEt() {
+        return et;
     }
 
 }

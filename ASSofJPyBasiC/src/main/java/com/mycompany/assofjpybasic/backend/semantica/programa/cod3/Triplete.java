@@ -30,6 +30,7 @@ public abstract class Triplete {
     protected final Triplete operando2;
     public static int VARNUM = 0, ETNUM = 0;
     public static final String[] tipos = {"char", "int", "float", "void"};
+    public static int FLOAT = 6;
 
     /**
      * Constructor para iniciar Triplete

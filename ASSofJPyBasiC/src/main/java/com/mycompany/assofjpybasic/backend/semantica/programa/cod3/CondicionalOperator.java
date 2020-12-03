@@ -54,9 +54,24 @@ public abstract class CondicionalOperator extends Triplete {
                     + ((Heap) this.operando1).asm(false)
                     + "\tmovss\t(%rdx,%rax), %xmm0\n";
         } else if (operando1 instanceof TerminalOperator) {
-            s += "  movss\t$" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
-        } else {
-            s += "  movss\t" + operando1.pos + "(%rbp), %xmm0\n";
+            if (((TerminalOperator) operando1).isFlo()) {
+                s += "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            } else {
+                s += "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n"
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+            }
+        } else if (operando1 instanceof AritmeticaOperator) {
+            if (((AsignarTemporal) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
+        } else if (operando1 instanceof AsignarTemporal) {
+            if (((AsignarTemporal) operando1).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+            }
         }
         if (operando2 instanceof Stack) {
             s += "\tcltq\n"
@@ -67,9 +82,24 @@ public abstract class CondicionalOperator extends Triplete {
                     + ((Heap) this.operando2).asm(false)
                     + "\tmovss\t(%rdx,%rax), %xmm1\n";
         } else if (operando2 instanceof TerminalOperator) {
-            s += "\tmovss\t$" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n";
-        } else {
-            s += "\tmovss\t" + operando1.pos + "(%rbp), %xmm1\n";
+            if (((TerminalOperator) operando2).isFlo()) {
+                s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+            } else {
+                s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+            }
+        } else if (operando2 instanceof AritmeticaOperator) {
+            if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+            }
+        } else if (operando2 instanceof AsignarTemporal) {
+            if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+            } else {
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+            }
         }
         return s;
     }

@@ -93,14 +93,13 @@ PROGRAMA ::= INCLUDE_LENG CONST MAIN {:List<String> st = new ArrayList<>(); st.a
 ;
 
 INCLUDE_LENG ::= INCLUDE_LENG IN_LENG
-        | 
+        |
 ;
 
 IN_LENG ::= py {:sem.iniciarPY(py, p);:}
         | vb {:sem.iniciarVB(vb, v);:}
         | java IN_CLASS:e1 comilla {:if(e1.equals("$$*$$")){sem.importarTodasClases();}else{sem.importarClase(e1);}:}
         | includee:e1 idlib:e2 {:sem.getImports().add(e1 + " " + e2);:}
-        | error IN_LENG {:reportarSem("Error en la importación de librerías o trozos de codigo");:}
 ;
 
 IN_CLASS ::= por {:RESULT = "$$*$$";:}
@@ -124,6 +123,7 @@ CONST ::= CONST constt TYPE:e1 id:e2 igual OPERACION_AC:e3 puntocoma
                         /*tri.addAll(var.mostrarTripletes());*/
                         tri.addAll(sem.getVariables().obtenerTriplete(var, var.getTipo()));
                         } sem.getVar().addAll(tri);:}
+        | CONST CLASS:e1 {:sem.getVar().addAll(e1);:}
         | {::}
         | CONST constt TYPE id igual error puntocoma {:reportarSem("Error en la asignación de constante, se esperaba una operacion");:}
         | CONST constt error igual OPERACION_AC puntocoma {:reportarSem("Error en la asignacion de constante, se esperaba un id");:}
@@ -230,11 +230,17 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(sum), "float");
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), ast);
                         op.getTripletes().add(sum);
                         RESULT = op;}:}
         | entero:e1 {:RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));:}
-        | decimal:e1 {:RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1));:}
+        | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s);
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1, s));:}
         | character:e1 {:RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));:}
         | id:e1 CORCHETES:e2 {:VariablePrograma var = sem.existeVar(e1, e2.size());
                 if(var == null){
@@ -243,7 +249,8 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                 var.getTipo(), e2, (ArregloPrograma) var);
                 SumOperator sum = sem.getVariables().devolverSum(e1);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTripletes().get(arr.getTripletes().size()-1), "int");
-                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum2));
+                AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(sum2), "float");
+                OperacionPrograma corch = new OperacionPrograma(var.getTipo(), ast);
                 corch.getTripletes().addAll(0, arr.getTripletes());
                 corch.getTripletes().add(sum);
                 corch.getTripletes().add(sum2);
@@ -321,6 +328,7 @@ DEF_VAR ::= id:e1 igual EXPR:e2 {:ListaTripletes tri = new ListaTripletes();
                 tri.add(sum);
                 SumOperator sum2 = new SumOperator(null, sum, arr.getTriplete(), "int");
                 tri.add(sum2);
+                if(e3.getTriplete() instanceof AsignarTemporal) tri.add(e3.getTriplete());
                 AsignarValor asig = new AsignarValor(null, sem.getVariables().devolverDireccion(sum2), e3.getTriplete());
                 tri.add(asig);
                 RESULT = tri; }:}
@@ -522,7 +530,9 @@ OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePro
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        SumOperator sum = new SumOperator(null, sem.getVariables().devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(ss1), "float");
+                        tri.add(ast);
+                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(sum);
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
@@ -534,7 +544,9 @@ OP_VAR ::= id:e1 masmas {:ListaTripletes tri = new ListaTripletes(); VariablePro
                 } else {
                         SumOperator ss1 = sem.getVariables().devolverSum(e1);
                         tri.add(ss1);
-                        RestOperator rest = new RestOperator(null,sem.getVariables().devolverDireccion(ss1), new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(ss1), "float");
+                        tri.add(ast);
+                        RestOperator rest = new RestOperator(null,ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(rest); 
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
@@ -580,7 +592,8 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
@@ -592,7 +605,8 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                                 tri.addAll(met.verMetodo(e2, sem.getVariables().getTamano()));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+sem.getVariables().getTamano()),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }:}
@@ -609,7 +623,8 @@ LLAMADA_METODO ::= pyy punto id:e1 para LIST_PARAM:e2 parc {:MetodoPython met = 
                                 tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(sem.getVariables().getTamano()+1)),"int");
                                 tri.add(s);
-                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), new Stack(s));
+                                AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");
+                                OperacionPrograma op = new OperacionPrograma(CallPrograma.regresarTipo(met), ast);
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;}
                         }:}
@@ -698,13 +713,20 @@ ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, 
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
                 } else{
                         SumOperator sum = sem.getVariables().devolverSum(e1);
-                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), sem.getVariables().devolverDireccion(sum));
+                        AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(sum), "float");
+                        OperacionPrograma op = new OperacionPrograma(var.getTipo(), ast);
                         op.getTripletes().add(sum);
                         op.setValor(var.getValor());
                         RESULT = op;}:}
         | entero:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
                         RESULT = pro;:}
-        | decimal:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
+        | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s);
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s)); 
+                pro.setValor(Float.parseFloat(e1));
                         RESULT = pro;:}
         | character:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor((float)e1.charAt(1));
                         RESULT = pro;:}

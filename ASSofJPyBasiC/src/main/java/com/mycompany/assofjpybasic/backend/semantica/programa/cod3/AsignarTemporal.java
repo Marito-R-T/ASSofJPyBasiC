@@ -46,22 +46,65 @@ public class AsignarTemporal extends Triplete {
     @Override
     public String asm() {
         String s = "";
-        if (operando1 instanceof Stack) {
-            s += "\tcltq\n"
-                    + ((Stack) this.operando1).asm()
-                    + "\tmovss   " + " %xmm0, " + this.getPos() + "(%rip)\n";
-        } else if (operando1 instanceof AritmeticaOperator) {
-            s += "\tmovss   " + operando1.getPos() + "(%rip), " + this.getPos() + "(%rip)\n";
-        } else if (operando1 instanceof P) {
-            s += "\tmovss   p(%rip), " + this.getPos() + "(%rip)\n";
-        } else if (operando1 instanceof TerminalOperator) {
-            s += "\tmovss   ." + this.operando1.getPos() + ", " + this.getPos() + "(%rip)\n";
+        if (this.tipo != null && this.tipo.equals("float")) {
+            return this.floatString();
+        } else if (this.tipo != null && (this.tipo.equals("int") || this.tipo.equals("char"))) {
+            return this.intString();
         }
         return s;
     }
 
+    /**
+     * Es el metodo donde se devuelve el string del assembler si es tipo float
+     *
+     * @return devuelve la linea ingresandola en xmm0
+     */
+    public String floatString() {
+        if (operando1 instanceof Stack) {
+            return ((Stack) this.operando1).asm()
+                    + "\tmovss\t" + " %xmm0, " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof Heap) {
+            return ((Heap) this.operando1).asm()
+                    + "\tmovss\t" + " %xmm0, " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof AritmeticaOperator) {
+            return "\tmovss\t" + operando1.getPos() + "(%rbp), " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof P) {
+            return "\tmovss\tp(%rip), " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            return "\tmovss\t." + ((TerminalOperator) operando1).getBin() + ", " + this.getPos() + "(%rbp)\n";
+        }
+        return "";
+    }
+
+    /**
+     * Es el metodo donde se devuelve el string del assembler si es tipo int o
+     * char
+     *
+     * @return devuelve la linea ingresandola en eax
+     */
+    public String intString() {
+        if (operando1 instanceof Stack) {
+            return ((Stack) this.operando1).asm()
+                    + "\tmovl\t" + " %xmm0, " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof Heap) {
+            return ((Heap) this.operando1).asm()
+                    + "\tmovl\t" + " %xmm0, " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof AritmeticaOperator) {
+            return "\tmovl\t" + operando1.getPos() + "(%rbp), " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof P) {
+            return "\tmovl\tp(%rip), " + this.getPos() + "(%rbp)\n";
+        } else if (operando1 instanceof TerminalOperator) {
+            return "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", " + this.getPos() + "(%rbp)\n";
+        }
+        return "";
+    }
+
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
 }

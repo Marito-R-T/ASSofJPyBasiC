@@ -36,8 +36,9 @@ public class GoToOperator extends Triplete {
         return "goto " + super.getOperando1().getId() + ";";
     }
 
+    @Override
     public String asm() {
-        return "    jmp     ." + super.getOperando1().getId() + "\n";
+        return "\tjmp\t." + super.getOperando1().getId() + "\n";
     }
 
 }

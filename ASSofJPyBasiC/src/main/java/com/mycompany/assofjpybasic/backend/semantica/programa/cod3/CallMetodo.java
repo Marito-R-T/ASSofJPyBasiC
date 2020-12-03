@@ -38,7 +38,7 @@ public class CallMetodo extends TerminalOperator {
 
     @Override
     public String asm() {
-        return "	movl	$0, %eax\n"
+        return "\tmovl\t$0, %eax\n"
                 + "\tcall\t" + this.id + "\n";
     }
 
