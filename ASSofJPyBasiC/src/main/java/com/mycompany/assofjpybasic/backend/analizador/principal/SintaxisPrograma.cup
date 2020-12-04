@@ -238,7 +238,7 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 sem.getFl().add("\t.align 4");
-                sem.getFl().add(s);
+                sem.getFl().add(s + ":");
                 sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1, s));:}
         | character:e1 {:RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));:}
@@ -723,7 +723,7 @@ ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, 
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 sem.getFl().add("\t.align 4");
-                sem.getFl().add(s);
+                sem.getFl().add(s + ":");
                 sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s)); 
                 pro.setValor(Float.parseFloat(e1));

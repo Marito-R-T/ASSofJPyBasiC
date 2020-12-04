@@ -186,7 +186,8 @@ public class CrearAssembler {
                 + "\t.cfi_def_cfa_offset 16\n"
                 + "\t.cfi_offset 6, -16\n"
                 + "\tmovq\t%rsp, %rbp\n"
-                + "\t.cfi_def_cfa_register 6\n";
+                + "\t.cfi_def_cfa_register 6\n"
+                + "\tsubq\t$" + (ite * -1) + ", %rsp\n";
         for (Triplete triplete : this.main) {
             s += triplete.asm();
         }
@@ -346,7 +347,7 @@ public class CrearAssembler {
                 + "\t.long\t5\n"
                 + "0:\n"
                 + "\t.string\t\"GNU\"\n"
-                + "\t1:\n"
+                + "1:\n"
                 + "\t.align 8\n"
                 + "\t.long\t0xc0000002\n"
                 + "\t.long\t3f - 2f\n"
@@ -359,29 +360,88 @@ public class CrearAssembler {
 
     private String floats() {
         String s = "";
+        int i = 0;
         for (MetodoPython metodoPython : this.metodosPython) {
             for (String string : metodoPython.getFl()) {
-                s += string + "\n";
+                switch (i) {
+                    case 0:
+                        s += "\t.align 8\n";
+                        break;
+                    case 2:
+                        s += "\n\t.long\t2576980378\n" + string + "\n";
+                        break;
+                    default:
+                        s += string + "\n";
+                        break;
+                }
+                i++;
             }
         }
         for (MetodoVisual metodoVisual : this.metodosVisual) {
             for (String string : metodoVisual.getFl()) {
-                s += string + "\n";
+                switch (i) {
+                    case 0:
+                        s += "\t.align 8\n";
+                        break;
+                    case 2:
+                        s += "\n\t.long\t2576980378\n" + string + "\n";
+                        break;
+                    default:
+                        s += string + "\n";
+                        break;
+                }
+                i++;
             }
         }
         for (TablaJava tablaJava : this.clasesJava) {
             for (MetodoJava metodo : tablaJava.getConstructores()) {
                 for (String string : metodo.getFl()) {
-                    s += string + "\n";
+                    switch (i) {
+                        case 0:
+                            s += "\t.align 8\n";
+                            break;
+                        case 2:
+                            s += "\n\t.long\t2576980378\n" + string + "\n";
+                            break;
+                        default:
+                            s += string + "\n";
+                            break;
+                    }
+                    i++;
                 }
             }
             for (MetodoJava metodo : tablaJava.getMetodos()) {
                 for (String string : metodo.getFl()) {
-                    s += string + "\n";
+                    switch (i) {
+                        case 0:
+                            s += "\t.align 8\n";
+                            break;
+                        case 2:
+                            s += "\n\t.long\t2576980378\n" + string + "\n";
+                            break;
+                        default:
+                            s += string + "\n";
+                            break;
+                    }
+                    i++;
                 }
             }
         }
-        s = this.fl.stream().map(string -> string + "\n").reduce(s, String::concat);
+        for (String string : fl) {
+            s += string + "\n";
+            switch (i) {
+                case 0:
+                    s += "\t.align 8\n";
+                    break;
+                case 2:
+                    s += "\n\t.long\t2576980378\n" + string + "\n";
+                    break;
+                default:
+                    s += string + "\n";
+                    break;
+            }
+            i++;
+        }
         return s;
     }
 

@@ -300,7 +300,7 @@ ATOM ::= id:e1 {:VariablePython tipo = sem.existeVar(new VariablePython(e1, Pyth
                 String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1, s));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}

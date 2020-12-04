@@ -2283,7 +2283,7 @@ class CUP$SintaxisPrograma$actions {
 		String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 sem.getFl().add("\t.align 4");
-                sem.getFl().add(s);
+                sem.getFl().add(s + ":");
                 sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1, s));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",12, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
@@ -4678,7 +4678,7 @@ ProgramaSemantica.AMBITO += 1;
 		String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 sem.getFl().add("\t.align 4");
-                sem.getFl().add(s);
+                sem.getFl().add(s + ":");
                 sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s)); 
                 pro.setValor(Float.parseFloat(e1));

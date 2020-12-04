@@ -1986,7 +1986,7 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                 String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT  = new OperacionPython(PythonSemantica.FLOAT, new TerminalOperator(e1, s));
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("ATOM",21, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);

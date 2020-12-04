@@ -532,7 +532,7 @@ ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){VariableJava num;
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}
@@ -610,7 +610,7 @@ EXPR ::= INPUT:e1 {:RESULT = e1;:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));:}
         | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}

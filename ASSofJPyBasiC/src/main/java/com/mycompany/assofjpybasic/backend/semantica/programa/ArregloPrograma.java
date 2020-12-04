@@ -186,7 +186,7 @@ public class ArregloPrograma extends VariablePrograma {
             this.obtenerS(trip, 0, this.finales.size() - 1);
         } else {
         }
-        TerminalOperator ter = new TerminalOperator(this.getTripletes().get(this.getTripletes().size() - 1).getId());
+        Triplete ter = this.getTripletes().get(this.getTripletes().size() - 1);
         this.getTripletes().addAll(op.getTripletes());
         return ter;
     }

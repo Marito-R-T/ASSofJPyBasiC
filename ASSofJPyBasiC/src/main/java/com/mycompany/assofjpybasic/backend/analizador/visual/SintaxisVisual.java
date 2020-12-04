@@ -1755,7 +1755,7 @@ VisualSemantica.AMBITO += 1;
 		String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1, s));
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("ATOM",19, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);

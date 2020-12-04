@@ -107,6 +107,9 @@ public class AsignarValor extends Triplete {
                     + "\tmovsbl\t%al, %eax\n"
                     + "\tcvtsi2ssl\t%eax, %xmm0\n";
         }
+        if (this.operando2 instanceof AritmeticaOperator) {
+            s += "\tcvtsi2ssl\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+        }
         s += stack();
         s += heap();
         if (this.operando2 instanceof Stack) {
@@ -115,8 +118,6 @@ public class AsignarValor extends Triplete {
             s += ((Heap) operando2).devolvers();
         } else if (this.operando2 instanceof P) {
             s += this.operando2.asm();
-        } else if (this.operando2 instanceof AritmeticaOperator) {
-            s += "\tcvtsi2ssl\t" + this.operando2.pos + "(%rbp), %xmm0\n";
         }
         if (this.operando1 instanceof Stack) {
             s += "\tcltq\n"

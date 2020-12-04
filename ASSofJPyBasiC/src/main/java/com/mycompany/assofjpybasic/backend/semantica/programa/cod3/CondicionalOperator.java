@@ -83,22 +83,22 @@ public abstract class CondicionalOperator extends Triplete {
                     + "\tmovss\t(%rdx,%rax), %xmm1\n";
         } else if (operando2 instanceof TerminalOperator) {
             if (((TerminalOperator) operando2).isFlo()) {
-                s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n";
             } else {
                 s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
             }
         } else if (operando2 instanceof AritmeticaOperator) {
             if (((AsignarTemporal) operando2).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
             } else {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
             }
         } else if (operando2 instanceof AsignarTemporal) {
             if (((AsignarTemporal) operando2).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
             } else {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
             }
         }
         return s;

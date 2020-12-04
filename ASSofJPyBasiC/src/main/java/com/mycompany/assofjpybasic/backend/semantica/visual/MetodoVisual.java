@@ -250,6 +250,7 @@ public class MetodoVisual {
             str = "\t.section\t.rodata\n" + str + "\t.text\n";
         }
         String s = str
+                + "\t.globl\t" + nom + "\n"
                 + "\t.type\t" + nom + ", @function\n"
                 + nom + ":\n"
                 + ".LFB" + lf + ":\n"

@@ -231,7 +231,7 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
-                actual.getFl().add(s);
+                actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionVisual(VisualSemantica.FLOAT, new TerminalOperator(e1, s));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
