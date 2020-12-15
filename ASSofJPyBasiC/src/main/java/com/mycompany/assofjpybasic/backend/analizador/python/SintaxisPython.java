@@ -1246,7 +1246,12 @@ PythonSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		RESULT = new OperacionPython(PythonSemantica.CHAR, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPython(PythonSemantica.CHAR, new TerminalOperator(e1, s));
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("D",18, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;
@@ -1970,7 +1975,12 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1,s));
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("ATOM",21, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;

@@ -127,7 +127,7 @@ public class OperacionVisual {
                     return "char";
             }
         }
-        return null;
+        return "float";
     }
 
     public List<Triplete> mostrarTripletes() {

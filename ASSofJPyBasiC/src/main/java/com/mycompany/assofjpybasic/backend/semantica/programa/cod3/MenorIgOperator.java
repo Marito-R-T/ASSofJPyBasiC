@@ -52,7 +52,7 @@ public class MenorIgOperator extends CondicionalOperator {
     public String asm() {
         String s = "";
         s += super.asm();
-        s += "\tucomiss\t%xmm0, %xmm1\n";
+        s += "\tucomiss\t%xmm1, %xmm0\n";
         s += "\tjle\t" + super.et + "\n";
         return s;
     }

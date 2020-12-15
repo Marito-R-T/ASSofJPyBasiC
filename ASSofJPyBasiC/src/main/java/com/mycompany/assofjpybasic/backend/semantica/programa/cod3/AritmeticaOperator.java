@@ -48,15 +48,15 @@ public abstract class AritmeticaOperator extends Triplete {
         String s = "";
         if (operando1 instanceof AritmeticaOperator) {
             if (((AritmeticaOperator) operando1).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando1.pos + "(%rbp), %xmm0\n";
             } else {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tcvtsi2ssl\t" + this.operando1.pos + "(%rbp), %xmm0\n";
             }
         } else if (operando1 instanceof AsignarTemporal) {
             if (((AsignarTemporal) operando1).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando1.pos + "(%rbp), %xmm0\n";
             } else {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tcvtsi2ssl\t" + this.operando1.pos + "(%rbp), %xmm0\n";
             }
         } else if (operando1 instanceof P) {
             s += "\tmovl\tp(%rip), %eax\n";
@@ -88,7 +88,12 @@ public abstract class AritmeticaOperator extends Triplete {
         } else if (operando1 instanceof P) {
             s += "\tmovss\tp(%rip), %xmm0\n";
         } else if (operando1 instanceof TerminalOperator) {
-            s += "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            if (((TerminalOperator) operando1).isFlo()) {
+                s += "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+            } else {
+                s += "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n"
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+            }
         }
         return s;
     }

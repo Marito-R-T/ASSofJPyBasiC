@@ -143,7 +143,7 @@ public class CallPrograma extends OperacionPrograma {
             case "INT-FLOAT":
                 return "float";
             default:
-                return null;
+                return "float";
         }
     }
 

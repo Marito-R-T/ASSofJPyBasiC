@@ -94,7 +94,7 @@ public class CrearAssembler {
                             + "\t.string \"clear\"\n";
                 }
             }
-            s += metodoPython.mostrarMetodoAss(lf, tr);
+            s += metodoPython.mostrarMetodoAss(lf, tr, pos);
             lf++;
         }
         return s;
@@ -129,7 +129,7 @@ public class CrearAssembler {
                             + "\t.string \"clear\"\n";
                 }
             }
-            s += metodoVisual.mostrarMetodoAss(lf, tr);
+            s += metodoVisual.mostrarMetodoAss(lf, tr, pos);
             lf++;
         }
         return s;
@@ -175,6 +175,7 @@ public class CrearAssembler {
         if (!str.equals("")) {
             str = "\t.section\t.rodata\n" + str + "\t.text\n";
         }
+        ite -= 8;
         s += str
                 + "\t.globl\tmain\n"
                 + "\t.type\tmain, @function\n"
@@ -191,7 +192,8 @@ public class CrearAssembler {
         for (Triplete triplete : this.main) {
             s += triplete.asm();
         }
-        s += "\n\tleave\n"
+        s += "\tmovl\t$0, %eax\n"
+                + "\tleave\n"
                 + "\t.cfi_def_cfa 7, 8\n"
                 + "\tret\n"
                 + "\t.cfi_endproc\n"
@@ -355,92 +357,35 @@ public class CrearAssembler {
                 + "\t.long\t0x3\n"
                 + "3:\n"
                 + "\t.align 8\n"
-                + "4:";
+                + "4:\n";
     }
 
     private String floats() {
         String s = "";
-        int i = 0;
         for (MetodoPython metodoPython : this.metodosPython) {
             for (String string : metodoPython.getFl()) {
-                switch (i) {
-                    case 0:
-                        s += "\t.align 8\n";
-                        break;
-                    case 2:
-                        s += "\n\t.long\t2576980378\n" + string + "\n";
-                        break;
-                    default:
-                        s += string + "\n";
-                        break;
-                }
-                i++;
+                s += string + "\n";
             }
         }
         for (MetodoVisual metodoVisual : this.metodosVisual) {
             for (String string : metodoVisual.getFl()) {
-                switch (i) {
-                    case 0:
-                        s += "\t.align 8\n";
-                        break;
-                    case 2:
-                        s += "\n\t.long\t2576980378\n" + string + "\n";
-                        break;
-                    default:
-                        s += string + "\n";
-                        break;
-                }
-                i++;
+                s += string + "\n";
             }
         }
         for (TablaJava tablaJava : this.clasesJava) {
             for (MetodoJava metodo : tablaJava.getConstructores()) {
                 for (String string : metodo.getFl()) {
-                    switch (i) {
-                        case 0:
-                            s += "\t.align 8\n";
-                            break;
-                        case 2:
-                            s += "\n\t.long\t2576980378\n" + string + "\n";
-                            break;
-                        default:
-                            s += string + "\n";
-                            break;
-                    }
-                    i++;
+                    s += string + "\n";
                 }
             }
             for (MetodoJava metodo : tablaJava.getMetodos()) {
                 for (String string : metodo.getFl()) {
-                    switch (i) {
-                        case 0:
-                            s += "\t.align 8\n";
-                            break;
-                        case 2:
-                            s += "\n\t.long\t2576980378\n" + string + "\n";
-                            break;
-                        default:
-                            s += string + "\n";
-                            break;
-                    }
-                    i++;
+                    s += string + "\n";
                 }
             }
         }
         for (String string : fl) {
             s += string + "\n";
-            switch (i) {
-                case 0:
-                    s += "\t.align 8\n";
-                    break;
-                case 2:
-                    s += "\n\t.long\t2576980378\n" + string + "\n";
-                    break;
-                default:
-                    s += string + "\n";
-                    break;
-            }
-            i++;
         }
         return s;
     }

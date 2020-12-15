@@ -79,7 +79,7 @@ public class OperacionJava {
             case 3:
                 return "float";
         }
-        return null;
+        return "float";
     }
 
     public static String obtenerTipo(Integer op1) {
@@ -91,7 +91,7 @@ public class OperacionJava {
             case 3:
                 return "float";
         }
-        return null;
+        return "float";
     }
 
     public List<Triplete> mostrarTripletes() {

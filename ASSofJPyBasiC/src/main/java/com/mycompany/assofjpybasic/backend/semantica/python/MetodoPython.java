@@ -248,7 +248,7 @@ public class MetodoPython {
         }
     }
 
-    public String mostrarMetodoAss(int lf, String str) {
+    public String mostrarMetodoAss(int lf, String str, int ite) {
         String nom = this.nombreMetodo();
         if (!str.equals("")) {
             str = "\t.section\t.rodata\n" + str + "\t.text\n";
@@ -264,12 +264,13 @@ public class MetodoPython {
                 + "\t.cfi_def_cfa_offset 16\n"
                 + "\t.cfi_offset 6, -16\n"
                 + "\tmovq\t%rsp, %rbp\n"
-                + "\t.cfi_def_cfa_register 6\n";
+                + "\t.cfi_def_cfa_register 6\n"
+                + "\tsubq\t$" + (ite * -1) + ", %rsp\n";
         for (Triplete triplete : trip) {
             s += triplete.asm();
         }
         s += "\tnop\n"
-                + "\tpopq\t%rbp\n"
+                + "\tleave\n"
                 + "\t.cfi_def_cfa 7, 8\n"
                 + "\tret\n"
                 + "\t.cfi_endproc\n"

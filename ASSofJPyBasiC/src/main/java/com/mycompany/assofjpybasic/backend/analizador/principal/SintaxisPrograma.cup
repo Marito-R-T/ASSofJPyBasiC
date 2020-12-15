@@ -234,14 +234,24 @@ ATOM ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, P
                         OperacionPrograma op = new OperacionPrograma(var.getTipo(), ast);
                         op.getTripletes().add(sum);
                         RESULT = op;}:}
-        | entero:e1 {:RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));:}
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 sem.getFl().add("\t.align 4");
                 sem.getFl().add(s + ":");
                 sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionPrograma(VariablePrograma.FLOAT, new TerminalOperator(e1, s));:}
-        | character:e1 {:RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));:}
+        | character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1, s));:}
         | id:e1 CORCHETES:e2 {:VariablePrograma var = sem.existeVar(e1, e2.size());
                 if(var == null){
                         reportarSem("Variable no existente con el id: <" + e1 + ">");
@@ -718,7 +728,13 @@ ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, 
                         op.getTripletes().add(sum);
                         op.setValor(var.getValor());
                         RESULT = op;}:}
-        | entero:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));
+                pro.setValor(Float.parseFloat(e1));
                         RESULT = pro;:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
@@ -728,7 +744,13 @@ ATOMC ::= id:e1 {:VariablePrograma var = sem.existeVar(new VariablePrograma(e1, 
                 OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s)); 
                 pro.setValor(Float.parseFloat(e1));
                         RESULT = pro;:}
-        | character:e1 {:OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor((float)e1.charAt(1));
+        | character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));
+                pro.setValor((float)e1.charAt(1));
                         RESULT = pro;:}
         | para OPERACION_AC:e1 parc {:RESULT = e1;:}
 ;

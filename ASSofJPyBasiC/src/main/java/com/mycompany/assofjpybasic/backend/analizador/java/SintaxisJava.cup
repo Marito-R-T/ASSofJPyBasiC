@@ -528,14 +528,24 @@ ATOM ::= THIS:e0 id:e1 PP:e2 {:if(e2==null){VariableJava num;
                                 op.getTripletes().addAll(tri);
                                 RESULT = op;
                         }}:}
-        | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1, s));:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
                 actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));:}
-        | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}
+        | character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1, s));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
         | INPUT:e1 {:RESULT = e1;:}
 ;
@@ -606,14 +616,24 @@ EXPR ::= INPUT:e1 {:RESULT = e1;:}
                                         RESULT = op;
                                 }
                         }:}
-        | entero:e1 {:RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1));:}
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.INT, new TerminalOperator(e1,s));:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
                 actual.getFl().add(s + ":");
                 actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
                 RESULT = new OperacionJava(TablaJava.FLOAT, new TerminalOperator(e1,s));:}
-        | character:e1 {:RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1));:}
+        | character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionJava(TablaJava.CHAR, new TerminalOperator(e1, s));:}
         | para OPERACION_A:e1 parc {:RESULT = e1;:}
 ;
 

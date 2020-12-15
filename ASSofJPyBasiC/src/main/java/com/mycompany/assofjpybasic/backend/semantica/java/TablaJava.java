@@ -383,7 +383,7 @@ public class TablaJava {
                             + "\t.string \"clear\"\n";
                 }
             }
-            s += constructor.mostrarMetodoAss(num, this.principales, tr);
+            s += constructor.mostrarMetodoAss(num, this.principales, tr, pos);
             num++;
         }
         for (MetodoJava metodo : this.metodos) {
@@ -413,7 +413,7 @@ public class TablaJava {
                             + "\t.string \"clear\"\n";
                 }
             }
-            s += metodo.mostrarMetodoAss(num, tr);
+            s += metodo.mostrarMetodoAss(num, tr, pos);
             num++;
         }
         this.num = num;

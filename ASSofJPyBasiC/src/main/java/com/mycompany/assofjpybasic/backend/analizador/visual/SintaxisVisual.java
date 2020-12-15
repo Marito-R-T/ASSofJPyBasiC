@@ -1740,7 +1740,12 @@ VisualSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1, s));
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("ATOM",19, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -1874,7 +1879,12 @@ VisualSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator("'"+e1+"'"));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator(e1, s));
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("EXPR",15, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;

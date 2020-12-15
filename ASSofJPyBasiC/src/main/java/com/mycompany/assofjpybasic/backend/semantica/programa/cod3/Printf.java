@@ -135,11 +135,20 @@ public class Printf extends Triplete {
                 }
             } else if (this.operando2 instanceof AsignarTemporal) {
                 if (((AsignarTemporal) this.operando2).getTipo().equals("float")) {
-                    return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
-                            + "\tmovl\t%eax, %esi\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$0, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
+                    if (this.tipo.equals("%d")) {
+                        return "\tmovss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                                + "\tcvttss2sil\t%xmm0, %eax\n"
+                                + "\tmovl\t%eax, %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                                + "\tmovl\t%eax, %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    }
                 } else {
                     return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
                             + "\tleaq\t" + et + "(%rip), %rdi\n"

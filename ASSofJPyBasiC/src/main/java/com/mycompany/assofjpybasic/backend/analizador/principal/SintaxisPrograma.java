@@ -2268,7 +2268,12 @@ class CUP$SintaxisPrograma$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",12, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -2297,7 +2302,12 @@ class CUP$SintaxisPrograma$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPrograma(VariablePrograma.CHAR, new TerminalOperator(e1, s));
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOM",12, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
           return CUP$SintaxisPrograma$result;
@@ -4662,7 +4672,13 @@ ProgramaSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor(Float.parseFloat(e1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));
+                pro.setValor(Float.parseFloat(e1));
                         RESULT = pro;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOMC",17, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }
@@ -4694,7 +4710,13 @@ ProgramaSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
-		OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1)); pro.setValor((float)e1.charAt(1));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                OperacionPrograma pro = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator(e1, s));
+                pro.setValor((float)e1.charAt(1));
                         RESULT = pro;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("ATOMC",17, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);
             }

@@ -227,7 +227,12 @@ ATOM ::= id:e1 {:VariableVisual var = sem.existeVar(new VariableVisual(e1, Visua
                         op.getTripletes().add(sum);
                         RESULT = op;
                 }:}
-        | entero:e1 {:RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1));:}
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.INT, new TerminalOperator(e1, s));:}
         | decimal:e1 {:String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;
                 actual.getFl().add("\t.align 4");
@@ -257,7 +262,12 @@ STATEMENTSF ::= STATEMENT:e1 STATEMENTSF:e2 {:if(e1.isRet() && e2.isRet()){
 
 EXPR ::= OPERACION_A:e1 {:RESULT = e1;:}
         | INPUT:e1 {:RESULT = e1;:}
-        | character:e1 {:RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator("'"+e1+"'"));:}
+        | character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionVisual(VisualSemantica.CHAR, new TerminalOperator(e1, s));:}
 ;
 
 STATEMENT ::= IF_ELSE:e1 {:RESULT = e1;:}

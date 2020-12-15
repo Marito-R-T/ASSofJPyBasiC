@@ -206,7 +206,7 @@ public class VisualSemantica {
         List<Triplete> tri = new ArrayList<>();
         va.forEach((variableVisual) -> {
             if (variableVisual.getTripletes().size() > 0) {
-                SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(variableVisual.getDireccion().toString()), null);
+                SumOperator sum = new SumOperator(null, new TerminalOperator("p"), new TerminalOperator(variableVisual.getDireccion().toString()), "int");
                 variableVisual.getTripletes().add(sum);
                 tri.addAll(variableVisual.getTripletes());
                 tri.add(new AsignarValor(this.devolverDireccion(sum), variableVisual.getTriplete().getOperando2(), null));

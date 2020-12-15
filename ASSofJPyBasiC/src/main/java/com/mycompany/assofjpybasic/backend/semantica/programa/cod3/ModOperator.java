@@ -55,23 +55,60 @@ public class ModOperator extends AritmeticaOperator {
     public String derecha() {
         if (this.tipo.equals("int") || this.tipo.equals("char")) {
             String s = "";
-            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
-                s += "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm1\n"
-                        + "\tcall\tfmod@PLT\n";
+            if (operando2 instanceof AritmeticaOperator) {
+                if (((AritmeticaOperator) operando2).getTipo().equals("float")) {
+                    s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm1\n";
+                } else {
+                    s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                }
+                s += "\tcall\tfmod@PLT\n";
+            } else if (operando2 instanceof AsignarTemporal) {
+                if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+                    s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm1\n";
+                } else {
+                    s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                }
+                s += "\tcall\tfmod@PLT\n";
             } else if (operando2 instanceof TerminalOperator) {
-                s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
-                        + "\tcall\tfmod@PLT\n";
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                }
+                s += "\tcall\tfmod@PLT\n";
             }
             return s + "\tcvttss2sil\t%xmm0, %eax\n"
                     + "\tmovl\t%eax, " + this.pos + "(%rbp)\n";
         } else {
             String s = "";
-            if (operando2 instanceof AritmeticaOperator || operando2 instanceof AsignarTemporal) {
-                s += "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm1\n"
-                        + "\tcall\tfmod@PLT\n";
+            if (operando2 instanceof AritmeticaOperator) {
+                if (((AritmeticaOperator) operando2).getTipo().equals("float")) {
+                    s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm1\n";
+                } else {
+                    s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                }
+                s += "\tcall\tfmod@PLT\n";
+            } else if (operando2 instanceof AsignarTemporal) {
+                if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+                    s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm1\n";
+                } else {
+                    s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                }
+                s += "\tcall\tfmod@PLT\n";
             } else if (operando2 instanceof TerminalOperator) {
-                s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
-                        + "\tcall\tfmod@PLT\n";
+                if (((TerminalOperator) operando2).isFlo()) {
+                    s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
+                            + "\tcall\tfmod@PLT\n";
+                } else {
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm1\n"
+                            + "\tcall\tfmod@PLT\n";
+                }
             }
             return s + "\tcvtsd2ss\t%xmm0, %xmm0\n"
                     + "\tmovss\t%xmm0, " + this.pos + "(%rbp)\n";

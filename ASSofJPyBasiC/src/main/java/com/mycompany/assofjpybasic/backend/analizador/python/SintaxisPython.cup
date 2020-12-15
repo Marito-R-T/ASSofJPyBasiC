@@ -169,7 +169,12 @@ LISTDEF ::= LISTDEF:e1 coma D:e2 {:e1.add(e2); RESULT = e1;:}
         | D:e1 {:List<OperacionPython> op = new ArrayList<>(); op.add(e1); RESULT = op;:}
 ;
 
-D ::= character:e1 {:RESULT = new OperacionPython(PythonSemantica.CHAR, new TerminalOperator(e1));:}
+D ::= character:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPython(PythonSemantica.CHAR, new TerminalOperator(e1, s));:}
     | OPERACION_A:e1 {:RESULT = e1;:}
     | INPUT:e1 {:RESULT = e1;:}
 ;
@@ -295,7 +300,12 @@ ATOM ::= id:e1 {:VariablePython tipo = sem.existeVar(new VariablePython(e1, Pyth
                         op.getTripletes().add(sum);
                         RESULT = op;}
                 :}
-        | entero:e1 {:RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1));:}
+        | entero:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat(e1)));
+                RESULT = new OperacionPython(PythonSemantica.INT, new TerminalOperator(e1,s));:}
         | decimal:e1 {:
                 String s = ".LC" + Triplete.FLOAT;
                 Triplete.FLOAT += 1;

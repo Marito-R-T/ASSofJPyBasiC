@@ -85,4 +85,8 @@ public class TerminalOperator extends Triplete {
         return flo;
     }
 
+    public String getOperador() {
+        return operador;
+    }
+
 }

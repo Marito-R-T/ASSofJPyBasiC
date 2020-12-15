@@ -106,9 +106,24 @@ public class AsignarValor extends Triplete {
                     + "\tcall\tgetch\n"
                     + "\tmovsbl\t%al, %eax\n"
                     + "\tcvtsi2ssl\t%eax, %xmm0\n";
-        }
-        if (this.operando2 instanceof AritmeticaOperator) {
-            s += "\tcvtsi2ssl\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+        } else if (this.operando2 instanceof AsignarTemporal) {
+            if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+            } else {
+                s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n";
+                if (!(this.operando1 instanceof P)) {
+                    s += "\tcvtsi2ssl\t%eax, %xmm0\n";
+                }
+            }
+        } else if (this.operando2 instanceof AritmeticaOperator) {
+            if (((AritmeticaOperator) operando2).getTipo() == null || ((AritmeticaOperator) operando2).getTipo().equals("float")) {
+                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
+            } else {
+                s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n";
+                if (!(this.operando1 instanceof P)) {
+                    s += "\tcvtsi2ssl\t%eax, %xmm0\n";
+                }
+            }
         }
         s += stack();
         s += heap();
@@ -123,35 +138,28 @@ public class AsignarValor extends Triplete {
             s += "\tcltq\n"
                     + "\tleaq\t0(,%rax,4), %rdx\n"
                     + "\tleaq\tstack(%rip), %rax\n";
-            if (this.operando2 instanceof AsignarTemporal) {
-                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
-            } else if (this.operando2 instanceof TerminalOperator) {
+            if (this.operando2 instanceof TerminalOperator) {
                 if (((TerminalOperator) operando2).isFlo()) {
-                    s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                    s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 } else {
-                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
-                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                    s += "\tpsrldq\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 }
             }
-            s += "\tmovss\t%xmm0, (%rdx, %rax)\n";
+            s += "\tmovss\t%xmm0, (%rdx,%rax)\n";
         } else if (this.operando1 instanceof Heap) {
             s += "\tcltq\n"
                     + "\tleaq\t0(,%rax,4), %rdx\n"
                     + "\tleaq\theap(%rip), %rax\n";
-            if (this.operando2 instanceof AsignarTemporal) {
-                s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
-            } else if (this.operando2 instanceof TerminalOperator) {
+            if (this.operando2 instanceof TerminalOperator) {
                 if (((TerminalOperator) operando2).isFlo()) {
                     s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 } else {
-                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
-                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                    s += "\tpsrldq\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 }
             }
-            s += "\tmovss\t%xmm0, (%rdx, %rax)\n";
+            s += "\tmovss\t%xmm0, (%rdx,%rax)\n";
         } else if (this.operando1 instanceof P) {
-            s += "\tcvttsd2sil\t%xmm0, %eax\n"
-                    + "\tmovl\t%eax, p(%rip)\n";
+            s += "\tmovl\t%eax, p(%rip)\n";
         }
         return s;
     }

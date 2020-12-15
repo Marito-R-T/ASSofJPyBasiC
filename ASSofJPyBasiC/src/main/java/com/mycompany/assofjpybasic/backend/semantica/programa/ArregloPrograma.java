@@ -163,7 +163,7 @@ public class ArregloPrograma extends VariablePrograma {
                 super.getTripletes().add(operacionPrograma.getTriplete());
                 this.finales.add(operacionPrograma.getTriplete());
             } else {
-                Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), null);
+                Triplete tri = new AsignarTemporal(null, operacionPrograma.getTriplete(), Triplete.tipos[operacionPrograma.getTipo() - 1]);
                 ((AsignarTemporal) tri).setTipo(Triplete.tipos[operacionPrograma.getTipo() - 1]);
                 super.getTripletes().add(tri);
                 this.finales.add(tri);

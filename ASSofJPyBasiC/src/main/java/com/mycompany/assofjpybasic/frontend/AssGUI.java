@@ -315,6 +315,7 @@ public class AssGUI extends javax.swing.JFrame {
             tabbed.getTabedGeneral().setSelectedIndex(1);
             Triplete.VARNUM = 0;
             Triplete.ETNUM = 0;
+            Triplete.FLOAT = 6;
             tabbed.setCompilado(true);
         } else {
             tabbed.getPaneCodigoT().setText(null);
