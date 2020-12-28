@@ -64,7 +64,7 @@ public class MenorOperator extends CondicionalOperator {
         String s = "";
         s += super.asm();
         s += "\tucomiss\t%xmm1, %xmm0\n";
-        s += "\tjl\t" + super.et + "\n";
+        s += "\tjg\t" + super.et + "\n";
         return s;
     }
 

@@ -85,6 +85,7 @@ public class AssGUI extends javax.swing.JFrame {
         itemGenerarCod3 = new javax.swing.JMenuItem();
         menuEjecutar = new javax.swing.JMenu();
         itemEjecutar = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,6 +196,14 @@ public class AssGUI extends javax.swing.JFrame {
             }
         });
         menuEjecutar.add(itemEjecutar);
+
+        jMenuItem1.setText("Ejecutar Assembler");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuEjecutar.add(jMenuItem1);
 
         jMenuBar1.add(menuEjecutar);
 
@@ -333,22 +342,14 @@ public class AssGUI extends javax.swing.JFrame {
         String s2 = tabbed.getaAssembler();
         try {
             File file = new File(this.getClass().getResource("/programa.c").toURI());
-            File file2 = new File(this.getClass().getResource("/prueba.s").toURI());
             FileWriter fichero = null;
             PrintWriter pw = null;
-            FileWriter fichero2 = null;
-            PrintWriter pw2 = null;
             try {
                 fichero = new FileWriter(file);
                 pw = new PrintWriter(fichero);
                 pw.print(s);
                 pw.flush();
                 pw.close();
-                fichero2 = new FileWriter(file2);
-                pw2 = new PrintWriter(fichero2);
-                pw2.print(s2);
-                pw2.flush();
-                pw2.close();
             } catch (IOException e) {
             } finally {
                 try {
@@ -376,6 +377,46 @@ public class AssGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_itemEjecutarActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
+        String s = tabbed.getaAssembler();
+        try {
+            File file = new File(this.getClass().getResource("/prueba.s").toURI());
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            try {
+                fichero = new FileWriter(file);
+                pw = new PrintWriter(fichero);
+                pw.print(s);
+                pw.flush();
+                pw.close();
+            } catch (IOException e) {
+            } finally {
+                try {
+                    // Nuevamente aprovechamos el finally para
+                    // asegurarnos que se cierra el fichero.
+                    if (null != fichero) {
+                        fichero.close();
+                    }
+                } catch (IOException e2) {
+                }
+            }
+            Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programa"}, null, file.getParentFile());
+            pr.waitFor();
+            int i = pr.exitValue();
+            System.out.println(i);
+            Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
+            //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
+            //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
+            //pb.start();
+            System.out.println("ya salio");
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        } catch (URISyntaxException | InterruptedException ex) {
+            Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static final javax.swing.JEditorPane editorTerminal = new javax.swing.JEditorPane();
     private javax.swing.JMenuItem itemAbrir;
@@ -387,6 +428,7 @@ public class AssGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemNuevo;
     private javax.swing.JMenuItem itemSalir;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenu menuCodigo;
     private javax.swing.JMenu menuEjecutar;

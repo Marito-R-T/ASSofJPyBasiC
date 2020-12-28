@@ -344,9 +344,9 @@ COMPARACION ::= OPERACION_A:e1 igig OPERACION_A:e2 {:RESULT = new IgualOperator(
                 e1.getTripletes(), e2.getTripletes());:}
 ;
 
-STRING ::= STRING:e1 coma D:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoPython(e2), e2.getTriplete(), Input.tipoPythonf(e2))); RESULT = e1;:}
+STRING ::= STRING:e1 coma D:e2 {:e1.addAll(e2.mostrarTripletes()); e1.add(new Printf(Input.tipoPython(e2), e2.getTriplete(), Input.tipoPythonf(e2))); RESULT = e1;:}
         | STRING:e1 coma string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
-        | D:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
+        | D:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Printf(Input.tipoPython(e1), e1.getTriplete(), Input.tipoPythonf(e1)));
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));

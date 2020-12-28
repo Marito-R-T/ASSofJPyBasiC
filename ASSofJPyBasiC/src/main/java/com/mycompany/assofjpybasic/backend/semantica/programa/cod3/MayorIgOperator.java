@@ -53,7 +53,7 @@ public class MayorIgOperator extends CondicionalOperator {
         String s = "";
         s += super.asm();
         s += "\tucomiss\t%xmm1, %xmm0\n";
-        s += "\tjge\t" + super.et + "\n";
+        s += "\tjle\t" + super.et + "\n";
         return s;
     }
 

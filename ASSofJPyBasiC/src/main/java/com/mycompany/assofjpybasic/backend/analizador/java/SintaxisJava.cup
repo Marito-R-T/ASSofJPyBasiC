@@ -352,10 +352,6 @@ DEFAULT ::= defaultt dosp {:cas++;:} STATEMENTS_METODO:e1  {:cas--;
 STATEMENT_LINE ::= AS_VAR_LINE:e1 puntocoma {:RESULT = e1;:}
         | DEF_VAR:e1 puntocoma {:RESULT = e1;:}
         | WRITE:e1 puntocoma {:RESULT = e1;:}
-        | INPUT:e1 puntocoma {:AsignarValor vl = new AsignarValor(new AsignarTemporal(null, null, OperacionJava.obtenerTipo(e1)),null
-                ,OperacionJava.obtenerTipo(e1)); 
-                ListaTripletes tri = new ListaTripletes(); tri.add(vl); 
-                tri.add(new AsignarValor(vl.getOperando1(), e1.getTriplete(), null)); RESULT = tri;:}
         | THIS LLAMADA_METODO:e1 {:RESULT = new ListaTripletes(e1.getTripletes());:}
 ;
 
@@ -585,9 +581,9 @@ COMPARACION ::= OPERACION_A:e1 igig OPERACION_A:e2 {:RESULT = new IgualOperator(
                 e1.getTripletes(), e2.getTripletes());:}
 ;
 
-STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete(), Input.tipoJAVAf(e2))); RESULT = e1;:}
+STRING ::= STRING:e1 mas EXPR:e2 {:e1.addAll(e2.mostrarTripletes()); e1.add(new Printf(Input.tipoJAVA(e2), e2.getTriplete(), Input.tipoJAVAf(e2))); RESULT = e1;:}
         | STRING:e1 mas string:e2 {:if(!e2.equals("")){e1.add(new Printf(e2));} RESULT = e1;:}
-        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
+        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Printf(Input.tipoJAVA(e1), e1.getTriplete(), Input.tipoJAVAf(e1)));
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); if(!e1.equals("")){tri.add(new Printf(e1));}

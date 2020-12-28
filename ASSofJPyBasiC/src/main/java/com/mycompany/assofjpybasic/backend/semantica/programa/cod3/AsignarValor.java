@@ -91,6 +91,8 @@ public class AsignarValor extends Triplete {
         String s = "";
         if (!(operando2 instanceof Input)) {
             s += this.asigAssembler();
+        } else {
+            s += this.scanf();
         }
         return s;
     }
@@ -142,7 +144,8 @@ public class AsignarValor extends Triplete {
                 if (((TerminalOperator) operando2).isFlo()) {
                     s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 } else {
-                    s += "\tpsrldq\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
                 }
             }
             s += "\tmovss\t%xmm0, (%rdx,%rax)\n";
@@ -152,9 +155,10 @@ public class AsignarValor extends Triplete {
                     + "\tleaq\theap(%rip), %rax\n";
             if (this.operando2 instanceof TerminalOperator) {
                 if (((TerminalOperator) operando2).isFlo()) {
-                    s += "\tcvtss2sd\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                    s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
                 } else {
-                    s += "\tpsrldq\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
+                    s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                            + "\tcvtsi2ssl\t%eax, %xmm0\n";
                 }
             }
             s += "\tmovss\t%xmm0, (%rdx,%rax)\n";
@@ -173,7 +177,7 @@ public class AsignarValor extends Triplete {
         } else if ((this.operando1 instanceof Stack
                 && ((Stack) this.operando1).getRef() instanceof TerminalOperator)) {
             if (((TerminalOperator) operando1).isFlo()) {
-                return "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
+                return "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
                         + "\tcvttsd2sil\t%xmm0, %eax";
             } else {
                 return "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n";
@@ -191,11 +195,30 @@ public class AsignarValor extends Triplete {
         } else if ((this.operando1 instanceof Heap
                 && ((Heap) this.operando1).getRef() instanceof TerminalOperator)) {
             if (((TerminalOperator) operando1).isFlo()) {
-                return "\tcvtss2sd\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
+                return "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n"
                         + "\tcvttsd2sil\t%xmm0, %eax";
             } else {
                 return "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n";
             }
+        }
+        return "";
+    }
+
+    private String scanf() {
+        if (this.operando1 instanceof Stack) {
+            return ((Stack) this.operando1).scanf()
+                    + "\taddq\t%rdx, %rax\n"
+                    + "\tmovq\t%rax, %rsi\n"
+                    + "\tleaq\t.LC5(%rip), %rdi\n"
+                    + "\tmovl\t$0, %eax\n"
+                    + "\tcall\t__isoc99_scanf@PLT\n";
+        } else if (this.operando1 instanceof Heap) {
+            return ((Heap) this.operando1).scanf()
+                    + "\taddq\t%rdx, %rax\n"
+                    + "\tmovq\t%rax, %rsi\n"
+                    + "\tleaq\t.LC5(%rip), %rdi\n"
+                    + "\tmovl\t$0, %eax\n"
+                    + "\tcall\t__isoc99_scanf@PLT\n";
         }
         return "";
     }

@@ -76,7 +76,7 @@ public class RestOperator extends AritmeticaOperator {
                 if (((TerminalOperator) operando2).isFlo()) {
                     s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n"
                             + "\tsubss\t%xmm1, %xmm0\n"
-                            + "\tcvttsd2sil\t%xmm0, %eax\n";
+                            + "\tcvttss2sil\t%xmm0, %eax\n";
                 } else {
                     if (operando1 instanceof P) {
                         s += "\tsubl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n";
@@ -84,7 +84,7 @@ public class RestOperator extends AritmeticaOperator {
                         s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
                                 + "\tcvtsi2ssl\t%eax, %xmm1\n"
                                 + "\tsubss\t%xmm1, %xmm0\n"
-                                + "\tcvttsd2sil\t%xmm0, %eax\n";
+                                + "\tcvttss2sil\t%xmm0, %eax\n";
                     }
                 }
             }

@@ -13,6 +13,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Clrs;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Heap;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Printf;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Scanf;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
@@ -358,6 +359,8 @@ public class TablaJava {
             trip.addAll(this.principales);
             trip.addAll(constructor.getTripletes());
             int pos = -4;
+            boolean flo = false;
+            boolean ent = false;
             String tr = "";
             for (int i = trip.size() - 1; i >= 0; i--) {
                 Triplete triplete = trip.get(i);
@@ -375,23 +378,41 @@ public class TablaJava {
                         tr += lc + ":\n"
                                 + "\t.string \"" + ((Printf) trip).getValor() + "\"\n";
                     }
+                    /*if (((Printf) trip).getTipo() != null) {
+                        if (((Printf) trip).getTipo().equals("%f")) {
+                            flo = true;
+                        } else if ((((Printf) trip).getTipo().equals("%d") || ((Printf) trip).getTipo().equals("%c"))) {
+                            ent = true;
+                        }
+                    }*/
                 } else if (trip instanceof Clrs) {
                     String lc = ".LC" + Triplete.FLOAT;
                     Triplete.FLOAT++;
                     ((Clrs) trip).setEt(lc);
                     tr += lc + ":\n"
                             + "\t.string \"clear\"\n";
+                } else if (trip instanceof Scanf) {
+                    flo = true;
                 }
+            }
+            if (flo) {
+                pos -= 8;
+            } else if (ent) {
+                pos -= 8;
+            } else {
+                pos -= 8;
             }
             s += constructor.mostrarMetodoAss(num, this.principales, tr, pos);
             num++;
         }
         for (MetodoJava metodo : this.metodos) {
             int pos = -4;
+            boolean flo = false;
+            boolean ent = false;
             String tr = "";
             for (int i = metodo.getTripletes().size() - 1; i >= 0; i--) {
                 Triplete triplete = metodo.getTripletes().get(i);
-                if (triplete instanceof AritmeticaOperator) {
+                if (triplete instanceof AritmeticaOperator || triplete instanceof AsignarTemporal) {
                     triplete.setPos(pos + "");
                     pos -= 4;
                 } else if (triplete instanceof Printf) {
@@ -405,13 +426,29 @@ public class TablaJava {
                         tr += lc + ":\n"
                                 + "\t.string \"" + ((Printf) triplete).getValor() + "\"\n";
                     }
+                    /*if (((Printf) triplete).getTipo() != null) {
+                        if (((Printf) triplete).getTipo().equals("%f")) {
+                            flo = true;
+                        } else if ((((Printf) triplete).getTipo().equals("%d") || ((Printf) triplete).getTipo().equals("%c"))) {
+                            ent = true;
+                        }
+                    }*/
                 } else if (triplete instanceof Clrs) {
                     String lc = ".LC" + Triplete.FLOAT;
                     Triplete.FLOAT++;
                     ((Clrs) triplete).setEt(lc);
                     tr += lc + ":\n"
                             + "\t.string \"clear\"\n";
+                } else if (triplete instanceof Scanf) {
+                    flo = true;
                 }
+            }
+            if (flo) {
+                pos -= 8;
+            } else if (ent) {
+                pos -= 8;
+            } else {
+                pos -= 8;
             }
             s += metodo.mostrarMetodoAss(num, tr, pos);
             num++;

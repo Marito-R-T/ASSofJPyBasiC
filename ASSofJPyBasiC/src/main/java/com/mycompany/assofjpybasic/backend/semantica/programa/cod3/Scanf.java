@@ -94,7 +94,7 @@ public class Scanf extends Triplete {
                     + "\tmovl\t$0, %eax\n"
                     + "\tcall\t__isoc99_scanf@PLT\n";
         }
-        return "\n";
+        return "";
     }
 
     public void setEt(String et) {

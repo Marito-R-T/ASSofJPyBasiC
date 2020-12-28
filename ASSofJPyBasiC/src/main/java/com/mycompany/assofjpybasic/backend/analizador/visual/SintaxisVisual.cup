@@ -463,9 +463,9 @@ COMPARACION ::= OPERACION_A:e1 igual OPERACION_A:e2 {:RESULT = new IgualOperator
                 e1.getTripletes(), e2.getTripletes());:}
 ;
 
-STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;:}
+STRING ::= STRING:e1 y EXPR:e2 {:e1.addAll(e2.mostrarTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;:}
         | STRING:e1 y string:e2 {:e1.add(new Printf(e2)); RESULT = e1;:}
-        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
+        | EXPR:e1 {:ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete(), Input.tipoVisualf(e1)));
                 RESULT = tri;:}
         | string:e1 {:ListaTripletes tri = new ListaTripletes(); tri.add(new Printf(e1));

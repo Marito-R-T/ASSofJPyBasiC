@@ -109,29 +109,63 @@ public class Printf extends Triplete {
         if (valor == null) {
             if (this.operando2 instanceof TerminalOperator) {
                 if (((TerminalOperator) this.operando2).isFlo()) {
-                    return "\tmovq\t" + ((TerminalOperator) operando2).getBin() + ", %rax\n"
-                            + "\tmovq\t%rax, %xmm0\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$1, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
+                    if (this.tipo.equals("%d")) {
+                        return "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n"
+                                + "\tcvttss2sil\t%xmm0, %eax\n"
+                                + "\tmovl\t%eax, %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$1, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$1, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    }
                 } else {
-                    return "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %esi\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$0, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
+                    if (this.tipo.equals("%d")) {
+                        return "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
+                                + "\tcvtsi2ssl\t%eax, %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    }
                 }
             } else if (this.operando2 instanceof AritmeticaOperator) {
                 if (((AritmeticaOperator) this.operando2).getTipo().equals("float")) {
-                    return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
-                            + "\tmovl\t%eax, %esi\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$0, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
+                    if (this.tipo.equals("%d")) {
+                        return "\tmovss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                                + "\tcvttss2sil\t%xmm0, %eax\n"
+                                + "\tmovl\t%eax, %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$1, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    }
                 } else {
-                    return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$1, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
+                    if (this.tipo.equals("%d")) {
+                        return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                                + "\tmovl\t%eax, %esi\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                                + "\tcvtsi2ssl\t%eax, %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+
+                    }
                 }
             } else if (this.operando2 instanceof AsignarTemporal) {
                 if (((AsignarTemporal) this.operando2).getTipo().equals("float")) {
@@ -143,17 +177,26 @@ public class Printf extends Triplete {
                                 + "\tmovl\t$0, %eax\n"
                                 + "\tcall\tprintf@PLT\n";
                     } else {
+                        return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$1, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+                    }
+                } else {
+                    if (this.tipo.equals("%d")) {
                         return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
                                 + "\tmovl\t%eax, %esi\n"
                                 + "\tleaq\t" + et + "(%rip), %rdi\n"
                                 + "\tmovl\t$0, %eax\n"
                                 + "\tcall\tprintf@PLT\n";
+                    } else {
+                        return "\tmovl\t" + this.operando2.getPos() + "(%rbp), %eax\n"
+                                + "\tcvtsi2ssl\t%eax, %xmm0\n"
+                                + "\tleaq\t" + et + "(%rip), %rdi\n"
+                                + "\tmovl\t$0, %eax\n"
+                                + "\tcall\tprintf@PLT\n";
+
                     }
-                } else {
-                    return "\tcvtss2sd\t" + this.operando2.getPos() + "(%rbp), %xmm0\n"
-                            + "\tleaq\t" + et + "(%rip), %rdi\n"
-                            + "\tmovl\t$1, %eax\n"
-                            + "\tcall\tprintf@PLT\n";
                 }
             }
         } else {

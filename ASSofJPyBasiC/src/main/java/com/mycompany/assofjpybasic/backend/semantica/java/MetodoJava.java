@@ -6,6 +6,7 @@
 package com.mycompany.assofjpybasic.backend.semantica.java;
 
 import com.mycompany.assofjpybasic.backend.semantica.programa.OperacionPrograma;
+import com.mycompany.assofjpybasic.backend.semantica.programa.ProgramaSemantica;
 import com.mycompany.assofjpybasic.backend.semantica.programa.VariablePrograma;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
@@ -319,12 +320,17 @@ public class MetodoJava {
         }
     }
 
-    public List<Triplete> verMetodo(Integer pos, VariablePrograma pro, List<OperacionPrograma> params) {
+    public List<Triplete> verMetodo(Integer pos, VariablePrograma pro, List<OperacionPrograma> params, ProgramaSemantica sem) {
         if (pos != null) {
             List<Triplete> tri = new ArrayList<>();
             SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + pos), "int");
             tri.add(sum);
-            tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + pro.getHeap())));
+            String s = ".LC" + Triplete.FLOAT;
+            Triplete.FLOAT += 1;
+            sem.getFl().add("\t.align 4");
+            sem.getFl().add(s + ":");
+            sem.getFl().add("\t.long\t" + Float.floatToIntBits(pro.getHeap()));
+            tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + pro.getHeap(), s)));
             for (int i = 0; i < params.size(); i++) {
                 tri.addAll(params.get(i).mostrarTripletes());
                 SumOperator op1 = new SumOperator(null, new P(), new TerminalOperator((pos + i + 2) + ""), "int");

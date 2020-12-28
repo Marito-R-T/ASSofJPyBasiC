@@ -3287,7 +3287,7 @@ reportarSem("Error en el do while, se espera un salto de linea despues del do");
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		OperacionVisual e2 = (OperacionVisual)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;
+		e1.addAll(e2.mostrarTripletes()); e1.add(new Printf(Input.tipoVisual(e2), e2.getTriplete(), Input.tipoVisualf(e2))); RESULT = e1;
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("STRING",27, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;
@@ -3314,7 +3314,7 @@ reportarSem("Error en el do while, se espera un salto de linea despues del do");
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		OperacionVisual e1 = (OperacionVisual)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
+		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Printf(Input.tipoVisual(e1), e1.getTriplete(), Input.tipoVisualf(e1)));
                 RESULT = tri;
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("STRING",27, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);

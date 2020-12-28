@@ -22,6 +22,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOpe
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Clrs;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Printf;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Scanf;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.MetodoVisual;
@@ -69,6 +70,8 @@ public class CrearAssembler {
         String s = "";
         for (MetodoPython metodoPython : this.metodosPython) {
             int pos = -4;
+            boolean flo = false;
+            boolean ent = false;
             String tr = "";
             for (int i = metodoPython.getTrip().size() - 1; i >= 0; i--) {
                 Triplete trip = metodoPython.getTrip().get(i);
@@ -86,13 +89,29 @@ public class CrearAssembler {
                         tr += lc + ":\n"
                                 + "\t.string \"" + ((Printf) trip).getValor() + "\"\n";
                     }
+                    /*if (((Printf) trip).getTipo() != null) {
+                        if (((Printf) trip).getTipo().equals("%f")) {
+                            flo = true;
+                        } else if ((((Printf) trip).getTipo().equals("%d") || ((Printf) trip).getTipo().equals("%c"))) {
+                            ent = true;
+                        }
+                    }*/
                 } else if (trip instanceof Clrs) {
                     String lc = ".LC" + Triplete.FLOAT;
                     Triplete.FLOAT++;
                     ((Clrs) trip).setEt(lc);
                     tr += lc + ":\n"
                             + "\t.string \"clear\"\n";
+                } else if (trip instanceof Scanf) {
+                    flo = true;
                 }
+            }
+            if (flo) {
+                pos -= 8;
+            } else if (ent) {
+                pos -= 8;
+            } else {
+                pos -= 8;
             }
             s += metodoPython.mostrarMetodoAss(lf, tr, pos);
             lf++;
@@ -104,6 +123,8 @@ public class CrearAssembler {
         String s = "";
         for (MetodoVisual metodoVisual : this.metodosVisual) {
             int pos = -4;
+            boolean flo = false;
+            boolean ent = false;
             String tr = "";
             for (int i = metodoVisual.getTripletes().size() - 1; i >= 0; i--) {
                 Triplete trip = metodoVisual.getTripletes().get(i);
@@ -127,7 +148,16 @@ public class CrearAssembler {
                     ((Clrs) trip).setEt(lc);
                     tr += lc + ":\n"
                             + "\t.string \"clear\"\n";
+                } else if (trip instanceof Scanf) {
+                    flo = true;
                 }
+            }
+            if (flo) {
+                pos -= 8;
+            } else if (ent) {
+                pos -= 8;
+            } else {
+                pos -= 8;
             }
             s += metodoVisual.mostrarMetodoAss(lf, tr, pos);
             lf++;
@@ -147,6 +177,8 @@ public class CrearAssembler {
     public String main() {
         String s = "";
         int ite = - 4;
+        boolean flo = false;
+        boolean ent = false;
         String str = "";
         for (int i = this.main.size() - 1; i >= 0; i--) {
             Triplete tr = this.main.get(i);
@@ -170,12 +202,20 @@ public class CrearAssembler {
                 ((Clrs) tr).setEt(lc);
                 str += lc + ":\n"
                         + "\t.string \"clear\"\n";
+            } else if (tr instanceof Scanf) {
+                flo = true;
             }
         }
         if (!str.equals("")) {
             str = "\t.section\t.rodata\n" + str + "\t.text\n";
         }
-        ite -= 8;
+        if (flo) {
+            ite -= 8;
+        } else if (ent) {
+            ite -= 8;
+        } else {
+            ite -= 8;
+        }
         s += str
                 + "\t.globl\tmain\n"
                 + "\t.type\tmain, @function\n"

@@ -2223,7 +2223,7 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		OperacionPython e2 = (OperacionPython)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		e1.addAll(e2.getTripletes()); e1.add(new Printf(Input.tipoPython(e2), e2.getTriplete(), Input.tipoPythonf(e2))); RESULT = e1;
+		e1.addAll(e2.mostrarTripletes()); e1.add(new Printf(Input.tipoPython(e2), e2.getTriplete(), Input.tipoPythonf(e2))); RESULT = e1;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("STRING",32, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;
@@ -2250,7 +2250,7 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		OperacionPython e1 = (OperacionPython)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.getTripletes());
+		ListaTripletes tri = new ListaTripletes(); tri.addAll(e1.mostrarTripletes());
                 tri.add(new Printf(Input.tipoPython(e1), e1.getTriplete(), Input.tipoPythonf(e1)));
                 RESULT = tri;
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("STRING",32, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);

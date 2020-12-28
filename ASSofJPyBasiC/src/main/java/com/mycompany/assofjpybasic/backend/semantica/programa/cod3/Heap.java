@@ -91,7 +91,7 @@ public class Heap extends TerminalOperator {
                     + "\tcltq\n";
         }
         s += "\tleaq\t0(,%rax,4), %rdx\n"
-                + "\tleaq\tstack(%rip), %rax\n";
+                + "\tleaq\theap(%rip), %rax\n";
         return s;
     }
 

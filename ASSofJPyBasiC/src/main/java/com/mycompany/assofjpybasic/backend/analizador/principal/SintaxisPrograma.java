@@ -4158,7 +4158,7 @@ ProgramaSemantica.AMBITO += 1;
                                         reportarSem("Metodo de Java no existente con id: <" + e2 + ">");
                                 } else {
                                 List<Triplete> tri = new ArrayList<>();
-                                tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3));
+                                tri.addAll(met.verMetodo(sem.getVariables().getTamano(), objeto, e3, sem));
                                 SumOperator s = new SumOperator(null, new P(), new TerminalOperator(""+(sem.getVariables().getTamano()+1)),"int");
                                 tri.add(s);
                                 AsignarTemporal ast = new AsignarTemporal(null, new Stack(s), "float");

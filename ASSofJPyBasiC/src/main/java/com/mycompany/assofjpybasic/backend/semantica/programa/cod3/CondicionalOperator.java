@@ -52,57 +52,57 @@ public abstract class CondicionalOperator extends Triplete {
         } else if (operando1 instanceof Heap) {
             s += "\tcltq\n"
                     + ((Heap) this.operando1).asm(false)
-                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
+                    + "\tmovss\t(%rdx,%rax), %xmm1\n";
         } else if (operando1 instanceof TerminalOperator) {
             if (((TerminalOperator) operando1).isFlo()) {
-                s += "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm0\n";
+                s += "\tmovss\t" + ((TerminalOperator) operando1).getBin() + ", %xmm1\n";
             } else {
                 s += "\tmovl\t" + ((TerminalOperator) operando1).getBin() + ", %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
             }
         } else if (operando1 instanceof AritmeticaOperator) {
             if (((AsignarTemporal) operando1).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rbp), %xmm1\n";
             } else {
                 s += "\tmovl\t" + this.operando1.pos + "(%rbp), %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
             }
         } else if (operando1 instanceof AsignarTemporal) {
             if (((AsignarTemporal) operando1).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando1.getPos() + "(%rip), %xmm0\n";
+                s += "\tmovss\t" + this.operando1.getPos() + "(%rbp), %xmm1\n";
             } else {
                 s += "\tmovl\t" + this.operando1.pos + "(%rbp), %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
             }
         }
         if (operando2 instanceof Stack) {
             s += "\tcltq\n"
                     + ((Stack) this.operando2).asm(false)
-                    + "\tmovss\t(%rdx,%rax), %xmm1\n";
+                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
         } else if (operando2 instanceof Heap) {
             s += "\tcltq\n"
                     + ((Heap) this.operando2).asm(false)
-                    + "\tmovss\t(%rdx,%rax), %xmm1\n";
+                    + "\tmovss\t(%rdx,%rax), %xmm0\n";
         } else if (operando2 instanceof TerminalOperator) {
             if (((TerminalOperator) operando2).isFlo()) {
-                s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm1\n";
+                s += "\tmovss\t" + ((TerminalOperator) operando2).getBin() + ", %xmm0\n";
             } else {
                 s += "\tmovl\t" + ((TerminalOperator) operando2).getBin() + ", %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
             }
         } else if (operando2 instanceof AritmeticaOperator) {
             if (((AsignarTemporal) operando2).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n";
             } else {
                 s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
             }
         } else if (operando2 instanceof AsignarTemporal) {
             if (((AsignarTemporal) operando2).getTipo().equals("float")) {
-                s += "\tmovss\t" + this.operando2.getPos() + "(%rip), %xmm1\n";
+                s += "\tmovss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n";
             } else {
                 s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"
-                        + "\tcvtsi2ssl\t%eax, %xmm1\n";
+                        + "\tcvtsi2ssl\t%eax, %xmm0\n";
             }
         }
         return s;

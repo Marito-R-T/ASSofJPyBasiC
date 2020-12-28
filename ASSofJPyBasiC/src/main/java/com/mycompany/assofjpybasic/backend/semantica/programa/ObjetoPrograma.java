@@ -18,7 +18,6 @@ package com.mycompany.assofjpybasic.backend.semantica.programa;
 
 import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
-import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.CallMetodo;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.P;
@@ -65,7 +64,12 @@ public class ObjetoPrograma {
             if (pro != null && sem.addVar(var)) {
                 SumOperator sum = new SumOperator(null, new P(), new TerminalOperator("" + integ), "int");
                 tri.add(sum);
-                tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + var.getHeap())));
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t" + Float.floatToIntBits(var.getHeap()));
+                tri.add(new AsignarValor(null, new Stack(sum), new TerminalOperator("" + var.getHeap(), s)));
                 tri.addAll(pro.mostrarTripletes());
                 tri.add(pro.getTriplete());
                 RestOperator rest = new RestOperator(null, new P(), new TerminalOperator("" + integ), "int");
