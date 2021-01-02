@@ -350,6 +350,10 @@ public class AssGUI extends javax.swing.JFrame {
         if (tabbed.isCompilado()) {
             String s = tabbed.getaEjecutar();
             try {
+                File f = new File(this.getClass().getResource("/").getPath() + "programa.c");
+                if (!f.exists()) {
+                    f.createNewFile();
+                }
                 File file = new File(this.getClass().getResource("/programa.c").toURI());
                 FileWriter fichero = null;
                 PrintWriter pw = null;
@@ -392,7 +396,11 @@ public class AssGUI extends javax.swing.JFrame {
         if (tabbed.isAssembly()) {
             String s = tabbed.getaAssembler();
             try {
-                File file = new File(this.getClass().getResource("/prueba.s").toURI());
+                File f = new File(this.getClass().getResource("/").getPath() + "programa.s");
+                if (!f.exists()) {
+                    f.createNewFile();
+                }
+                File file = new File(this.getClass().getResource("/programa.s").toURI());
                 FileWriter fichero = null;
                 PrintWriter pw = null;
                 try {
@@ -412,11 +420,11 @@ public class AssGUI extends javax.swing.JFrame {
                     } catch (IOException e2) {
                     }
                 }
-                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programa"}, null, file.getParentFile());
+                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
                 pr.waitFor();
                 int i = pr.exitValue();
                 System.out.println(i);
-                Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
+                Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programaAsm\""}, null, file.getParentFile());
                 //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
                 //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
                 //pb.start();
