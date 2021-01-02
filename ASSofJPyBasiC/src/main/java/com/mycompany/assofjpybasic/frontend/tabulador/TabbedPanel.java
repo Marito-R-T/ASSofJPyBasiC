@@ -20,7 +20,7 @@ import javax.swing.JTextPane;
 public final class TabbedPanel extends javax.swing.JPanel {
 
     private final File[] archivo;
-    private boolean compilado;
+    private boolean compilado, assembly;
     private String aEjecutar;
 
     /**
@@ -197,6 +197,10 @@ public final class TabbedPanel extends javax.swing.JPanel {
         this.compilado = compilado;
     }
 
+    public boolean isCompilado() {
+        return compilado;
+    }
+
     public File[] getArchivo() {
         return archivo;
     }
@@ -231,6 +235,14 @@ public final class TabbedPanel extends javax.swing.JPanel {
 
     public void setaEjecutar(String aEjecutar) {
         this.aEjecutar = aEjecutar;
+    }
+
+    public boolean isAssembly() {
+        return assembly;
+    }
+
+    public void setAssembly(boolean assembly) {
+        this.assembly = assembly;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -83,9 +83,10 @@ public class AssGUI extends javax.swing.JFrame {
         itemSalir = new javax.swing.JMenuItem();
         menuCodigo = new javax.swing.JMenu();
         itemGenerarCod3 = new javax.swing.JMenuItem();
+        itemGenerarAssembler = new javax.swing.JMenuItem();
         menuEjecutar = new javax.swing.JMenu();
         itemEjecutar = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        itemEjecutarAssembler = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -180,6 +181,14 @@ public class AssGUI extends javax.swing.JFrame {
         });
         menuCodigo.add(itemGenerarCod3);
 
+        itemGenerarAssembler.setText("Assembler");
+        itemGenerarAssembler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemGenerarAssemblerActionPerformed(evt);
+            }
+        });
+        menuCodigo.add(itemGenerarAssembler);
+
         jMenuBar1.add(menuCodigo);
 
         menuEjecutar.setText("Ejecutar");
@@ -197,13 +206,13 @@ public class AssGUI extends javax.swing.JFrame {
         });
         menuEjecutar.add(itemEjecutar);
 
-        jMenuItem1.setText("Ejecutar Assembler");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        itemEjecutarAssembler.setText("Ejecutar Assembler");
+        itemEjecutarAssembler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                itemEjecutarAssemblerActionPerformed(evt);
             }
         });
-        menuEjecutar.add(jMenuItem1);
+        menuEjecutar.add(itemEjecutarAssembler);
 
         jMenuBar1.add(menuEjecutar);
 
@@ -320,7 +329,6 @@ public class AssGUI extends javax.swing.JFrame {
             tabbed.getPaneCodigoT().setText(s.get(0));
             tabbed.setaEjecutar(s.get(1));
             tabbed.getPaneOptimizacion().setText(s.get(1));
-            tabbed.getPaneAssembler().setText(s.get(2));
             tabbed.getTabedGeneral().setSelectedIndex(1);
             Triplete.VARNUM = 0;
             Triplete.ETNUM = 0;
@@ -328,6 +336,7 @@ public class AssGUI extends javax.swing.JFrame {
             tabbed.setCompilado(true);
         } else {
             tabbed.getPaneCodigoT().setText(null);
+            tabbed.setCompilado(false);
         }
     }//GEN-LAST:event_itemGenerarCod3ActionPerformed
 
@@ -338,97 +347,117 @@ public class AssGUI extends javax.swing.JFrame {
     private void itemEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEjecutarActionPerformed
         // TODO add your handling code here:
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
-        String s = tabbed.getaEjecutar();
-        String s2 = tabbed.getaAssembler();
-        try {
-            File file = new File(this.getClass().getResource("/programa.c").toURI());
-            FileWriter fichero = null;
-            PrintWriter pw = null;
+        if (tabbed.isCompilado()) {
+            String s = tabbed.getaEjecutar();
             try {
-                fichero = new FileWriter(file);
-                pw = new PrintWriter(fichero);
-                pw.print(s);
-                pw.flush();
-                pw.close();
-            } catch (IOException e) {
-            } finally {
+                File file = new File(this.getClass().getResource("/programa.c").toURI());
+                FileWriter fichero = null;
+                PrintWriter pw = null;
                 try {
-                    // Nuevamente aprovechamos el finally para
-                    // asegurarnos que se cierra el fichero.
-                    if (null != fichero) {
-                        fichero.close();
+                    fichero = new FileWriter(file);
+                    pw = new PrintWriter(fichero);
+                    pw.print(s);
+                    pw.flush();
+                    pw.close();
+                } catch (IOException e) {
+                } finally {
+                    try {
+                        // Nuevamente aprovechamos el finally para
+                        // asegurarnos que se cierra el fichero.
+                        if (null != fichero) {
+                            fichero.close();
+                        }
+                    } catch (IOException e2) {
                     }
-                } catch (IOException e2) {
                 }
+                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.c", "-lm", "-o", "programa"}, null, file.getParentFile());
+                pr.waitFor();
+                int i = pr.exitValue();
+                System.out.println(i);
+                Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
+                //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
+                //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
+                //pb.start();
+                System.out.println("ya salio");
+            } catch (IOException ioe) {
+                System.out.println(ioe);
+            } catch (URISyntaxException | InterruptedException ex) {
+                Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.c", "-lm", "-o", "programa"}, null, file.getParentFile());
-            pr.waitFor();
-            int i = pr.exitValue();
-            System.out.println(i);
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
-            //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
-            //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
-            //pb.start();
-            System.out.println("ya salio");
-        } catch (IOException ioe) {
-            System.out.println(ioe);
-        } catch (URISyntaxException | InterruptedException ex) {
-            Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_itemEjecutarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void itemEjecutarAssemblerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEjecutarAssemblerActionPerformed
         TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
-        String s = tabbed.getaAssembler();
-        try {
-            File file = new File(this.getClass().getResource("/prueba.s").toURI());
-            FileWriter fichero = null;
-            PrintWriter pw = null;
+        if (tabbed.isAssembly()) {
+            String s = tabbed.getaAssembler();
             try {
-                fichero = new FileWriter(file);
-                pw = new PrintWriter(fichero);
-                pw.print(s);
-                pw.flush();
-                pw.close();
-            } catch (IOException e) {
-            } finally {
+                File file = new File(this.getClass().getResource("/prueba.s").toURI());
+                FileWriter fichero = null;
+                PrintWriter pw = null;
                 try {
-                    // Nuevamente aprovechamos el finally para
-                    // asegurarnos que se cierra el fichero.
-                    if (null != fichero) {
-                        fichero.close();
+                    fichero = new FileWriter(file);
+                    pw = new PrintWriter(fichero);
+                    pw.print(s);
+                    pw.flush();
+                    pw.close();
+                } catch (IOException e) {
+                } finally {
+                    try {
+                        // Nuevamente aprovechamos el finally para
+                        // asegurarnos que se cierra el fichero.
+                        if (null != fichero) {
+                            fichero.close();
+                        }
+                    } catch (IOException e2) {
                     }
-                } catch (IOException e2) {
                 }
+                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programa"}, null, file.getParentFile());
+                pr.waitFor();
+                int i = pr.exitValue();
+                System.out.println(i);
+                Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
+                //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
+                //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
+                //pb.start();
+                System.out.println("ya salio");
+            } catch (IOException ioe) {
+                System.out.println(ioe);
+            } catch (URISyntaxException | InterruptedException ex) {
+                Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programa"}, null, file.getParentFile());
-            pr.waitFor();
-            int i = pr.exitValue();
-            System.out.println(i);
-            Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", "xterm -hold -e \"./programa\""}, null, file.getParentFile());
-            //pr = Runtime.getRuntime().exec(new String[]{"xterm", "-e", "./programa.c"}, null, file.getParentFile());
-            //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
-            //pb.start();
-            System.out.println("ya salio");
-        } catch (IOException ioe) {
-            System.out.println(ioe);
-        } catch (URISyntaxException | InterruptedException ex) {
-            Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_itemEjecutarAssemblerActionPerformed
+
+    private void itemGenerarAssemblerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGenerarAssemblerActionPerformed
+        TabbedPanel tabbed = (TabbedPanel) ((JScrollPane) tabbedArchivo.getSelectedComponent()).getViewport().getView();
+        List<String> s = ManejadorAnalisis.regresar3D(tabbed.getPanePrograma().getText());
+        if (s != null && s.size() == 3) {
+            tabbed.getPaneAssembler().setText(s.get(2));
+            tabbed.getTabedGeneral().setSelectedIndex(3);
+            Triplete.VARNUM = 0;
+            Triplete.ETNUM = 0;
+            Triplete.FLOAT = 6;
+            tabbed.setAssembly(true);
+        } else {
+            tabbed.getPaneCodigoT().setText(null);
+            tabbed.setAssembly(false);
+        }
+    }//GEN-LAST:event_itemGenerarAssemblerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static final javax.swing.JEditorPane editorTerminal = new javax.swing.JEditorPane();
     private javax.swing.JMenuItem itemAbrir;
     private javax.swing.JMenuItem itemCerrar;
     private javax.swing.JMenuItem itemEjecutar;
+    private javax.swing.JMenuItem itemEjecutarAssembler;
+    private javax.swing.JMenuItem itemGenerarAssembler;
     private javax.swing.JMenuItem itemGenerarCod3;
     private javax.swing.JMenuItem itemGuardar;
     private javax.swing.JMenuItem itemGuardarComo;
     private javax.swing.JMenuItem itemNuevo;
     private javax.swing.JMenuItem itemSalir;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenu menuCodigo;
     private javax.swing.JMenu menuEjecutar;
