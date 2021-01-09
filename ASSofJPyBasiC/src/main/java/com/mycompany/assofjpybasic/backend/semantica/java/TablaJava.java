@@ -18,6 +18,7 @@ import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Stack;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.SumOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.TerminalOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import com.mycompany.assofjpybasic.backend.semantica.python.Input;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -393,14 +394,18 @@ public class TablaJava {
                             + "\t.string \"clear\"\n";
                 } else if (trip instanceof Scanf) {
                     flo = true;
+                } else if (trip instanceof AsignarValor
+                        && ((AsignarValor) trip).getOperando2() instanceof Input
+                        && ((AsignarValor) trip).getOperando1() instanceof Heap) {
+                    ent = true;
                 }
             }
             if (flo) {
                 pos -= 8;
             } else if (ent) {
-                pos -= 8;
+                pos -= 4;
             } else {
-                pos -= 8;
+                pos -= 0;
             }
             s += constructor.mostrarMetodoAss(num, this.principales, tr, pos);
             num++;
@@ -441,14 +446,18 @@ public class TablaJava {
                             + "\t.string \"clear\"\n";
                 } else if (triplete instanceof Scanf) {
                     flo = true;
+                } else if (triplete instanceof AsignarValor
+                        && ((AsignarValor) triplete).getOperando2() instanceof Input
+                        && ((AsignarValor) triplete).getOperando1() instanceof Heap) {
+                    ent = true;
                 }
             }
             if (flo) {
                 pos -= 8;
             } else if (ent) {
-                pos -= 8;
+                pos -= 4;
             } else {
-                pos -= 8;
+                pos -= 0;
             }
             s += metodo.mostrarMetodoAss(num, tr, pos);
             num++;

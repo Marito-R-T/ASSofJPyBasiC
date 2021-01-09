@@ -20,10 +20,12 @@ import com.mycompany.assofjpybasic.backend.semantica.java.MetodoJava;
 import com.mycompany.assofjpybasic.backend.semantica.java.TablaJava;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AritmeticaOperator;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarTemporal;
+import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.AsignarValor;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Clrs;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Printf;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Scanf;
 import com.mycompany.assofjpybasic.backend.semantica.programa.cod3.Triplete;
+import com.mycompany.assofjpybasic.backend.semantica.python.Input;
 import com.mycompany.assofjpybasic.backend.semantica.python.MetodoPython;
 import com.mycompany.assofjpybasic.backend.semantica.visual.MetodoVisual;
 import java.util.ArrayList;
@@ -104,14 +106,16 @@ public class CrearAssembler {
                             + "\t.string \"clear\"\n";
                 } else if (trip instanceof Scanf) {
                     flo = true;
+                } else if (trip instanceof AsignarValor && ((AsignarValor) trip).getOperando2() instanceof Input) {
+                    ent = true;
                 }
             }
             if (flo) {
                 pos -= 8;
             } else if (ent) {
-                pos -= 8;
+                pos -= 4;
             } else {
-                pos -= 8;
+                pos -= 0;
             }
             s += metodoPython.mostrarMetodoAss(lf, tr, pos);
             lf++;
@@ -150,14 +154,16 @@ public class CrearAssembler {
                             + "\t.string \"clear\"\n";
                 } else if (trip instanceof Scanf) {
                     flo = true;
+                } else if (trip instanceof AsignarValor && ((AsignarValor) trip).getOperando2() instanceof Input) {
+                    ent = true;
                 }
             }
             if (flo) {
                 pos -= 8;
             } else if (ent) {
-                pos -= 8;
+                pos -= 4;
             } else {
-                pos -= 8;
+                pos -= 0;
             }
             s += metodoVisual.mostrarMetodoAss(lf, tr, pos);
             lf++;
@@ -204,6 +210,8 @@ public class CrearAssembler {
                         + "\t.string \"clear\"\n";
             } else if (tr instanceof Scanf) {
                 flo = true;
+            } else if (tr instanceof AsignarValor && ((AsignarValor) tr).getOperando2() instanceof Input) {
+                ent = true;
             }
         }
         if (!str.equals("")) {
@@ -212,9 +220,9 @@ public class CrearAssembler {
         if (flo) {
             ite -= 8;
         } else if (ent) {
-            ite -= 8;
+            ite -= 4;
         } else {
-            ite -= 8;
+            ite += 4;
         }
         s += str
                 + "\t.globl\tmain\n"

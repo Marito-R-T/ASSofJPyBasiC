@@ -396,11 +396,11 @@ public class AssGUI extends javax.swing.JFrame {
         if (tabbed.isAssembly()) {
             String s = tabbed.getaAssembler();
             try {
-                File f = new File(this.getClass().getResource("/").getPath() + "programa.s");
+                File f = new File(this.getClass().getResource("/").getPath() + "prueba.s");
                 if (!f.exists()) {
                     f.createNewFile();
                 }
-                File file = new File(this.getClass().getResource("/programa.s").toURI());
+                File file = new File(this.getClass().getResource("/prueba.s").toURI());
                 FileWriter fichero = null;
                 PrintWriter pw = null;
                 try {
@@ -420,7 +420,7 @@ public class AssGUI extends javax.swing.JFrame {
                     } catch (IOException e2) {
                     }
                 }
-                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
+                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
                 pr.waitFor();
                 int i = pr.exitValue();
                 System.out.println(i);
