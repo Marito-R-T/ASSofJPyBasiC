@@ -398,11 +398,11 @@ public class AssGUI extends javax.swing.JFrame {
         if (tabbed.isAssembly()) {
             String s = tabbed.getaAssembler();
             try {
-                File f = new File(this.getClass().getResource("/").getPath() + "prueba.s");
+                File f = new File(this.getClass().getResource("/").getPath() + "programa.s");
                 if (!f.exists()) {
                     f.createNewFile();
                 }
-                File file = new File(this.getClass().getResource("/prueba.s").toURI());
+                File file = new File(this.getClass().getResource("/programa.s").toURI());
                 FileWriter fichero = null;
                 PrintWriter pw = null;
                 try {
@@ -424,7 +424,7 @@ public class AssGUI extends javax.swing.JFrame {
                         Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, e2);
                     }
                 }
-                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
+                Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
                 pr.waitFor();
                 int i = pr.exitValue();
                 System.out.println(i);
