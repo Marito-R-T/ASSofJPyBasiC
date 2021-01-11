@@ -25,10 +25,9 @@ public class RestOperator extends AritmeticaOperator {
     private final String OPERADOR = "-";
 
     public RestOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
-        super(id, operando1, operando2);
+        super(id, operando1, operando2, tipo);
         this.id = "t" + Triplete.VARNUM;
         Triplete.VARNUM++;
-        this.tipo = tipo;
     }
 
     @Override

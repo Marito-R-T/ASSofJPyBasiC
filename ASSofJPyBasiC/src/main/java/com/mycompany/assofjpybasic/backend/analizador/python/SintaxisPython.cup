@@ -255,7 +255,14 @@ FOR ::= forr id:e1 {:if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBIT
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
                 } else {
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
-                } RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum), e2, e3);:}
+                } 
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                TerminalOperator t = new TerminalOperator("0", s);
+                RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum), e2, e3, t);:}
         | forr error COMA inn RANGE dosp SUITE {:reportarSem("Error en el for, se esperaba un id"); RESULT = new ListaTripletes();:}
 ;
 
@@ -284,8 +291,13 @@ OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:RESULT = new OperacionPython
         | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionPython(new OperacionPython(PythonSemantica.INT, new TerminalOperator("0")),
-                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionPython.obtenerTipo(e1)));:}
+OPERACION_U ::= menos OPERACION_U:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                RESULT = new OperacionPython(new OperacionPython(PythonSemantica.INT, new TerminalOperator("0", s)),
+                        e1, new RestOperator(null, new TerminalOperator("0", s), e1.getTriplete(), OperacionPython.obtenerTipo(e1)));:}
         | mas OPERACION_U:e1 {:RESULT  = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
 ;

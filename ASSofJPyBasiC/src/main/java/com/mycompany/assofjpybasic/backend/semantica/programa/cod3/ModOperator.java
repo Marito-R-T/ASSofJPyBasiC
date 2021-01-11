@@ -23,11 +23,9 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
 public class ModOperator extends AritmeticaOperator {
 
     private final String OPERADOR = "%";
-    private final String tipo;
 
     public ModOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
-        super(id, operando1, operando2);
-        this.tipo = tipo;
+        super(id, operando1, operando2, tipo);
         this.id = "t" + Triplete.VARNUM;
         Triplete.VARNUM++;
     }

@@ -25,8 +25,7 @@ public class PorOperator extends AritmeticaOperator {
     private final String OPERADOR = "*";
 
     public PorOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
-        super(id, operando1, operando2);
-        this.tipo = tipo;
+        super(id, operando1, operando2, tipo);
         this.id = "t" + Triplete.VARNUM;
         Triplete.VARNUM++;
     }

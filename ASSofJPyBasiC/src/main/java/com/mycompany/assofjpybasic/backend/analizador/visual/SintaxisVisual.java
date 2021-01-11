@@ -1670,8 +1670,13 @@ VisualSemantica.AMBITO += 1;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()).right;
 		OperacionVisual e1 = (OperacionVisual)((java_cup.runtime.Symbol) CUP$SintaxisVisual$stack.peek()).value;
-		RESULT = new OperacionVisual(new OperacionVisual(PythonSemantica.INT, new TerminalOperator("0")),
-                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                RESULT = new OperacionVisual(new OperacionVisual(PythonSemantica.INT, new TerminalOperator("0", s)),
+                        e1, new RestOperator(null, new TerminalOperator("0", s), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));
               CUP$SintaxisVisual$result = parser.getSymbolFactory().newSymbol("OPERACION_U",18, ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.elementAt(CUP$SintaxisVisual$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisVisual$stack.peek()), RESULT);
             }
           return CUP$SintaxisVisual$result;

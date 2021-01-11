@@ -22,10 +22,11 @@ package com.mycompany.assofjpybasic.backend.semantica.programa.cod3;
  */
 public abstract class AritmeticaOperator extends Triplete {
 
-    protected String tipo;
+    protected final String tipo;
 
-    public AritmeticaOperator(String id, Triplete operando1, Triplete operando2) {
+    public AritmeticaOperator(String id, Triplete operando1, Triplete operando2, String tipo) {
         super(id, operando1, operando2);
+        this.tipo = tipo;
     }
 
     @Override

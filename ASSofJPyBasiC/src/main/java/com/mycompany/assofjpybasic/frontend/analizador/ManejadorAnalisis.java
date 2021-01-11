@@ -24,6 +24,8 @@ import com.mycompany.assofjpybasic.backend.classes.ArchivoMLG;
 import com.mycompany.assofjpybasic.frontend.AssGUI;
 import java.io.StringReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase donde se llama a los Analizadores Sintacticos y Lexicos, y cualquier
@@ -55,6 +57,7 @@ public class ManejadorAnalisis {
                         + "<<<<<<<<<<<<<ERROR, NO SE PUEDE GENERAR CODIGO 3 DIRECCIONES>>>>>>>>>>>>>");
             }
         } catch (Exception ex) {
+            Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
             System.out.println(ex.getLocalizedMessage());
             AssGUI.editorTerminal.setText(AssGUI.editorTerminal.getText() + "\n"

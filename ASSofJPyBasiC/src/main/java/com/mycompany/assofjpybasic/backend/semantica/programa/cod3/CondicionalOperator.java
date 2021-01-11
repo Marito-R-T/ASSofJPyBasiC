@@ -61,7 +61,7 @@ public abstract class CondicionalOperator extends Triplete {
                         + "\tcvtsi2ssl\t%eax, %xmm1\n";
             }
         } else if (operando1 instanceof AritmeticaOperator) {
-            if (((AsignarTemporal) operando1).getTipo().equals("float")) {
+            if (((AritmeticaOperator) operando1).getTipo().equals("float")) {
                 s += "\tmovss\t" + this.operando1.getPos() + "(%rbp), %xmm1\n";
             } else {
                 s += "\tmovl\t" + this.operando1.pos + "(%rbp), %eax\n"
@@ -91,7 +91,7 @@ public abstract class CondicionalOperator extends Triplete {
                         + "\tcvtsi2ssl\t%eax, %xmm0\n";
             }
         } else if (operando2 instanceof AritmeticaOperator) {
-            if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+            if (((AritmeticaOperator) operando2).getTipo().equals("float")) {
                 s += "\tmovss\t" + this.operando2.getPos() + "(%rbp), %xmm0\n";
             } else {
                 s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n"

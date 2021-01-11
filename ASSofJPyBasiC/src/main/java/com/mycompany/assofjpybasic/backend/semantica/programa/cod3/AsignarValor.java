@@ -109,7 +109,7 @@ public class AsignarValor extends Triplete {
                     + "\tmovsbl\t%al, %eax\n"
                     + "\tcvtsi2ssl\t%eax, %xmm0\n";
         } else if (this.operando2 instanceof AsignarTemporal) {
-            if (((AsignarTemporal) operando2).getTipo().equals("float")) {
+            if (((AsignarTemporal) this.operando2).getTipo().equals("float")) {
                 s += "\tmovss\t" + this.operando2.pos + "(%rbp), %xmm0\n";
             } else {
                 s += "\tmovl\t" + this.operando2.pos + "(%rbp), %eax\n";

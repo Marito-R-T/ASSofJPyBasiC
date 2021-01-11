@@ -190,9 +190,10 @@ public class Else_Operator extends ListaTripletes {
      * @param id Id del stack
      * @param op Operaciones de RANGE de python
      * @param tri Tripletes del For
+     * @param cero los que necesite asignar valor 0
      * @return Regresa los tripletes del for
      */
-    public static ListaTripletes FORP(SumOperator ss, Stack id, List<OperacionPython> op, ListaTripletes tri) {
+    public static ListaTripletes FORP(SumOperator ss, Stack id, List<OperacionPython> op, ListaTripletes tri, TerminalOperator cero) {
         if (id != null && op != null && tri != null) {
             Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
             MenorOperator men;
@@ -264,7 +265,7 @@ public class Else_Operator extends ListaTripletes {
     public static ListaTripletes FORV(Integer direccion, String tipo, OperacionVisual inicio, OperacionVisual fin, OperacionVisual step, ListaTripletes tri) {
         if (direccion != null && tipo != null && inicio != null && fin != null && step != null && tri != null) {
             SumOperator smm = new SumOperator(null, new P(), new TerminalOperator(direccion.toString()), "int");
-            TerminalOperator term = new Stack(smm);
+            Stack term = new Stack(smm);
             Etiqueta et = new Etiqueta(), mala = new Etiqueta(), buena = new Etiqueta();
             ListaTripletes nuevos = new ListaTripletes();
             nuevos.addAll(inicio.mostrarTripletes());

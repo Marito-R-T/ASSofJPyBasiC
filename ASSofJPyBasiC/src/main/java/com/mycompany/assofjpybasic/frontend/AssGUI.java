@@ -364,6 +364,7 @@ public class AssGUI extends javax.swing.JFrame {
                     pw.flush();
                     pw.close();
                 } catch (IOException e) {
+                    Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, e);
                 } finally {
                     try {
                         // Nuevamente aprovechamos el finally para
@@ -372,6 +373,7 @@ public class AssGUI extends javax.swing.JFrame {
                             fichero.close();
                         }
                     } catch (IOException e2) {
+                        Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, e2);
                     }
                 }
                 Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "programa.c", "-lm", "-o", "programa"}, null, file.getParentFile());
@@ -383,9 +385,9 @@ public class AssGUI extends javax.swing.JFrame {
                 //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
                 //pb.start();
                 System.out.println("ya salio");
-            } catch (IOException ioe) {
+            }/* catch (IOException ioe) {
                 System.out.println(ioe);
-            } catch (URISyntaxException | InterruptedException ex) {
+            }*/ catch (URISyntaxException | InterruptedException | IOException ex) {
                 Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -410,6 +412,7 @@ public class AssGUI extends javax.swing.JFrame {
                     pw.flush();
                     pw.close();
                 } catch (IOException e) {
+                    Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, e);
                 } finally {
                     try {
                         // Nuevamente aprovechamos el finally para
@@ -418,6 +421,7 @@ public class AssGUI extends javax.swing.JFrame {
                             fichero.close();
                         }
                     } catch (IOException e2) {
+                        Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, e2);
                     }
                 }
                 Process pr = Runtime.getRuntime().exec(new String[]{"gcc", "prueba.s", "-lm", "-o", "programaAsm"}, null, file.getParentFile());
@@ -429,10 +433,8 @@ public class AssGUI extends javax.swing.JFrame {
                 //pb.command("gcc -o programa programa.c && xterm -e \"./programa\"");
                 //pb.start();
                 System.out.println("ya salio");
-            } catch (IOException ioe) {
-                System.out.println(ioe);
-            } catch (URISyntaxException | InterruptedException ex) {
-                Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | URISyntaxException | InterruptedException ioe) {
+                Logger.getLogger(AssGUI.class.getName()).log(Level.SEVERE, null, ioe);
             }
         }
     }//GEN-LAST:event_itemEjecutarAssemblerActionPerformed

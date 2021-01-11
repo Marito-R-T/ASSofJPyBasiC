@@ -210,8 +210,13 @@ OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1!=null && e2 !=null){RE
         | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionVisual(new OperacionVisual(PythonSemantica.INT, new TerminalOperator("0")),
-                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));:}
+OPERACION_U ::= menos OPERACION_U:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                RESULT = new OperacionVisual(new OperacionVisual(PythonSemantica.INT, new TerminalOperator("0", s)),
+                        e1, new RestOperator(null, new TerminalOperator("0", s), e1.getTriplete(), OperacionVisual.obtenerTipo(e1)));:}
         | mas OPERACION_U:e1 {:RESULT = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
         | LLAMADA_METODO:e1 {:RESULT = e1;:}

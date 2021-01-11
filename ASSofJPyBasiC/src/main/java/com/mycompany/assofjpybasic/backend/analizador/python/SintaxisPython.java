@@ -1732,7 +1732,14 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
                 } else {
                         sum = new SumOperator(null, new P(), new TerminalOperator(d.toString()), "int");
-                } RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum), e2, e3);
+                } 
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                TerminalOperator t = new TerminalOperator("0", s);
+                RESULT = Else_Operator.FORP(sum, sem.devolverDireccion(sum), e2, e3, t);
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("FOR",29, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-7)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;
@@ -1917,8 +1924,13 @@ if(!sem.addVar(new VariablePython(e1, PythonSemantica.AMBITO + 1))){
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()).right;
 		OperacionPython e1 = (OperacionPython)((java_cup.runtime.Symbol) CUP$SintaxisPython$stack.peek()).value;
-		RESULT = new OperacionPython(new OperacionPython(PythonSemantica.INT, new TerminalOperator("0")),
-                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionPython.obtenerTipo(e1)));
+		String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                RESULT = new OperacionPython(new OperacionPython(PythonSemantica.INT, new TerminalOperator("0", s)),
+                        e1, new RestOperator(null, new TerminalOperator("0", s), e1.getTriplete(), OperacionPython.obtenerTipo(e1)));
               CUP$SintaxisPython$result = parser.getSymbolFactory().newSymbol("OPERACION_U",20, ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.elementAt(CUP$SintaxisPython$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPython$stack.peek()), RESULT);
             }
           return CUP$SintaxisPython$result;

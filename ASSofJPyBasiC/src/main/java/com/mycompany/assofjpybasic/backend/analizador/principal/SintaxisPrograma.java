@@ -2209,7 +2209,12 @@ class CUP$SintaxisPrograma$actions {
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.INT);}
-                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0"));
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0", s));
                 RESULT = new OperacionPrograma(cero,
                 e1, new RestOperator(null, cero.getTriplete(), e1.getTriplete(),
                 Triplete.devolverTipo(cero, e1)));
@@ -3833,7 +3838,12 @@ ProgramaSemantica.AMBITO += 1;
                         tri.add(ss1);
                         AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(ss1), "float");
                         tri.add(ast);
-                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        String s = ".LC" + Triplete.FLOAT;
+                        Triplete.FLOAT += 1;
+                        sem.getFl().add("\t.align 4");
+                        sem.getFl().add(s + ":");
+                        sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1", s), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(sum);
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
@@ -3858,7 +3868,12 @@ ProgramaSemantica.AMBITO += 1;
                         tri.add(ss1);
                         AsignarTemporal ast = new AsignarTemporal(null, sem.getVariables().devolverDireccion(ss1), "float");
                         tri.add(ast);
-                        RestOperator rest = new RestOperator(null,ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(vars.getTipo()));
+                        String s = ".LC" + Triplete.FLOAT;
+                        Triplete.FLOAT += 1;
+                        sem.getFl().add("\t.align 4");
+                        sem.getFl().add(s + ":");
+                        sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                        RestOperator rest = new RestOperator(null,ast, new TerminalOperator("1", s), OperacionJava.obtenerTipo(vars.getTipo()));
                         tri.add(rest); 
                         SumOperator ss2 = sem.getVariables().devolverSum(e1);
                         tri.add(ss2);
@@ -4613,7 +4628,12 @@ ProgramaSemantica.AMBITO += 1;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()).right;
 		OperacionPrograma e1 = (OperacionPrograma)((java_cup.runtime.Symbol) CUP$SintaxisPrograma$stack.peek()).value;
 		if(e1 != null && e1.getTipo()==1){e1.setTipo(VariablePrograma.INT);}
-                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0"));
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                sem.getFl().add("\t.align 4");
+                sem.getFl().add(s + ":");
+                sem.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                OperacionPrograma cero = new OperacionPrograma(VariablePrograma.INT, new TerminalOperator("0", s));
                 OperacionPrograma op = new OperacionPrograma(cero, e1, new RestOperator(null, cero.getTriplete(), e1.getTriplete(), Triplete.devolverTipo(cero, e1)));
                 op.setValor(e1.getValor()*-1); RESULT = op;
               CUP$SintaxisPrograma$result = parser.getSymbolFactory().newSymbol("OPERACION_UC",16, ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.elementAt(CUP$SintaxisPrograma$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisPrograma$stack.peek()), RESULT);

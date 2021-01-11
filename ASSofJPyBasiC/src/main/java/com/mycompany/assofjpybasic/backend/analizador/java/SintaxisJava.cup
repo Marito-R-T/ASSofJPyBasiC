@@ -277,9 +277,14 @@ INICIO ::= AS_VAR_LINE:e1 {:
                 tri.addAll(e2.getTripletes());
                 SumOperator sum = tabla.devolverSum(e2.getId(), false, null);
                 tri.add(sum);
-                AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(sum), "float");
-                tri.add(ast);
-                tri.add(new AsignarValor(ast, e2.getTriplete().getOperando2(), null));} RESULT = tri;:}
+                /*AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(sum), "float");
+                tri.add(ast);*/
+                String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                tri.add(new AsignarValor(tabla.devolverDireccion(sum)/*ast*/, new TerminalOperator("0", s)/*e2.getTriplete().getOperando2()*/, null));} RESULT = tri;:}
 ;
 
 STEP ::= AS_VAR_LINE:e1 {:RESULT = e1;:}
@@ -402,8 +407,12 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                         SumOperator ss1 = tabla.devolverSum(e1, true, ast);
                                         tri.add(ss1);
                                         AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(ss1), "float");
-                                        tri.add(ast1);
-                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        tri.add(ast1);String s = ".LC" + Triplete.FLOAT;
+                                        Triplete.FLOAT += 1;
+                                        actual.getFl().add("\t.align 4");
+                                        actual.getFl().add(s + ":");
+                                        actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1", s), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         Triplete ast2 = new AsignarTemporal(null, new Stack(new P()), "float");
                                         tri.add(ast2);
@@ -416,7 +425,12 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                         tri.add(ss1);
                                         AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(ss1), "float");
                                         tri.add(ast);
-                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        String s = ".LC" + Triplete.FLOAT;
+                                        Triplete.FLOAT += 1;
+                                        actual.getFl().add("\t.align 4");
+                                        actual.getFl().add(s + ":");
+                                        actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1", s), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss2);
@@ -436,7 +450,12 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                         tri.add(ss1);
                                         AsignarTemporal ast1 = new AsignarTemporal(null, tabla.devolverDireccionH(ss1), "float");
                                         tri.add(ast1);
-                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        String s = ".LC" + Triplete.FLOAT;
+                                        Triplete.FLOAT += 1;
+                                        actual.getFl().add("\t.align 4");
+                                        actual.getFl().add(s + ":");
+                                        actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                                        SumOperator sum = new SumOperator(null, ast1, new TerminalOperator("1", s), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         Triplete ast2 = new AsignarTemporal(null, new Stack(new P()), "float");
                                         tri.add(ast2);
@@ -449,7 +468,12 @@ OP_VAR ::= THIS:e0 id:e1 masmas {:ListaTripletes tri = new ListaTripletes();
                                         tri.add(ss1);
                                         AsignarTemporal ast = new AsignarTemporal(null, tabla.devolverDireccion(ss1), "float");
                                         tri.add(ast);
-                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1"), OperacionJava.obtenerTipo(num.getTipo()));
+                                        String s = ".LC" + Triplete.FLOAT;
+                                        Triplete.FLOAT += 1;
+                                        actual.getFl().add("\t.align 4");
+                                        actual.getFl().add(s + ":");
+                                        actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("1")));
+                                        SumOperator sum = new SumOperator(null, ast, new TerminalOperator("1", s), OperacionJava.obtenerTipo(num.getTipo()));
                                         tri.add(sum);
                                         SumOperator ss2 = tabla.devolverSum(e1, false, null);
                                         tri.add(ss2);
@@ -480,8 +504,13 @@ OPERACION_M ::= OPERACION_M:e1 por OPERACION_U:e2 {:if(e1!=null&&e2!=null){
         | OPERACION_U:e1 {:RESULT = e1;:}
 ;
 
-OPERACION_U ::= menos OPERACION_U:e1 {:RESULT = new OperacionJava(new OperacionJava(TablaJava.INT, new TerminalOperator("0")),
-                        e1, new RestOperator(null, new TerminalOperator("0"), e1.getTriplete(), OperacionJava.obtenerTipo(e1)));:}
+OPERACION_U ::= menos OPERACION_U:e1 {:String s = ".LC" + Triplete.FLOAT;
+                Triplete.FLOAT += 1;
+                actual.getFl().add("\t.align 4");
+                actual.getFl().add(s + ":");
+                actual.getFl().add("\t.long\t"+Float.floatToIntBits(Float.parseFloat("0")));
+                RESULT = new OperacionJava(new OperacionJava(TablaJava.INT, new TerminalOperator("0", s)),
+                        e1, new RestOperator(null, new TerminalOperator("0", s), e1.getTriplete(), OperacionJava.obtenerTipo(e1)));:}
         | mas OPERACION_U:e1 {:RESULT = e1;:}
         | ATOM:e1 {:RESULT = e1;:}
 ;
